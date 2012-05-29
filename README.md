@@ -7,6 +7,9 @@ Clearly this gem should be hosted on GitHub.
 
 I'm just maintaining the repo and documentation.
 
+## Screenshot
+![Redactor in action](redactor-js.png)
+
 ## Authors
 
 #### Developers
