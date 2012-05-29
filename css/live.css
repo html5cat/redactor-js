@@ -1,0 +1,38 @@
+@import "kube.css";
+
+/* =Typography
+-----------------------------------------------------------------------------*/
+body {
+	font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+	font-size: 15px;
+}
+
+::selection {
+	background-color: #c72020;
+	color: #fff;
+	text-shadow: none;
+}
+
+.callout {
+	background-color: #e8edf5;
+	border: 1px solid #cfd5df;
+	padding: 1.5em;
+	border-radius: 3px;
+}
+
+/* =Links
+-----------------------------------------------------------------------------*/
+a {
+	color: #46a;
+}
+a:hover {
+	color: #c72020 !important;
+}
+
+/* =Layout
+-----------------------------------------------------------------------------*/
+#page {
+	margin: 1.5em;
+	position: relative;
+}
+
