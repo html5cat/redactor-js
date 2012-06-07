@@ -30,8 +30,4 @@ I'm just maintaining the repo and documentation.
 * German — Volodymyr Atapin
 
 ## License 
-As per http://redactorjs.com/docs/ :
-
-"Redactor распространяется бесплатно по лицензии MIT или GPL, на ваш выбор."
-
-"Redactor is freely distributed under MIT or GPL license, your call."
+Starting with version 7.6.2 redactor-js is licensed under [Creative Commons Attribution-NonCommercial 3.0 license](http://creativecommons.org/licenses/by-nc/3.0/).
