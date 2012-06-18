@@ -1,4 +1,3 @@
-//@chen1706@gmail.com
 var RLANG = {
 	html: '原始碼',
 	video: '影片',
