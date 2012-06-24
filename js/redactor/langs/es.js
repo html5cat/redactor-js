@@ -72,5 +72,6 @@ var RLANG = {
 	fullscreen: 'Pantalla completa',
 	deleted: 'Borrado',
 	none: 'Ninguno',
-	anchor: 'Anclaje o anchor'
+	anchor: 'Anclaje o anchor',
+	:special_chars: 'caracteres especiales'
 };

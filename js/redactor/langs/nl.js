@@ -72,5 +72,6 @@ var RLANG = {
 	fullscreen: 'Volledig scherm',
 	deleted: 'Verwijderd',
 	none: 'Geen',
-	anchor: 'Anker'
+	anchor: 'Anker',
+	special_chars: 'Speciale tekens'
 };

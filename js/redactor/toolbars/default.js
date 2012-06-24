@@ -210,5 +210,11 @@ RTOOLBAR['default'] =
 	{
 		title: RLANG.fullscreen,
 		func: 'fullscreen'
+	},
+	special_chars: 
+	{
+		title: RLANG.special_chars,
+		func: 'buildSpecialChars',
+		dropdown: true
 	}	
 };

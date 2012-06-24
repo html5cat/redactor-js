@@ -71,5 +71,6 @@ var RLANG = {
 	horizontalrule: 'Horizontale Linie',
 	fullscreen: 'Vollbild',
 	deleted: 'Durchgestrichen',
-	anchor: 'Anker'    	
+	anchor: 'Anker',
+	special_chars: 'Sonderzeichen'    	
 };

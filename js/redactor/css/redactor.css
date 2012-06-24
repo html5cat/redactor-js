@@ -147,8 +147,17 @@ body .redactor_toolbar li a.redactor_btn_justifyright span		  { background-posit
 body .redactor_toolbar li a.redactor_btn_justify span		 	  { background-position: -450px; }
 body .redactor_toolbar li a.redactor_btn_horizontalrule span 	  { background-position: -475px; }
 body .redactor_toolbar li a.redactor_btn_fullscreen span		  { background-position: -500px; }							
-body .redactor_toolbar li a.redactor_btn_normalscreen span		  { background-position: -525px !important; }	
+body .redactor_toolbar li a.redactor_btn_normalscreen span		  { background-position: -550px !important; }	
+body .redactor_toolbar li a.redactor_btn_special_chars span		  { background-position: -575px; }							
 
+.redactor_btn_dropdown_close {
+	background-color: #EEEEEE;
+	border-radius: 5px; 
+	float: right; 
+	padding: 6px 16px !important;
+	margin: 10px 5px !important;
+	font-size: 12px;
+}
 
 /*
 	RESIZER
@@ -216,7 +225,19 @@ body .redactor_toolbar li a.redactor_btn_normalscreen span		  { background-posit
 	font-size: 11px;
 }
 
+/* Special Characters */
 
+.redactor_special_char_link {
+	padding: 0 !important;
+	width: 15px !important;
+	height: 15px !important;
+	float: left !important;
+	border: 2px solid #f1f1f1 !important;
+	text-align: center;
+}
+.redactor_special_char_none {
+	font-size: 11px;
+}
 
 /* MODAL */
 #redactor_modal_overlay {
