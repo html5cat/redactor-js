@@ -72,5 +72,7 @@ var RLANG = {
 	fullscreen: 'Fullscreen',
 	deleted: 'Deleted',
 	none: 'None',
-	anchor: 'Anchor'
+	anchor: 'Anchor',
+	special_chars: 'Special Characters',
+	close: 'Close'
 };
