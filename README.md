@@ -1,7 +1,7 @@
 redactor-js
 ===========
 
-jQuery based WYSIWYG-editor, authors website: http://redactorjs.com/
+jQuery based WYSIWYG-editor, author's website: http://redactorjs.com/
 
 Clearly this gem should be hosted on GitHub.
 
@@ -29,7 +29,7 @@ I'm just maintaining the repo and documentation.
 * Latvian — Максим Солдатёнок maksold.com
 * German — Volodymyr Atapin
 
-## License 
+## License
 Starting with version 7.6.2 redactor-js is licensed under [Creative Commons Attribution-NonCommercial 3.0 license](http://creativecommons.org/licenses/by-nc/3.0/)
 
 For commercial use please buy license here: http://redactorjs.com/download/ or use earlier version.
