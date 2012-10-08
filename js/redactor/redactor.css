@@ -225,6 +225,7 @@ body .redactor_air {
 	overflow: hidden !important;
 	height: 32px !important;
 	border-bottom: 1px solid #bbb;
+  display: block;
 }
 body .redactor_air .redactor_toolbar {
 	padding-right: 2px !important;
