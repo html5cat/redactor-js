@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>	
+	<title>Redactor</title>
+
+	<meta charset="utf-8">
+	
+	<link rel="stylesheet" type="text/css" href="../css/style.css" /> 		
+
+	<script type="text/javascript" src="../lib/jquery-1.7.min.js"></script>	
+
+	<!-- Redactor is here -->
+	<link rel="stylesheet" href="../redactor/redactor.css" />
+	<script src="../redactor/redactor.js"></script>
+	
+	<style type="text/css">
+	body .redactor_toolbar li a.redactor_btn_button1 {
+		background: url(img/button1.png) no-repeat;
+	}
+	</style>
+	
+	<script type="text/javascript">
+	
+	function testButton(obj, event, key)
+	{
+		obj.execCommand('underline');
+	}
+	
+	$(document).ready(
+		function()
+		{
+			var buttons = ['formatting', '|', 'bold', 'italic', 'fullscreen', '|', 'button1'];
+		
+			$('#redactor').redactor({
+				focus: true, 
+				buttons: buttons, 
+				buttonsCustom: {
+					button1: {
+						title: 'Button', 
+						callback: testButton 
+					} 
+				}  
+			});
+			
+			$('#redactor2').redactor({
+				focus: true, 
+				buttonsAdd: ['|', 'button1'], 
+				buttonsCustom: {
+					button1: {
+						title: 'Button', 
+						callback: function(obj)
+						{
+							obj.execCommand('fontsize', '5');
+						}
+                     
+					} 
+				}  
+			});			
+
+		}
+	);
+	</script>				
+
+</head>
+<body>
+	<div id="page">
+
+		<textarea id="redactor" name="content">
+			<h2>Hello and Welcome</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</textarea>
+		
+		<br>
+		
+		<textarea id="redactor2" name="content">
+			<h2>Hello and Welcome</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</textarea>		
+
+	</div>			
+</body>
+</html>
