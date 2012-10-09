@@ -2935,7 +2935,7 @@ Redactor.prototype = {
 			{
 				$.each(this.opts.uploadFields, $.proxy(function(k,v)
 				{					
-					if (v.indexOf('#') === 0)
+					if (v.indexOf && v.indexOf('#') === 0)
 					{
 						v = $(v).val();
 					}
