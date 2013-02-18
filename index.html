@@ -1,30 +1,50 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Redactor in action</title>
-    <meta charset="utf-8">
+<head>
+	<title>Redactor</title>
 
-    <link rel="stylesheet" href="./css/live.css" />
-    <script src="./lib/jquery-1.7.min.js"></script>
+	<meta charset="utf-8">
 
-    <link rel="stylesheet" href="./redactor/redactor.css" />
-    <script src="./redactor/redactor.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script type="text/javascript" src="lib/jquery-1.9.0.min.js"></script>
 
-    <script type="text/javascript">
-    $(document).ready(
-      function()
-      {
-        $('#redactor_content').redactor();
-      }
-    );
-    </script>
-  </head>
-  <body>
-    <div id="page">
-      <h2>Redactor in action</h2>
 
-      <textarea id="redactor_content" name="content" style="height: 560px;"></textarea>
+	<!-- Redactor is here -->
+	<link rel="stylesheet" href="redactor/redactor.css" />
+	<script src="redactor/redactor.min.js"></script>
 
-    </div>
-  </body>
+	<script type="text/javascript">
+	$(document).ready(
+		function()
+		{
+			$('#redactor').redactor();
+		}
+	);
+	</script>
+
+</head>
+<body>
+	<div id="page">
+
+		<textarea id="redactor" name="content">
+			<h2>Hello and Welcome</h2>
+			<p>Lorem ipsum <a href="http://test.com" title="dolor">dolor</a> sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing <b>elit, sed do eiusmod tempor incididunt</b> ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</textarea>
+
+		<br>
+		<h3>See other demos</h3>
+		<ul class="list">
+			<li><a href="demo/images_upload.html">Images upload</a></li>
+			<li><a href="demo/images_json.html">Images JSON</a></li>
+			<li><a href="demo/files_upload.html">Files upload</a></li>
+			<li><a href="demo/all_uploads.html">All in one uploads</a></li>
+			<li><a href="demo/autosave.html">Autosave utility</a></li>
+			<li><a href="demo/fixed.html">Fixed toolbar</a></li>
+			<li><a href="demo/toolbar.html">Custom toolbar</a></li>
+			<li><a href="demo/post.html">Post form</a></li>
+		</ul>
+
+	</div>
+</body>
 </html>
