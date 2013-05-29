@@ -152,6 +152,7 @@ var RLANG = {
 
 			autosave: false, // false or url
 			autosaveCallback: false, // function
+            autosaveAfterChange: false, // true or false
 			interval: 60, // seconds
 
 			imageGetJson: false, // url (ex. /folder/images.json ) or false
@@ -1979,24 +1980,31 @@ var RLANG = {
 		// AUTOSAVE
 		autoSave: function()
 		{
+            var data = {"current": this.getCode(), "history": this.getCode()};
+
 			this.autosaveInterval = setInterval($.proxy(function()
 			{
-				$.ajax({
-					url: this.opts.autosave,
-					type: 'post',
-					data: this.$el.attr('name') + '=' + escape(encodeURIComponent(this.getCode())),
-					success: $.proxy(function(data)
-					{
-						// callback
-						if (typeof this.opts.autosaveCallback === 'function')
-						{
-							this.opts.autosaveCallback(data, this);
-						}
+                data.current = this.getCode();
 
-					}, this)
-				});
+                if(!this.opts.autosaveAfterChange || data.current != data.history)
+                {
+                    data.history = data.current;
 
+                    $.ajax({
+                        url: this.opts.autosave,
+                        type: 'post',
+                        data: this.$el.attr('name') + '=' + escape(encodeURIComponent(data.current)),
+                        success: $.proxy(function(data)
+                        {
+                            // callback
+                            if (typeof this.opts.autosaveCallback === 'function')
+                            {
+                                this.opts.autosaveCallback(data, this);
+                            }
 
+                        }, this)
+                    });
+                }
 			}, this), this.opts.interval*1000);
 		},
 

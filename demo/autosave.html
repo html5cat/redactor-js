@@ -20,7 +20,8 @@
 			$('#redactor_content').redactor({
 				autosave: 'scripts/save.php',
 				interval: 30,
-				autosaveCallback: testCallback
+				autosaveCallback: testCallback,
+                autosaveAfterChange: true
 			});
 		}
 	);
