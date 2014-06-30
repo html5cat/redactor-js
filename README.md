@@ -2,6 +2,7 @@ redactor-js
 ===========
 
 # Repo not maintained. Proceed with caution or refer to http://imperavi.com/redactor/
+##Happy to transfer ownership if you want to maintain a fork.
 
 jQuery based WYSIWYG-editor, official author's website: http://redactorjs.com/
 
