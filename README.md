@@ -3,8 +3,9 @@ redactor-js
 
 jQuery based WYSIWYG-editor, official author's website: http://redactorjs.com/
 
-This is a codebase mirror hosted here for your, my dear Githubbers', convenience!
+This is a codebase mirror hosted here for your, my dear Githubbers', convenience.
 
+If you found and issue, please submit it here: http://imperavi.com/support/
 
 ## Screenshot
 ![Redactor in action](https://github.com/dybskiy/redactor-js/raw/master/redactor-js.png)
@@ -31,4 +32,4 @@ This is a codebase mirror hosted here for your, my dear Githubbers', convenience
 ## License
 Starting with version 7.6.2 redactor-js is licensed under [Creative Commons Attribution-NonCommercial 3.0 license](http://creativecommons.org/licenses/by-nc/3.0/)
 
-For commercial use please buy license here: http://redactorjs.com/download/ or use earlier version.
+For commercial use please buy license here: http://redactorjs.com/ or use earlier version.
