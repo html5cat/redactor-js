@@ -1,6 +1,8 @@
 redactor-js
 ===========
 
+# Repo not maintained. Proceed with caution or refer to http://imperavi.com/redactor/
+
 jQuery based WYSIWYG-editor, official author's website: http://redactorjs.com/
 
 This is a codebase mirror hosted here for your, my dear Githubbers', convenience.
