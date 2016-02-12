@@ -154,12 +154,15 @@ var RLANG = {
 			autosaveCallback: false, // function
 			interval: 60, // seconds
 
+			imageId: 0,
+
 			imageGetJson: false, // url (ex. /folder/images.json ) or false
 
 			imageUpload: false, // url
 			imageUploadCallback: false, // function
 			imageUploadErrorCallback: false, // function
-
+			imageDeleteCallback: false, // function
+			
 			fileUpload: false, // url
 			fileUploadCallback: false, // function
 			fileUploadErrorCallback: false, // function
@@ -284,7 +287,7 @@ var RLANG = {
 					'<div class="redactor_tab" id="redactor_tab1">' +
 						'<label>URL</label><input type="text" id="redactor_link_url" class="redactor_input"  />' +
 						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_url_text" />' +
-						'<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
+						'<label><input type="checkbox" id="redactor_link_blank" checked="checked"> ' + RLANG.link_new_tab + '</label>' +
 					'</div>' +
 					'<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
 						'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
@@ -834,6 +837,35 @@ var RLANG = {
 				// if empty
 				if (key === 8 || key === 46)
 				{
+					function compareHtml(beforeHtml, afterHtml)
+					{
+						var diff='"tag":"';
+						var j=0;
+						var openQuate = false;
+					    for(var i=0;i<beforeHtml.length;i++)
+					    {
+					        if(beforeHtml[i]!=afterHtml[j])
+							{
+								if(beforeHtml[i]==' ' && !openQuate)
+									diff += '","';
+								else if(beforeHtml[i]=='=')
+									diff += '":"'
+								else if(beforeHtml[i]=='>')
+									break;
+								else if (beforeHtml[i]=='"')
+									openQuate = !openQuate;
+								else
+									diff += beforeHtml[i];
+
+							}
+					        else
+					        	j++;
+					    }
+					    return '{'+diff+'"}';
+					}
+					var delJSON = JSON.parse(compareHtml(this.beforeHtml, this.$editor.html()));
+					if(delJSON.tag == 'img')
+						this.opts.imageDeleteCallback(delJSON);
 					this.observeImages();
 					return this.formatEmpty(e);
 				}
@@ -924,6 +956,12 @@ var RLANG = {
 					{
 						this.shortcuts(e, 'subscript'); // Ctrl + h
 					}
+				}
+
+				// backspace and delete
+				if (key === 8 || key === 46)
+				{
+					this.beforeHtml = this.$editor.html();
 				}
 
 				// clear undo buffer
@@ -1615,8 +1653,7 @@ var RLANG = {
 				html = html.replace(/<br>/i, '');
 			}
 
-			var thtml = html.replace(/<(?:.|\n)*?>/gm, '');
-
+			var thtml = html.replace('/<p>*</p>/gm>','');
 			if (html === '' || thtml === '')
 			{
 				e.preventDefault();
@@ -3103,6 +3140,10 @@ var RLANG = {
 		},
 		imageDelete: function(el)
 		{
+			var json = [];
+			json['id'] =  $(el).attr('id');
+			json['src'] = $(el).attr('src');
+			this.opts.imageDeleteCallback(json);
 			$(el).remove();
 			this.modalClose();
 			this.syncCode();
@@ -3325,7 +3366,9 @@ var RLANG = {
 				var html = '';
 				if (link !== true)
 				{
-					html = '<p><img src="' + json.filelink + '" /></p>';
+					++this.opts.imageId;
+					html = '<p><img id=redImage'+(this.opts.imageId)+' class=redImage src="' + json.filelink + '" /></p>';
+					json.id='redImage'+this.opts.imageId;
 				}
 				else
 				{
