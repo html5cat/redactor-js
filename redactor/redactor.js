@@ -3423,7 +3423,7 @@ var RLANG = {
 
 				if (target === '_blank')
 				{
-					$('#redactor_link_blank').attr('checked', true);
+					$('#redactor_link_blank').prop('checked', true);
 				}
 
 				$('#redactor_insert_link_btn').click($.proxy(this.insertLink, this));
@@ -3447,8 +3447,8 @@ var RLANG = {
 			{
 				link = $('#redactor_link_url').val();
 				text = $('#redactor_link_url_text').val();
-
-				if ($('#redactor_link_blank').attr('checked'))
+				
+				if ($('#redactor_link_blank').prop('checked'))
 				{
 					target = ' target="_blank"';
 				}
