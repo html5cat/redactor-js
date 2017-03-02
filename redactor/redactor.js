@@ -3382,7 +3382,7 @@ var RLANG = {
 				{
 					if (sel && sel.anchorNode && sel.anchorNode.parentNode.tagName === 'A')
 					{
-						url = sel.anchorNode.parentNode.href;
+						url = unescape(sel.anchorNode.parentNode.href);
 						text = sel.anchorNode.parentNode.text;
 						target = sel.anchorNode.parentNode.target;
 
