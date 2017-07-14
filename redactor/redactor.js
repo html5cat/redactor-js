@@ -1399,6 +1399,7 @@ var RLANG = {
 
 				if (cmd === 'inserthtml')
 				{
+					debugger
 					if (this.browser('msie'))
 					{
 						this.$editor.focus();
@@ -3070,12 +3071,47 @@ var RLANG = {
 		{
 			var data = $('#redactor_insert_video_area').val();
 			data = this.stripTags(data);
-
+			//iframe new start
+			var ifrm = this.createIframe(data);
+			//end
+			// console.dir(ifrm);
+			// data = ifrm.outerHTML;
+			//new figure starts
+			var generatedFigure = this.createFigure();
+			generatedFigure.appendChild(ifrm);
+            data = generatedFigure.outerHTML;
+			debugger;
 			this.restoreSelection();
 			this.execCommand('inserthtml', data);
 			this.modalClose();
 		},
-
+		createIframe: function(src)
+		{
+            var ifrm = document.createElement("iframe");
+		    src = src.replace("watch?v=", "embed/");
+            ifrm.setAttribute("src", src);
+            ifrm.style.width = "640px";
+			ifrm.style.height = "480px";
+			ifrm.style.pointerEvents = "none";
+			return ifrm;
+		},
+		createFigure: function()
+		{
+			// <a href="#" class="close">
+			var aTag = document.createElement('a');
+			aTag.setAttribute('href',"#");
+			aTag.classList.add('close');
+			// aTag.innerHTML = 'Close';
+			// aTag.contentEditable = 'true';
+            aTag.onclick = function (e){
+                    // e.preventDefault();
+                    console.log('hello world');
+            };
+			var generatedFigure = document.createElement('figure');
+			generatedFigure.contentEditable = 'true';
+			generatedFigure.appendChild(aTag)
+			return generatedFigure;
+		},
 		// INSERT IMAGE
 		imageEdit: function(e)
 		{

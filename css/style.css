@@ -24,3 +24,34 @@ body {
 .list li {
 	margin: 10px 0;
 }
+
+/*
+hover effects
+*/
+.close {
+  position: sticky;
+  right: 32px;
+  top: 32px;
+  width: 32px;
+  height: 32px;
+  opacity: 1;
+  color:red
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: rgba(241, 43, 36, 0.64);
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
+/*---------end hover ----*/
