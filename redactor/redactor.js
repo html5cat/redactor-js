@@ -759,6 +759,8 @@ var RLANG = {
 				{
 					this.observeImages();
 					this.observeTables();
+					console.log('observers');
+					this.observeVideos();
 
 				}, this), 1);
 
@@ -1195,6 +1197,8 @@ var RLANG = {
 			this.$editor.focus();
 			this.pasteHtmlAtCaret(html);
 			this.observeImages();
+			//new line
+			this.observeVideos();
 			this.syncCode();
 		},
 
@@ -1323,9 +1327,33 @@ var RLANG = {
 				{
 					$(s).attr('unselectable', 'on');
 				}
-
+                console.log('img', s);
 				this.resizeImage(s);
 
+			}, this));
+
+		},
+		//For looking video tags for click event
+		observeVideos: function(){
+			this.$editor.find('.close').each($.proxy(function(i, s)
+			{
+				if (this.browser('msie'))
+					{
+						$(s).attr('unselectable', 'on');
+					}
+				this.addClickToCloseTag(s);
+
+			}, this));
+		},
+		//close Video 
+		addClickToCloseTag: function(video){
+			
+			$(video).click($.proxy(function(e)
+			{
+				// console.log('hello world', e);
+				// console.log($(e.target).parent());
+				let parent  =  $(e.target).parent()
+				$(parent).remove();
 			}, this));
 
 		},
@@ -1412,6 +1440,8 @@ var RLANG = {
 					}
 
 					this.observeImages();
+					//new line
+					this.observeVideos();
 				}
 				else if (cmd === 'unlink')
 				{
@@ -1974,6 +2004,7 @@ var RLANG = {
 
 				this.observeImages();
 				this.observeTables();
+				this.observeVideos();
 			}
 		},
 
@@ -2846,6 +2877,7 @@ var RLANG = {
 
 			$(resize).click($.proxy(function(e)
 			{
+				console.log('hello world');
 				if (clicker)
 				{
 					this.imageEdit(e);
@@ -3071,18 +3103,12 @@ var RLANG = {
 		{
 			var data = $('#redactor_insert_video_area').val();
 			data = this.stripTags(data);
-			//iframe new start
-			var ifrm = this.createIframe(data);
-			//end
-			// console.dir(ifrm);
-			// data = ifrm.outerHTML;
-			//new figure starts
+		
 			var generatedFigure = this.createFigure();
-			generatedFigure.appendChild(ifrm);
-            data = generatedFigure.outerHTML;
-			debugger;
+			generatedFigure.appendChild(this.createIframe(data));
+			
 			this.restoreSelection();
-			this.execCommand('inserthtml', data);
+			this.execCommand('inserthtml', generatedFigure.outerHTML);
 			this.modalClose();
 		},
 		createIframe: function(src)
@@ -3097,20 +3123,18 @@ var RLANG = {
 		},
 		createFigure: function()
 		{
-			// <a href="#" class="close">
-			var aTag = document.createElement('a');
+			var generatedFigure = document.createElement('figure');
+			generatedFigure.contentEditable = 'false';
+			//insert Anchor to it
+			generatedFigure.appendChild(this.createAnchor());
+			return generatedFigure;
+		},
+		createAnchor: function()
+		{
+            var aTag = document.createElement('a');
 			aTag.setAttribute('href',"#");
 			aTag.classList.add('close');
-			// aTag.innerHTML = 'Close';
-			// aTag.contentEditable = 'true';
-            aTag.onclick = function (e){
-                    // e.preventDefault();
-                    console.log('hello world');
-            };
-			var generatedFigure = document.createElement('figure');
-			generatedFigure.contentEditable = 'true';
-			generatedFigure.appendChild(aTag)
-			return generatedFigure;
+			return aTag;
 		},
 		// INSERT IMAGE
 		imageEdit: function(e)
