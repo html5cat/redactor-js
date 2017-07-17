@@ -604,6 +604,9 @@ var RLANG = {
 		// Initialization
 		init: function()
 		{
+			//Initialize aviry image editor plugin
+			this.aviary();
+
 			// get dimensions
 			this.height = this.$el.css('height');
 			this.width = this.$el.css('width');
@@ -810,6 +813,22 @@ var RLANG = {
 			// construct editor
 		    this.build(false, afterBuild);
 
+		},
+		aviary: function (){
+			this.featherEditor = new Aviary.Feather({
+                apiKey: '3c2ecea9c7734cb88633e839e970e6d5',
+                onSave: function(imageID, newURL) {
+                        var img = document.getElementById(imageID);
+						img.src = newURL;
+						this.closeEditor();
+			    }.bind(this),
+			    onError: function(errorObj) {
+                    alert(errorObj.message);
+                }			
+		});
+		},
+	    closeEditor: function(){
+          this.featherEditor.close();
 		},
 		shortcuts: function(e, cmd)
 		{
@@ -1327,11 +1346,25 @@ var RLANG = {
 				{
 					$(s).attr('unselectable', 'on');
 				}
-                console.log('img', s);
-				this.resizeImage(s);
+				console.dir('img', s);
+				this.imageClick(s)
+				// this.resizeImage(s);
 
 			}, this));
 
+		},
+		imageClick: function(image){
+			$(image).off('hover mousedown mouseup click mousemove');
+			$(image).click($.proxy(function(e)
+			{
+				console.log('hello world');
+				    this.aviaryEditor(e)
+				// if (clicker)
+				// {
+				// 	// this.imageEdit(e);
+				// }
+
+			}, this));
 		},
 		//For looking video tags for click event
 		observeVideos: function(){
@@ -2880,6 +2913,7 @@ var RLANG = {
 				console.log('hello world');
 				if (clicker)
 				{
+				    // this.aviaryEditor(e)
 					this.imageEdit(e);
 				}
 
@@ -3136,6 +3170,29 @@ var RLANG = {
 			aTag.classList.add('close');
 			return aTag;
 		},
+		aviaryFeather: function()
+		{
+            var featherEditor = new Aviary.Feather({
+                apiKey: '3c2ecea9c7734cb88633e839e970e6d5',
+                onSave: function(imageID, newURL) {
+                         console.log('hello world', imageID, newURL);
+                         var img = document.getElementById(imageID);
+                         img.src = newURL;
+				},
+				onError: function(errorObj) {
+                    alert(errorObj.message);
+                }		
+			});
+			return featherEditor;
+		},
+		aviaryEditor: function(e)
+		{
+			// console.log('src', typeof $(e.target).attr('src'));
+			src = $(e.target).attr('src')
+			// var featherEditor = this.aviaryFeather()
+			this.featherEditor.launch({image: 'idea', url: src});
+            return false;
+		},
 		// INSERT IMAGE
 		imageEdit: function(e)
 		{
@@ -3364,7 +3421,7 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
-				var data = '<img src="' + $('#redactor_file_link').val() + '" />';
+				var data = '<img id="idea" src="' + $('#redactor_file_link').val() + '" />';
 				this._imageSet(data, true);
 			}
 			else
