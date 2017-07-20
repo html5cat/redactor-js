@@ -292,7 +292,7 @@ body .redactor_air .redactor_toolbar {
 	width: 25px;
 	height: 25px;
 	border: 1px solid transparent;
-	* border: 1px solid #eee;
+	border: 1px solid #eee;
 	display: block;
 	line-height: 0;
 	font-size: 0;

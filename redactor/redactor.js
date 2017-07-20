@@ -182,9 +182,9 @@ var RLANG = {
 
 			buttonsCustom: {},
 			buttonsAdd: [],
-			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-					'image', 'video', 'file', 'table', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
+					'image', 'video', 'file', 'link', '|',
+					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -265,6 +265,10 @@ var RLANG = {
 				'<div id="redactor_tab3" class="redactor_tab" style="display: none;">' +
 					'<label>' + RLANG.image_web_link + '</label>' +
 					'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
+					'<label>height</label>'+
+					'<input type="number" id="redactor_link_height_id" class="redactor_input" />'+
+					'<label>width</label>'+
+					'<input type="number" id="redactor_link_width_id" class="redactor_input" />'+
 				'</div>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
@@ -814,13 +818,24 @@ var RLANG = {
 		    this.build(false, afterBuild);
 
 		},
+		generateRandomId: function()
+		{
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+           }
+           return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+		},
 		aviary: function (){
 			this.featherEditor = new Aviary.Feather({
                 apiKey: '3c2ecea9c7734cb88633e839e970e6d5',
                 onSave: function(imageID, newURL) {
                         var img = document.getElementById(imageID);
 						img.src = newURL;
-						this.closeEditor();
+						setTimeout(function(){
+						    this.closeEditor();
+						}.bind(this), 3000);
 			    }.bind(this),
 			    onError: function(errorObj) {
                     alert(errorObj.message);
@@ -2118,6 +2133,7 @@ var RLANG = {
 		},
 		buildButton: function(key, s)
 		{
+			console.log(s, key)
 			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
 
 			if (typeof s.func === 'undefined')
@@ -2135,7 +2151,7 @@ var RLANG = {
 						this.$editor.focus();
 						//this.restoreSelection();
 					}
-
+                    // console.log('hello world', s.exec, key);
 					this.execCommand(s.exec, key);
 
 				}, this));
@@ -3188,9 +3204,10 @@ var RLANG = {
 		aviaryEditor: function(e)
 		{
 			// console.log('src', typeof $(e.target).attr('src'));
-			src = $(e.target).attr('src')
+			var src = 
+			
 			// var featherEditor = this.aviaryFeather()
-			this.featherEditor.launch({image: 'idea', url: src});
+			this.featherEditor.launch({image: $(e.target).attr('id'), url: $(e.target).attr('src')});
             return false;
 		},
 		// INSERT IMAGE
@@ -3421,7 +3438,12 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
-				var data = '<img id="idea" src="' + $('#redactor_file_link').val() + '" />';
+				var height = $('#redactor_link_height_id').val() || '400'
+				var width = $('#redactor_link_width_id').val() || '400'
+				console.log(height, width)
+				var id = this.generateRandomId()
+				var data = '<img' + ' id="' + id + '"' + ' style="'+ 'width:' +width+ 'px; height:' + height+ 'px;"'+ ' src="' + $('#redactor_file_link').val() + '" />';
+				console.log(data)
 				this._imageSet(data, true);
 			}
 			else
