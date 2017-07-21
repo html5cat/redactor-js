@@ -82,7 +82,8 @@ var RLANG = {
 	anchor: 'Anchor',
 	link_new_tab: 'Open link in new tab',
 	underline: 'Underline',
-	alignment: 'Alignment'
+	alignment: 'Alignment',
+	fontsize: 'Font size'
 };
 
 (function($){
@@ -184,7 +185,7 @@ var RLANG = {
 			buttonsAdd: [],
 			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
 					'image', 'video', 'file', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -526,6 +527,10 @@ var RLANG = {
 							exec: 'unlink'
 						}
 					}
+				},
+				fontsize:{
+					 title: RLANG.fontsize,
+					 func: 'show'
 				},
 				fontcolor:
 				{
@@ -2133,7 +2138,7 @@ var RLANG = {
 		},
 		buildButton: function(key, s)
 		{
-			console.log(s, key)
+			// console.log(s, key)
 			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
 
 			if (typeof s.func === 'undefined')
@@ -2171,13 +2176,22 @@ var RLANG = {
 			}
 
 			// dropdown
-			if (key === 'backcolor' || key === 'fontcolor' || typeof(s.dropdown) !== 'undefined')
+			if (key === 'backcolor' || key === 'fontcolor' || key === 'fontsize' || typeof(s.dropdown) !== 'undefined')
 			{
 				var dropdown = $('<div class="redactor_dropdown" style="display: none;">');
 
 				if (key === 'backcolor' || key === 'fontcolor')
 				{
 					dropdown = this.buildColorPicker(dropdown, key);
+				}
+				else if (key === 'fontsize') 
+				{
+				   var select =  this.buildFontSizeDropdown();
+				    $(select).change($.proxy(function(e) {
+                            var val = $("#myFontsize option:selected").text();
+							this.changeFontSize(val);
+                    }, this));
+					return select;
 				}
 				else
 				{
@@ -2194,8 +2208,25 @@ var RLANG = {
 
 			return button;
 		},
+		buildFontSizeDropdown:function(){
+                var $select = $('<select id="myFontsize"/>');
+                for (i=1;i<=100;i++){
+					if (i === 1) {
+						$select.append($('<option></option>').val(i).html(i))
+					}
+                    $select.append($('<option></option>').val(i).html(i))
+				}
+				return $select;
+		},
+		changeFontSize: function(val){
+			this.execCommand('fontSize', val)
+			this.$editor.find('font').replaceWith(function() {
+				return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
+		    });
+		},
 		buildDropdown: function(dropdown, obj)
 		{
+			// console.log('obj', obj);
 			$.each(obj, $.proxy(
 				function (x, d)
 				{
@@ -2211,10 +2242,12 @@ var RLANG = {
 					}
 					else
 					{
+						// console.log('iterate', x, d);
 						drop_a = $('<a href="javascript:void(null);" class="' + d.className + '">' + d.title + '</a>');
-
+                        
 						if (typeof(d.callback) === 'function')
 						{
+							console.log('callback', d)
 							$(drop_a).click($.proxy(function(e) { d.callback(this, e, x); }, this));
 						}
 						else if (typeof(d.func) === 'undefined')
@@ -2223,6 +2256,7 @@ var RLANG = {
 						}
 						else
 						{
+							console.log('if function', d)
 							$(drop_a).click($.proxy(function(e) { this[d.func](e); }, this));
 						}
 					}
@@ -2267,6 +2301,7 @@ var RLANG = {
 				var _self = this;
 				$(swatch).click(function()
 				{
+					console.log(mode)
 					_self.execCommand(mode, $(this).attr('rel'));
 
 					if (mode === 'forecolor')
