@@ -84,7 +84,8 @@ var RLANG = {
 	underline: 'Underline',
 	alignment: 'Alignment',
 	fontsize: 'Font size',
-	fontfamily: 'Font Family'
+	fontfamily: 'Font Family',
+	undo: 'Undo'
 };
 
 (function($){
@@ -186,7 +187,7 @@ var RLANG = {
 			buttonsAdd: [],
 			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
 					'image', 'video', 'file', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize', '|', 'fontfamily', '|'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize', '|', 'fontfamily', '|', 'undo'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -605,6 +606,10 @@ var RLANG = {
 				{
 					exec: 'inserthorizontalrule',
 					title: RLANG.horizontalrule
+				},
+				undo: {
+					title: RLANG.undo,
+					exec: 'undo'
 				}
 			}
 
@@ -633,7 +638,8 @@ var RLANG = {
 
 			rdocument = this.document = document;
 			rwindow = this.window = window;
-
+			//updated due to undo redo not working when updating font tags.
+            this.document.execCommand('styleWithCSS')
 			// mobile
 			if (this.opts.mobile === false && this.isMobile())
 			{
@@ -863,6 +869,7 @@ var RLANG = {
 		},
 		shortcuts: function(e, cmd)
 		{
+			console.log('dfsdfsdfsd')
 			e.preventDefault();
 			this.execCommand(cmd, false);
 		},
@@ -2248,18 +2255,18 @@ var RLANG = {
 			return $select;
 		},
 		changeFontSize: function(val){
-			this.execCommand('fontSize', val)
-			this.$editor.find('font').replaceWith(function() {
-				return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
-		    });
+			this.execCommand('fontSize', val);
+			// this.$editor.find('font').replaceWith(function() {
+			// 	return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
+		    // });
 		},
 		changeFontFamily: function(val){
 			this.execCommand('fontName', val)
-			this.$editor.find('font').replaceWith(function() {
-				var span = $('<span>' + $(this).html() + '</span>');
-				$(span).css('font-family', val);
-				return span
-		    });
+			// this.$editor.find('font').replaceWith(function() {
+			// 	var span = $('<span>' + $(this).html() + '</span>');
+			// 	$(span).css('font-family', val);
+			// 	return span
+		    // });
 		},
 		buildDropdown: function(dropdown, obj)
 		{
@@ -2340,7 +2347,6 @@ var RLANG = {
 				{
 					console.log(mode)
 					_self.execCommand(mode, $(this).attr('rel'));
-
 					if (mode === 'forecolor')
 					{
 						_self.$editor.find('font').replaceWith(function() {
@@ -2366,6 +2372,7 @@ var RLANG = {
 
 			if (key === 'backcolor')
 			{
+				console.log('helloo2', mode) 
 				elnone.click($.proxy(this.setBackgroundNone, this));
 			}
 			else
@@ -2380,6 +2387,7 @@ var RLANG = {
 		setBackgroundNone: function()
 		{
 			$(this.getParentNode()).css('background-color', 'transparent');
+			debugger;
 			this.syncCode();
 		},
 		setColorNone: function()
