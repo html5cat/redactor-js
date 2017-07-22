@@ -83,7 +83,8 @@ var RLANG = {
 	link_new_tab: 'Open link in new tab',
 	underline: 'Underline',
 	alignment: 'Alignment',
-	fontsize: 'Font size'
+	fontsize: 'Font size',
+	fontfamily: 'Font Family'
 };
 
 (function($){
@@ -109,7 +110,7 @@ var RLANG = {
 	{
 		// Element
 		this.$el = $(element);
-
+        // console.log(this.$el.data())
 		// Lang
 		if (typeof options !== 'undefined' && typeof options.lang !== 'undefined' && options.lang !== 'en' && typeof RELANG[options.lang] !== 'undefined')
 		{
@@ -185,7 +186,7 @@ var RLANG = {
 			buttonsAdd: [],
 			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
 					'image', 'video', 'file', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize', '|', 'fontfamily', '|'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -211,7 +212,13 @@ var RLANG = {
 				'#bfbfbf', '#3f3f3f', '#938953', '#548dd4', '#95b3d7', '#d99694', '#c3d69b', '#b2a2c7', '#b7dde8', '#fac08f', '#f2c314',
 				'#a5a5a5', '#262626', '#494429', '#17365d', '#366092', '#953734', '#76923c', '#5f497a', '#92cddc', '#e36c09', '#c09100',
 				'#7f7f7f', '#0c0c0c', '#1d1b10', '#0f243e', '#244061', '#632423', '#4f6128', '#3f3151', '#31859b', '#974806', '#7f6000'],
-
+            fontFamily: [
+				{ font: 'Times New Roman', family: '"Times New Roman", Times, serif'},
+				{ font: 'Courier New', family: '"Courier New", Courier, monospace'},
+				{ font: 'Palatino Linotype', family: '"Palatino Linotype", "Book Antiqua", Palatino, serif'},
+				{ font: 'Arial', family: 'Arial, Helvetica, sans-serif'},
+				{ font: 'Arial Black', family: '"Arial Black", Gadget, sans-serif'}
+			],
 			// private
 			emptyHtml: '<p><br /></p>',
 			buffer: false,
@@ -531,6 +538,10 @@ var RLANG = {
 				fontsize:{
 					 title: RLANG.fontsize,
 					 func: 'show'
+				},
+				fontfamily:{
+					title: RLANG.fontfamily,
+					func: 'show'                           
 				},
 				fontcolor:
 				{
@@ -2176,7 +2187,7 @@ var RLANG = {
 			}
 
 			// dropdown
-			if (key === 'backcolor' || key === 'fontcolor' || key === 'fontsize' || typeof(s.dropdown) !== 'undefined')
+			if (key === 'backcolor' || key === 'fontcolor' || key === 'fontsize' || key === 'fontfamily' || typeof(s.dropdown) !== 'undefined')
 			{
 				var dropdown = $('<div class="redactor_dropdown" style="display: none;">');
 
@@ -2191,6 +2202,15 @@ var RLANG = {
                             var val = $("#myFontsize option:selected").text();
 							this.changeFontSize(val);
                     }, this));
+					return select;
+				}
+				else if (key === 'fontfamily'){
+					var select = this.buildFontFamilyDropdown();
+					$(select).change($.proxy(function(e){
+						var val = $("#myFontfamily option:selected").val();
+						console.log('font-family', val);
+						this.changeFontFamily(val);
+					}, this));
 					return select;
 				}
 				else
@@ -2209,19 +2229,36 @@ var RLANG = {
 			return button;
 		},
 		buildFontSizeDropdown:function(){
-                var $select = $('<select id="myFontsize"/>');
-                for (i=1;i<=100;i++){
-					if (i === 1) {
-						$select.append($('<option></option>').val(i).html(i))
-					}
-                    $select.append($('<option></option>').val(i).html(i))
+            var $select = $('<select id="myFontsize"/>');
+            for (i=1;i<=100;i++){
+				if (i === 1) {
+					$select.append($('<option></option>').val(i).html(i))
 				}
-				return $select;
+                $select.append($('<option></option>').val(i).html(i))
+			}
+			return $select;
+		},
+		buildFontFamilyDropdown: function(){
+            var $select = $('<select id="myFontfamily"/>');
+                for (i=0;i<this.opts.fontFamily.length;i++){
+					var font = this.opts.fontFamily[i].font
+					var family = this.opts.fontFamily[i].family
+                    $select.append($('<option></option>').val(family).html(font))
+				}
+			return $select;
 		},
 		changeFontSize: function(val){
 			this.execCommand('fontSize', val)
 			this.$editor.find('font').replaceWith(function() {
 				return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
+		    });
+		},
+		changeFontFamily: function(val){
+			this.execCommand('fontName', val)
+			this.$editor.find('font').replaceWith(function() {
+				var span = $('<span>' + $(this).html() + '</span>');
+				$(span).css('font-family', val);
+				return span
 		    });
 		},
 		buildDropdown: function(dropdown, obj)
@@ -2256,7 +2293,7 @@ var RLANG = {
 						}
 						else
 						{
-							console.log('if function', d)
+							// console.log('if function', d)
 							$(drop_a).click($.proxy(function(e) { this[d.func](e); }, this));
 						}
 					}
