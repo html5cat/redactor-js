@@ -2250,6 +2250,8 @@ var RLANG = {
                 for (i=0;i<this.opts.fontFamily.length;i++){
 					var font = this.opts.fontFamily[i].font
 					var family = this.opts.fontFamily[i].family
+					// var span = $('<span></span>').css('font-family', family).html(font)
+
                     $select.append($('<option></option>').val(family).html(font))
 				}
 			return $select;
