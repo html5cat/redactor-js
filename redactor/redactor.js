@@ -639,7 +639,6 @@ var RLANG = {
 			rdocument = this.document = document;
 			rwindow = this.window = window;
 			//updated due to undo redo not working when updating font tags.
-            this.document.execCommand('styleWithCSS')
 			// mobile
 			if (this.opts.mobile === false && this.isMobile())
 			{
@@ -1341,8 +1340,10 @@ var RLANG = {
 
 			$.each(this.opts.activeButtonsStates, $.proxy(function(i,s)
 			{
+				// console.log('parent closest',i, s,$(parent).closest(i,this.$editor.get()[0]))
 				if ($(parent).closest(i,this.$editor.get()[0]).length != 0)
 				{
+					console.log('s', s)
 					this.setBtnActive(s);
 				}
 
@@ -2257,13 +2258,18 @@ var RLANG = {
 			return $select;
 		},
 		changeFontSize: function(val){
+			// this.execCommand('styleWithCSS', true)
 			this.execCommand('fontSize', val);
+			// this.execCommand('styleWithCSS', false)
+			// this.document.execCommand('styleWithCSS', false, )
 			// this.$editor.find('font').replaceWith(function() {
 			// 	return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
 		    // });
 		},
 		changeFontFamily: function(val){
+			// this.execCommand('styleWithCSS', true)
 			this.execCommand('fontName', val)
+			// this.execCommand('styleWithCSS', false)
 			// this.$editor.find('font').replaceWith(function() {
 			// 	var span = $('<span>' + $(this).html() + '</span>');
 			// 	$(span).css('font-family', val);
