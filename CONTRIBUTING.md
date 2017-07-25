@@ -15,3 +15,9 @@ button highlight disabled by document.execCommand--stylewithcss
 # problems
  * options tag doesnt support any  style except firefox so the dropdown showing font-family not   work.
  * custom embed need api to fetch data of the url(then only we can render)
+ * justify wont work when we select bold or anyother tags in paragraph
+
+
+# Ideas
+ * getCurrentNode() -- function gives you the caret placed element.
+ * jquery closest to find the closest tags.

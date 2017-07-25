@@ -274,10 +274,10 @@ var RLANG = {
 				'<div id="redactor_tab3" class="redactor_tab" style="display: none;">' +
 					'<label>' + RLANG.image_web_link + '</label>' +
 					'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
-					'<label>height</label>'+
-					'<input type="number" id="redactor_link_height_id" class="redactor_input" />'+
-					'<label>width</label>'+
-					'<input type="number" id="redactor_link_width_id" class="redactor_input" />'+
+					// '<label>height</label>'+
+					// '<input type="number" id="redactor_link_height_id" class="redactor_input" />'+
+					// '<label>width</label>'+
+					// '<input type="number" id="redactor_link_width_id" class="redactor_input" />'+
 				'</div>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
@@ -1426,6 +1426,8 @@ var RLANG = {
 				// console.log($(e.target).parent());
 				let parent  =  $(e.target).parent()
 				$(parent).remove();
+				//to set the cursor back to the same position
+				this.restoreSelection();
 			}, this));
 
 		},
@@ -2258,18 +2260,18 @@ var RLANG = {
 			return $select;
 		},
 		changeFontSize: function(val){
-			// this.execCommand('styleWithCSS', true)
+			this.execCommand('styleWithCSS', true)
 			this.execCommand('fontSize', val);
-			// this.execCommand('styleWithCSS', false)
+			this.execCommand('styleWithCSS', false)
 			// this.document.execCommand('styleWithCSS', false, )
 			// this.$editor.find('font').replaceWith(function() {
 			// 	return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
-		    // });
+			// });
 		},
 		changeFontFamily: function(val){
-			// this.execCommand('styleWithCSS', true)
+			this.execCommand('styleWithCSS', true)
 			this.execCommand('fontName', val)
-			// this.execCommand('styleWithCSS', false)
+			this.execCommand('styleWithCSS', false)
 			// this.$editor.find('font').replaceWith(function() {
 			// 	var span = $('<span>' + $(this).html() + '</span>');
 			// 	$(span).css('font-family', val);
@@ -3531,8 +3533,11 @@ var RLANG = {
 				console.log(height, width)
 				var id = this.generateRandomId()
 				var data = '<img' + ' id="' + id + '"' + ' style="'+ 'width:' +width+ 'px; height:' + height+ 'px;"'+ ' src="' + $('#redactor_file_link').val() + '" />';
+				//add image inside afigure with close tag
+				var generatedFigure = this.createFigure();
+				generatedFigure.appendChild($(data)[0])
 				console.log(data)
-				this._imageSet(data, true);
+				this._imageSet(generatedFigure.outerHTML, true);
 			}
 			else
 			{
@@ -3570,6 +3575,8 @@ var RLANG = {
 
 			this.modalClose();
 			this.observeImages();
+			//for click event
+			this.observeVideos()
 		},
 
 		// INSERT LINK
