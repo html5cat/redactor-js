@@ -85,7 +85,7 @@ var RLANG = {
 	alignment: 'Alignment',
 	fontsize: 'Font size',
 	fontfamily: 'Font Family',
-	undo: 'Undo'
+	multiple: 'multiple'
 };
 
 (function($){
@@ -188,7 +188,7 @@ var RLANG = {
 			buttonsAdd: [],
 			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
 					'image', 'video', 'file', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize', '|', 'fontfamily', '|', 'undo'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize', '|', 'fontfamily', '|', 'multiple'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -337,6 +337,15 @@ var RLANG = {
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" class="redactor_modal_btn" id="redactor_insert_video_btn" value="' + RLANG.insert + '" />' +
+				'</div>',
+			modal_mulipleImage: String() +
+				'<div id="redactor_modal_content">' +
+					'<label>Upload images</label>' +
+					'<input type="file" id="redactor_multiple_file_upload" multiple/>' +
+				'</div>' +
+				'<div id="redactor_modal_footer">' +
+					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+					'<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_multiple_file" value="' + RLANG.insert + '" />' +
 				'</div>',
 
 			toolbar: {
@@ -608,9 +617,9 @@ var RLANG = {
 					exec: 'inserthorizontalrule',
 					title: RLANG.horizontalrule
 				},
-				undo: {
-					title: RLANG.undo,
-					exec: 'undo'
+				multiple: {
+					title: RLANG.multiple,
+					func: 'showMultipleImage'
 				}
 			}
 
@@ -3384,6 +3393,55 @@ var RLANG = {
 			this.syncCode();
 
 		},
+		showMultipleImage: function()
+		{
+			this.saveSelection();
+			
+			var callback = $.proxy(function()
+			{
+				$('#redactor_btn_multiple_file').click($.proxy(this.multipleImageUpload, this))
+			}, this);
+
+			this.modalInit(RLANG.image, this.opts.modal_mulipleImage, 610, callback);
+		},
+		multipleImageUpload:function()
+		{
+			var images = $("#redactor_multiple_file_upload")[0].files
+			if (images.length)
+				{
+				$.each(images, $.proxy(function(key, file)
+				{
+					var reader = new FileReader();	
+					reader.onload = function(file)
+					{
+				        var fileUrl =  file.target.result;
+				        console.log(fileUrl);
+				    }				
+					reader.readAsDataURL(file);
+			    }, this))
+			}
+			this._imageSet(this.createSlideHtml(), true);
+			this.showSlides();
+            this.modalClose();
+		},
+		
+		showSlides: function (n) 
+		{
+			if (!this.slideIndex){ this.slideIndex = 1;}
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+			// var dots = document.getElementsByClassName("dot");
+			if (n > slides.length) {this.slideIndex = 1}    
+			if (n < 1) {this.slideIndex = slides.length}
+			for (i = 0; i < slides.length; i++) {
+				slides[i].style.display = "none";  
+			}
+			// for (i = 0; i < dots.length; i++) {
+			// 	dots[i].className = dots[i].className.replace(" active", "");
+			// }
+			slides[this.slideIndex-1].style.display = "block";  
+			// dots[slideIndex-1].className += " active";
+        },
 		showImage: function()
 		{
 			this.saveSelection();
@@ -3467,7 +3525,7 @@ var RLANG = {
 
 				if (this.opts.imageUpload !== false)
 				{
-
+                    console.log('hello world===image upload')
 					// dragupload
 					if (this.opts.uploadCrossDomain === false && this.isMobile() === false)
 					{
@@ -3483,7 +3541,7 @@ var RLANG = {
 							});
 						}
 					}
-
+                    
 					// ajax upload
 					this.uploadInit('redactor_file',
 					{
@@ -3553,6 +3611,7 @@ var RLANG = {
 		},
 		imageUploadCallback: function(data)
 		{
+			console.log('helloo');
 			this._imageSet(data);
 		},
 		_imageSet: function(json, link)
@@ -3588,82 +3647,25 @@ var RLANG = {
 		// image slide html
 		createSlideHtml: function()
 		{
-			  var slideimages = '<ul class="slides">' +
-				'<input type="radio" name="radio-btn" id="img-1" checked />'+
-    '<li class="slide-container">'+
-		'<div class="slide">' +
-			'<img src="http://farm9.staticflickr.com/8072/8346734966_f9cd7d0941_z.jpg" />' +
-        '</div>'+
-		'<div class="nav">' +
-			'<label for="img-6" class="prev">&#x2039;</label>' +
-			'<label for="img-2" class="next">&#x203a;</label>' +
-		'</div>'+
-    '</li>'+
-    '<input type="radio" name="radio-btn" id="img-2" />'+
-    '<li class="slide-container">'+
-        '<div class="slide">'+
-          '<img src="http://farm9.staticflickr.com/8504/8365873811_d32571df3d_z.jpg" />'+
-        '</div>'+
-		'<div class="nav">'+
-			'<label for="img-1" class="prev">&#x2039;</label>'+
-			'<label for="img-3" class="next">&#x203a;</label>'+
-		'</div>'+
-    '</li>'+
-
-    '<input type="radio" name="radio-btn" id="img-3" />'+
-    '<li class="slide-container">'+
-        '<div class="slide">'+
-          '<img src="http://farm9.staticflickr.com/8068/8250438572_d1a5917072_z.jpg" />'+
-        '</div>'+
-		'<div class="nav">'+
-			'<label for="img-2" class="prev">&#x2039;</label>'+
-			'<label for="img-4" class="next">&#x203a;</label>'+
-		'</div>'+
-    '</li>'+
-
-    '<input type="radio" name="radio-btn" id="img-4" />'+
-    '<li class="slide-container">'+
-        '<div class="slide">'+
-          '<img src="http://farm9.staticflickr.com/8061/8237246833_54d8fa37f0_z.jpg" />'+
-        '</div>'+
-		'<div class="nav">'+
-			'<label for="img-3" class="prev">&#x2039;</label>'+
-			'<label for="img-5" class="next">&#x203a;</label>'+
-		'</div>'+
-   ' </li>'+
-
-   ' <input type="radio" name="radio-btn" id="img-5" />'+
-    '<li class="slide-container">'+
-        '<div class="slide">'+
-          '<img src="http://farm9.staticflickr.com/8055/8098750623_66292a35c0_z.jpg" />'+
-        '</div>'+
-		'<div class="nav">'+
-			'<label for="img-4" class="prev">&#x2039;</label>'+
-			'<label for="img-6" class="next">&#x203a;</label>'+
-		'</div>'+
-    '</li>'+
-
-    '<input type="radio" name="radio-btn" id="img-6" />'+
-    '<li class="slide-container">'+
-        '<div class="slide">'+
-         ' <img src="http://farm9.staticflickr.com/8195/8098750703_797e102da2_z.jpg" />'+
-        '</div>'+
-		'<div class="nav">'+
-			'<label for="img-5" class="prev">&#x2039;</label>'+
-			'<label for="img-1" class="next">&#x203a;</label>'+
-		'</div>'+
-    '</li>'+
-
-    '<li class="nav-dots">'+
-      '<label for="img-1" class="nav-dot" id="img-dot-1"></label>'+
-      '<label for="img-2" class="nav-dot" id="img-dot-2"></label>'+
-      '<label for="img-3" class="nav-dot" id="img-dot-3"></label>'+
-      '<label for="img-4" class="nav-dot" id="img-dot-4"></label>'+
-      '<label for="img-5" class="nav-dot" id="img-dot-5"></label>'+
-      '<label for="img-6" class="nav-dot" id="img-dot-6"></label>'+
-   ' </li>'+
-'</ul>';
-       return $(slideimages)[0].outerHTML
+			var slideimages = '<div class="slideshow-container">'+
+                                '<div class="mySlides fade">'+
+                                  '<div class="numbertext">1 / 3</div>'+
+                                      '<img src="http://farm9.staticflickr.com/8072/8346734966_f9cd7d0941_z.jpg" style="width:100%">'+
+                                      '<div class="text">Caption Text</div>'+
+                                '</div>'+
+                               '<div class="mySlides fade">'+
+                                  '<div class="numbertext">2 / 3</div>'+
+                                    '<img src="http://farm9.staticflickr.com/8504/8365873811_d32571df3d_z.jpg" style="width:100%">'+
+                                    '<div class="text">Caption Two</div>'+
+                                '</div>'+
+                                '<div class="mySlides fade">'+
+                                  '<div class="numbertext">3 / 3</div>'+
+                                  '<img src="http://farm9.staticflickr.com/8068/8250438572_d1a5917072_z.jpg" style="width:100%">'+
+                                  '<div class="text">Caption Three</div>'+
+                                '</div>'+
+                                '<a class="prev" onclick="plusSlides(-1)">&#10094;</a>'+
+                                '<a class="next" onclick="plusSlides(1)">&#10095;</a>';
+            return $(slideimages)[0].outerHTML
 		},
 		// INSERT LINK
 		showLink: function()
@@ -4053,6 +4055,7 @@ var RLANG = {
 		// UPLOAD
 		uploadInit: function(element, options)
 		{
+			console.log('hello--upload init', element, options);
 			// Upload Options
 			this.uploadOptions = {
 				url: false,
@@ -4082,6 +4085,7 @@ var RLANG = {
 			// Auto or trigger
 			if (this.uploadOptions.auto)
 			{
+				debugger
 				$(this.uploadOptions.input).change($.proxy(function()
 				{
 					this.element.submit(function(e) { return false; });
@@ -4091,6 +4095,7 @@ var RLANG = {
 			}
 			else if (this.uploadOptions.trigger)
 			{
+				debugger
 				$('#' + this.uploadOptions.trigger).click($.proxy(this.uploadSubmit, this));
 			}
 		},
@@ -4119,6 +4124,8 @@ var RLANG = {
 		},
 		uploadForm : function(f, name)
 		{
+			debugger;
+			console.log('upload form')
 			if (this.uploadOptions.input)
 			{
 				var formId = 'redactorUploadForm' + this.id;
@@ -4150,11 +4157,12 @@ var RLANG = {
 				$(this.form).css('top', '-2000px');
 				$(this.form).css('left', '-2000px');
 				$(this.form).appendTo('body');
-
+               
 				this.form.submit();
 			}
 			else
 			{
+				console.log('hello---in uploadfornm')
 				f.attr('target', name);
 				f.attr('method', 'POST');
 				f.attr('enctype', 'multipart/form-data');
