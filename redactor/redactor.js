@@ -194,7 +194,7 @@ var RLANG = {
 
 			formattingTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4'],
 
-			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
+			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
 			activeButtonsStates: {
 				b: 'bold',
 				strong: 'bold',
@@ -2501,6 +2501,7 @@ var RLANG = {
 		{
 			$.each(this.opts.activeButtons, $.proxy(function(i,s)
 			{
+				console.log(s);
 				this.setBtnInactive(s);
 
 			}, this));
