@@ -204,7 +204,8 @@ var RLANG = {
 				strike: 'deleted',
 				ul: 'unorderedlist',
 				ol: 'orderedlist',
-				u: 'underline'
+				u: 'underline',
+				a: 'link'
 			},
 
 			colors: [
@@ -1355,7 +1356,7 @@ var RLANG = {
 
 			$.each(this.opts.activeButtonsStates, $.proxy(function(i,s)
 			{
-				console.log('parent --- closest', i, s ,parent)
+				console.log('parent --- closest', i, s ,parent, this.$editor.get()[0])
 				if ($(parent).closest(i,this.$editor.get()[0]).length != 0)
 				{
 					console.log('s', s);
@@ -1365,7 +1366,7 @@ var RLANG = {
 			}, this));
 
 			var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
-			console.log('tag',parent,  tag.css("background-color", "red" ), $(tag).css('text-align'));            
+			console.log('tag', parent,  tag.css("background-color", "red" ), $(tag).css('text-align'), $(parent).css('text-align'));            
 			if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
 			{
 				var align = $(tag[0].elem).css('text-align');
