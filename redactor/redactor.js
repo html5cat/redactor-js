@@ -1355,17 +1355,17 @@ var RLANG = {
 
 			$.each(this.opts.activeButtonsStates, $.proxy(function(i,s)
 			{
-				// console.log('parent closest',i, s,$(parent).closest(i,this.$editor.get()[0]))
+				console.log('parent --- closest', i, s ,parent)
 				if ($(parent).closest(i,this.$editor.get()[0]).length != 0)
 				{
-					console.log('s', s)
+					console.log('s', s);
 					this.setBtnActive(s);
 				}
 
 			}, this));
 
 			var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
-
+			console.log('tag',parent,  tag.css("background-color", "red" ), $(tag).css('text-align'));            
 			if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
 			{
 				var align = $(tag[0].elem).css('text-align');
@@ -2370,7 +2370,7 @@ var RLANG = {
 				var _self = this;
 				$(swatch).click(function()
 				{
-					console.log(mode)
+					console.log(mode, $(this).attr('rel'))
 					_self.execCommand(mode, $(this).attr('rel'));
 					if (mode === 'forecolor')
 					{
@@ -2411,13 +2411,13 @@ var RLANG = {
 		},
 		setBackgroundNone: function()
 		{
-			$(this.getParentNode()).css('background-color', 'transparent');
-			debugger;
+			// console.log(this.getParentNode(), this.getCurrentNode());
+			$(this.getCurrentNode()).css('background-color', 'transparent');
 			this.syncCode();
 		},
 		setColorNone: function()
 		{
-			$(this.getParentNode()).attr('color', '').css('color', '');
+			$(this.getCurrentNode()).attr('color', '').css('color', '');
 			this.syncCode();
 		},
 
@@ -3420,8 +3420,8 @@ var RLANG = {
 					reader.readAsDataURL(file);
 			    }, this))
 			}
-			this._imageSet(this.createSlideHtml(), true);
-			this.showSlides();
+			this._imageSet(this.newSlide(), true);
+			// this.showSlides();
             this.modalClose();
 		},
 		
@@ -3666,6 +3666,19 @@ var RLANG = {
                                 '<a class="prev" onclick="plusSlides(-1)">&#10094;</a>'+
                                 '<a class="next" onclick="plusSlides(1)">&#10095;</a>';
             return $(slideimages)[0].outerHTML
+		},
+		newSlide: function()
+		{
+			var plainSlide = '<div id="slider">'+
+                              '<figure>'+
+                                  '<img src="http://farm9.staticflickr.com/8072/8346734966_f9cd7d0941_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8504/8365873811_d32571df3d_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8068/8250438572_d1a5917072_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8061/8237246833_54d8fa37f0_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8055/8098750623_66292a35c0_z.jpg" alt>'+
+                              '</figure>'+
+                             '</div>';
+            return $(plainSlide)[0].outerHTML;
 		},
 		// INSERT LINK
 		showLink: function()
