@@ -194,7 +194,7 @@ var RLANG = {
 
 			formattingTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4'],
 
-			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
+			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link', 'alignright', 'alignleft', 'aligncenter', 'justify'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
 			activeButtonsStates: {
 				b: 'bold',
 				strong: 'bold',
@@ -1366,12 +1366,29 @@ var RLANG = {
 			}, this));
 
 			var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
-			console.log('tag', parent,  tag.css("background-color", "red" ), $(tag).css('text-align'), $(parent).css('text-align'));            
-			if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
-			{
-				var align = $(tag[0].elem).css('text-align');
+			console.log('tag', parent, $(tag).css('text-align'), $(parent).css('text-align'));            
+			// if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
+			// {
+			// 	var align = $(tag[0].elem).css('text-align');
 
-				switch (align)
+				// switch (align)
+				// {
+				// 	case 'right':
+				// 		this.setBtnActive('alignright');
+				// 	break;
+				// 	case 'center':
+				// 		this.setBtnActive('aligncenter');
+				// 	break;
+				// 	case 'justify':
+				// 		this.setBtnActive('justify');
+				// 	break;
+				// 	default:
+				// 		this.setBtnActive('alignleft');
+				// 	break;
+				// }
+			// }
+			var align = $(parent).css('text-align');
+			switch (align)
 				{
 					case 'right':
 						this.setBtnActive('alignright');
@@ -1386,7 +1403,6 @@ var RLANG = {
 						this.setBtnActive('alignleft');
 					break;
 				}
-			}
 		},
 		observeImages: function()
 		{
