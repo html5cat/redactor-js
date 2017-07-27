@@ -1,4 +1,4 @@
-@keyframes slidy {
+/* @keyframes slidy {
 0% { left: 0%; }
 20% { left: 0%; }
 25% { left: -100%; }
@@ -8,10 +8,10 @@
 75% { left: -300%; }
 95% { left: -300%; }
 100% { left: -400%; }
-}
+} */
 
 /* body { margin: 0; }  */
-div#slider { overflow: hidden; }
+/* div#slider { overflow: hidden; }
 div#slider figure img { width: 20%; float: left; }
 div#slider figure { 
   position: relative;
@@ -21,4 +21,19 @@ div#slider figure {
   text-align: left;
   font-size: 0;
   animation: 30s slidy infinite; 
+} */
+
+.button {
+   background-color: ForestGreen;   
+  border-radius: 5px;
+  color: white;
+  padding: .5em;
+  text-decoration: none;
+  text-align: center;
 }
+
+.button:focus,
+.button:hover {
+  background-color: DarkGreen;
+}
+

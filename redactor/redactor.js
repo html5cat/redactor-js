@@ -59,7 +59,7 @@ var RLANG = {
 	delete_head: 'Delete Head',
 	title: 'Title',
 	image_position: 'Position',
-	none: 'None',
+	clear: 'Clear',
 	left: 'Left',
 	right: 'Right',
 	image_web_link: 'Image Web Link',
@@ -247,7 +247,7 @@ var RLANG = {
 				'<input id="redactor_file_link" class="redactor_input" />' +
 				'<label>' + RLANG.image_position + '</label>' +
 				'<select id="redactor_form_image_align">' +
-					'<option value="none">' + RLANG.none + '</option>' +
+					'<option value="none">' + RLANG.clear + '</option>' +
 					'<option value="left">' + RLANG.left + '</option>' +
 					'<option value="right">' + RLANG.right + '</option>' +
 				'</select>' +
@@ -2410,7 +2410,7 @@ var RLANG = {
 				});
 			}
 
-			var elnone = $('<a href="javascript:void(null);" class="redactor_color_none"></a>').html(RLANG.none);
+			var elnone = $('<a href="javascript:void(null);" class="redactor_color_none button"></a>').html(RLANG.clear);
 
 			if (key === 'backcolor')
 			{
