@@ -2358,6 +2358,7 @@ var RLANG = {
 		buildColorPicker: function(dropdown, key)
 		{
 			var mode;
+			var that = this;
 			if (key === 'backcolor')
 			{
 				if (this.browser('msie'))
@@ -2387,8 +2388,13 @@ var RLANG = {
 				var _self = this;
 				$(swatch).click(function()
 				{
+					_self.restoreSelection();
 					console.log(mode, $(this).attr('rel'))
+					 //ugly code for making undo redo activated.
+					_self.execCommand('styleWithCSS', true)
 					_self.execCommand(mode, $(this).attr('rel'));
+					_self.execCommand('styleWithCSS', false);
+					// remove style with css
 					if (mode === 'forecolor')
 					{
 						_self.$editor.find('font').replaceWith(function() {
@@ -2411,19 +2417,33 @@ var RLANG = {
 			}
 
 			var elnone = $('<a href="javascript:void(null);" class="redactor_color_none button"></a>').html(RLANG.clear);
-
+			//new hex code input an button
+			var elhex = $('<input type="text" name="lname" class="hexInput" style="margin: 6px 0px 0px 16px;" placeholder="Place Your Hex code">');
+			var elapplyhex = $('<a href="javascript:void(null);" class="redactor_color_none button" style="margin-top: 9px;"></a>').html('Apply');
+            
 			if (key === 'backcolor')
 			{
 				console.log('helloo2', mode) 
 				elnone.click($.proxy(this.setBackgroundNone, this));
+				elapplyhex.click(function(e){
+					that.restoreSelection();
+                    that.execCommand(mode, $(this).siblings('input').val());
+		        });
 			}
 			else
 			{
 				elnone.click($.proxy(this.setColorNone, this));
+				elapplyhex.click(function(e){
+					console.log('font-color');
+					that.restoreSelection();
+                    that.execCommand(mode, $(this).siblings('input').val());
+		        });
 			}
 
 			$(dropdown).append(elnone);
-
+			$(dropdown).append(elhex);
+            $(dropdown).append(elapplyhex);
+			
 			return dropdown;
 		},
 		setBackgroundNone: function()
@@ -2437,10 +2457,11 @@ var RLANG = {
 			$(this.getCurrentNode()).attr('color', '').css('color', '');
 			this.syncCode();
 		},
-
 		// DROPDOWNS
 		showDropDown: function(e, dropdown, key)
 		{
+			this.saveSelection();
+
 			if (this.getBtn(key).hasClass('dropact'))
 			{
 				this.hideAllDropDown();
@@ -2448,7 +2469,6 @@ var RLANG = {
 			else
 			{
 				this.hideAllDropDown();
-
 				this.setBtnActive(key);
 				this.getBtn(key).addClass('dropact');
 
@@ -2469,8 +2489,10 @@ var RLANG = {
 					var top = this.$toolbar.offset().top + 30;
 					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show();
 				}
+				$('.hexInput').val('');
+				$('.hexInput').focus();
 			}
-
+            
 			var hdlHideDropDown = $.proxy(function(e) { this.hideDropDown(e, dropdown, key); }, this);
 
 			$(document).one('click', hdlHideDropDown);
@@ -2487,8 +2509,10 @@ var RLANG = {
 		},
 		hideDropDown: function(e, dropdown, key)
 		{
+			console.log('keyy',e, dropdown, key);
 			if (!$(e.target).hasClass('dropact'))
 			{
+				console.log('urrey')
 				$(dropdown).removeClass('dropact');
 				this.showedDropDown = false;
 				this.hideAllDropDown();
