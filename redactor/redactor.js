@@ -1585,12 +1585,11 @@ var RLANG = {
 				else if (cmd === 'JustifyLeft' || cmd === 'JustifyCenter' || cmd === 'JustifyRight' || cmd === 'JustifyFull')
 				{
 					parent = this.getCurrentNode();
-					console.log('justify', parent);
+					// console.log('justify', parent);
 					var tag = $(parent).get(0).tagName;
-                //    debugger;
+					
 					if (this.opts.iframe === false && $(parent).parents('.redactor_editor').size() == 0)
 					{
-						// debugger;
 						this.execRun(cmd, param);
 						return false;
 					}
