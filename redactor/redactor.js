@@ -253,7 +253,8 @@ var RLANG = {
 				'</select>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
-					'<a href="javascript:void(null);" id="redactor_image_delete_btn" class="redactor_modal_btn">' + RLANG._delete + '</a>&nbsp;&nbsp;&nbsp;' +
+				    '<a href="javascript:void(null);" id="redactor_image_aviary_btn" class="redactor_modal_btn">' + 'Aviary' + '</a>&nbsp;&nbsp;&nbsp;'+
+					'<a href="javascript:void(null);" id="redactor_image_delete_btn" class="redactor_modal_btn">' + RLANG._delete + '</a>' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" name="save" class="redactor_modal_btn" id="redactorSaveBtn" value="' + RLANG.save + '" />' +
 				'</div>',
@@ -1441,8 +1442,8 @@ var RLANG = {
 					$(s).attr('unselectable', 'on');
 				}
 				console.dir('img', s);
-				this.imageClick(s)
-				// this.resizeImage(s);
+				// this.imageClick(s)
+				this.resizeImage(s);
 
 			}, this));
 
@@ -1453,10 +1454,7 @@ var RLANG = {
 			{
 				console.log('hello world');
 				    this.aviaryEditor(e)
-				// if (clicker)
-				// {
-				// 	// this.imageEdit(e);
-				// }
+
 
 			}, this));
 		},
@@ -3346,8 +3344,11 @@ var RLANG = {
 		{
 			var generatedFigure = document.createElement('figure');
 			generatedFigure.contentEditable = 'false';
+			var figureCaption = document.createElement('figcaption');;
+			// console.log(figureCaption);
+			generatedFigure.appendChild(figureCaption);
 			//insert Anchor to it
-			generatedFigure.appendChild(this.createAnchor());
+			// generatedFigure.appendChild(this.createAnchor());
 			return generatedFigure;
 		},
 		createAnchor: function()
@@ -3372,13 +3373,10 @@ var RLANG = {
 			});
 			return featherEditor;
 		},
-		aviaryEditor: function(e)
+		aviaryEditor: function(elem)
 		{
-			// console.log('src', typeof $(e.target).attr('src'));
-			var src = 
-			
-			// var featherEditor = this.aviaryFeather()
-			this.featherEditor.launch({image: $(e.target).attr('id'), url: $(e.target).attr('src')});
+			this.modalClose();
+			this.featherEditor.launch({image: elem.attr('id'), url: elem.attr('src')});
             return false;
 		},
 		// INSERT IMAGE
@@ -3389,7 +3387,8 @@ var RLANG = {
 
 			var callback = $.proxy(function()
 			{
-				$('#redactor_file_alt').val($el.attr('alt'));
+				var caption =  $($($el).siblings()[0]).text();
+				$('#redactor_file_alt').val(caption);
 				$('#redactor_image_edit_src').attr('href', $el.attr('src'));
 				$('#redactor_form_image_align').val($el.css('float'));
 
@@ -3400,6 +3399,7 @@ var RLANG = {
 
 				$('#redactor_image_delete_btn').click($.proxy(function() { this.imageDelete($el); }, this));
 				$('#redactorSaveBtn').click($.proxy(function() { this.imageSave($el); }, this));
+				$('#redactor_image_aviary_btn').click($.proxy(function(){ this.aviaryEditor($el)}, this));
 
 			}, this);
 
@@ -3415,9 +3415,12 @@ var RLANG = {
 		imageSave: function(el)
 		{
 			var parent = $(el).parent();
+			var sibling = $(el).siblings();
 
-			$(el).attr('alt', $('#redactor_file_alt').val());
-
+			$(sibling[0]).html('<h3>' + $('#redactor_file_alt').val() + '</h3>');
+            // console.log('parent ', parent, $(el).siblings());
+			// $(el).attr('alt', $('#redactor_file_alt').val());
+            
 			var floating = $('#redactor_form_image_align').val();
 
 			if (floating === 'left')
@@ -3658,16 +3661,11 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
-				var height = $('#redactor_link_height_id').val() || '400'
-				var width = $('#redactor_link_width_id').val() || '400'
-				console.log(height, width)
 				var id = this.generateRandomId()
-				var data = '<img' + ' id="' + id + '"' + ' style="'+ 'width:' +width+ 'px; height:' + height+ 'px;"'+ ' src="' + $('#redactor_file_link').val() + '" />';
+				var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
 				//add image inside afigure with close tag
 				var generatedFigure = this.createFigure();
 				generatedFigure.appendChild($(data)[0])
-				// generatedFigure.appendChild(this.createSlideHtml());
-				console.log(data)
 				this._imageSet(generatedFigure.outerHTML, true);
 			}
 			else
