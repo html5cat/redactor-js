@@ -1351,22 +1351,41 @@ var RLANG = {
 		observeFormatting: function()
 		{
 			var parent = this.getCurrentNode();
+			this.inactiveAllButtons();			
+            // console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
+			// console.log('node type', this.getSelectedNode().nodeType)
+			//selecting the node for formatting
+			if(this.getSelectedNode().nodeType == 3)
+			{
+				parent = this.getCurrentNode();
+			}
+			else if (!$(this.getSelectedNode()).is('div'))
+			{
+				parent = this.getSelectedNode()
+			}
+			else 
+			{
+				// console.dir($(this.getSelectedHtml()).children())
+				// every element in the editor is selected then show last applyed style
+				$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
+				{
+					var tagName = $(s).prop("tagName").toLowerCase();
+                    this.setBtnActive(this.opts.activeButtonsStates[tagName])
+				}, this))
+			}
 
-			this.inactiveAllButtons();
 
 			$.each(this.opts.activeButtonsStates, $.proxy(function(i,s)
 			{
-				console.log('parent --- closest', i, s ,parent, this.$editor.get()[0])
 				if ($(parent).closest(i,this.$editor.get()[0]).length != 0)
 				{
-					console.log('s', s);
 					this.setBtnActive(s);
 				}
 
 			}, this));
 
-			var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
-			console.log('tag', parent, $(tag).css('text-align'), $(parent).css('text-align'));            
+			// var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
+			// console.log('tag', parent, $(tag).css('text-align'), $(parent).css('text-align'));            
 			// if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
 			// {
 			// 	var align = $(tag[0].elem).css('text-align');
@@ -1387,22 +1406,26 @@ var RLANG = {
 				// 	break;
 				// }
 			// }
-			var align = $(parent).css('text-align');
-			switch (align)
-				{
-					case 'right':
-						this.setBtnActive('alignright');
-					break;
-					case 'center':
-						this.setBtnActive('aligncenter');
-					break;
-					case 'justify':
-						this.setBtnActive('justify');
-					break;
-					default:
-						this.setBtnActive('alignleft');
-					break;
-				}
+			if (!$(this.getSelectedNode()).is('div'))
+			{
+                var align = $(parent).css('text-align');
+			    switch (align)
+				    {
+					    case 'right':
+						    this.setBtnActive('alignright');
+					        break;
+					    case 'center':
+						    this.setBtnActive('aligncenter');
+					        break;
+						case 'justify':
+							this.setBtnActive('justify');
+							break;
+						default:
+							this.setBtnActive('alignleft');
+							break;
+					}
+			}
+			
 		},
 		observeImages: function()
 		{
@@ -2541,7 +2564,6 @@ var RLANG = {
 		{
 			$.each(this.opts.activeButtons, $.proxy(function(i,s)
 			{
-				console.log(s);
 				this.setBtnInactive(s);
 
 			}, this));
@@ -2864,6 +2886,7 @@ var RLANG = {
 		{
 			if (typeof this.window.getSelection !== 'undefined')
 			{
+				// console.dir( this.getSelectedNode());
 				return this.getSelectedNode().parentNode;
 			}
 			else if (typeof this.document.selection !== 'undefined')
@@ -2884,6 +2907,7 @@ var RLANG = {
 			else if (typeof this.window.getSelection !== 'undefined')
 			{
 				var s = this.window.getSelection();
+				// console.log('sssssss---', this.window.getSelection(), this.getSelection().getRangeAt(0));
 				if (s.rangeCount > 0)
 				{
 					return this.getSelection().getRangeAt(0).commonAncestorContainer;
