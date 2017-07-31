@@ -243,8 +243,8 @@ var RLANG = {
 				'<div id="redactor_modal_content">' +
 				'<label>' + RLANG.title + '</label>' +
 				'<input id="redactor_file_alt" class="redactor_input" />' +
-				'<label>' + RLANG.link + '</label>' +
-				'<input id="redactor_file_link" class="redactor_input" />' +
+				// '<label>' + RLANG.link + '</label>' +
+				// '<input id="redactor_file_link" class="redactor_input" />' +
 				'<label>' + RLANG.image_position + '</label>' +
 				'<select id="redactor_form_image_align">' +
 					'<option value="none">' + RLANG.clear + '</option>' +
@@ -3419,7 +3419,7 @@ var RLANG = {
 
 			$(sibling[0]).html('<h3>' + $('#redactor_file_alt').val() + '</h3>');
             // console.log('parent ', parent, $(el).siblings());
-			// $(el).attr('alt', $('#redactor_file_alt').val());
+			$(el).attr('alt', $('#redactor_file_alt').val());
             
 			var floating = $('#redactor_form_image_align').val();
 
