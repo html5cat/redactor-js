@@ -2270,13 +2270,16 @@ var RLANG = {
 					return select;
 				}
 				else if (key === 'fontfamily'){
-					var select = this.buildFontFamilyDropdown();
-					$(select).change($.proxy(function(e){
-						var val = $("#myFontfamily option:selected").val();
-						console.log('font-family', val);
-						this.changeFontFamily(val);
-					}, this));
-					return select;
+					// var select = this.buildFontFamilyDropdown();
+					// $(select).change($.proxy(function(e){
+					// 	var val = $("#myFontfamily option:selected").val();
+					// 	console.log('font-family', val);
+					// 	this.changeFontFamily(val);
+					// }, this));
+					// return select;
+					dropdown = this.buildFontFamilyDropdown(dropdown);
+					// button = $('<button/>').addClass('redactor_btn_' + key).text('FontFamily')
+					button.html('<button>fontfamily</button>')
 				}
 				else
 				{
@@ -2303,16 +2306,24 @@ var RLANG = {
 			}
 			return $select;
 		},
-		buildFontFamilyDropdown: function(){
-            var $select = $('<select id="myFontfamily"/>');
-                for (i=0;i<this.opts.fontFamily.length;i++){
-					var font = this.opts.fontFamily[i].font
-					var family = this.opts.fontFamily[i].family
-					// var span = $('<span></span>').css('font-family', family).html(font)
+		buildFontFamilyDropdown: function(dropdown){
+            // var $select = $('<select id="myFontfamily"/>');
+            //     for (i=0;i<this.opts.fontFamily.length;i++){
+			// 		var font = this.opts.fontFamily[i].font
+			// 		var family = this.opts.fontFamily[i].family
+			// 		// var span = $('<span></span>').css('font-family', family).html(font)
 
-                    $select.append($('<option></option>').val(family).html(font))
-				}
-			return $select;
+            //         $select.append($('<option></option>').val(family).html(font))
+			// 	}
+			// return $select;
+			var drop_a;
+            $.each(this.opts.fontFamily, $.proxy(function(index, obj){
+				drop_a = $('<a href="javascript:void(null);" >' + obj.font + '</a>');
+				$(drop_a).css("font-family", obj.family);
+				$(drop_a).click($.proxy(function() { this.changeFontFamily(obj.family); }, this));
+                $(dropdown).append(drop_a);
+			}, this));
+            return dropdown
 		},
 		changeFontSize: function(val){
 			this.execCommand('styleWithCSS', true)
