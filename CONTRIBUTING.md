@@ -6,10 +6,6 @@ Thus, no pull-requests will be accepted and there's very low chance original aut
 
 Sorry about that.
 
-
-# TODO
-
-
 # problems
  * options tag doesnt support any  style except firefox so the dropdown showing font-family not   work.
  * custom embed need api to fetch data of the url(then only we can render)
