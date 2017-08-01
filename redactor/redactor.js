@@ -293,8 +293,8 @@ var RLANG = {
 				'<form id="redactorInsertLinkForm" method="post" action="">' +
 					'<div id="redactor_tabs">' +
 						'<a href="javascript:void(null);" class="redactor_tabs_act">URL</a>' +
-						'<a href="javascript:void(null);">Email</a>' +
-						'<a href="javascript:void(null);">' + RLANG.anchor + '</a>' +
+						// '<a href="javascript:void(null);">Email</a>' +
+						// '<a href="javascript:void(null);">' + RLANG.anchor + '</a>' +
 					'</div>' +
 					'<input type="hidden" id="redactor_tab_selected" value="1" />' +
 					'<div class="redactor_tab" id="redactor_tab1">' +
@@ -302,14 +302,14 @@ var RLANG = {
 						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_url_text" />' +
 						'<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
 					'</div>' +
-					'<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
-						'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
-						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_mailto_text" />' +
-					'</div>' +
-					'<div class="redactor_tab" id="redactor_tab3" style="display: none;">' +
-						'<label>' + RLANG.anchor + '</label><input type="text" class="redactor_input" id="redactor_link_anchor"  />' +
-						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_anchor_text" />' +
-					'</div>' +
+					// '<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
+					// 	'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
+					// 	'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_mailto_text" />' +
+					// '</div>' +
+					// '<div class="redactor_tab" id="redactor_tab3" style="display: none;">' +
+					// 	'<label>' + RLANG.anchor + '</label><input type="text" class="redactor_input" id="redactor_link_anchor"  />' +
+					// 	'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_anchor_text" />' +
+					// '</div>' +
 				'</form>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
@@ -2532,7 +2532,7 @@ var RLANG = {
 		},
 		hideDropDown: function(e, dropdown, key)
 		{
-			console.log('keyy',e, dropdown, key);
+			// console.log('keyy',e, dropdown, key);
 			if (!$(e.target).hasClass('dropact'))
 			{
 				console.log('urrey')
