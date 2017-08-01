@@ -2315,7 +2315,6 @@ var RLANG = {
 			return $select;
 		},
 		changeFontSize: function(val){
-			// console.log('node', this.getSelectedNode());
 			this.execCommand('styleWithCSS', true)
 			this.execCommand('fontSize', val);
 			this.execCommand('styleWithCSS', false)
