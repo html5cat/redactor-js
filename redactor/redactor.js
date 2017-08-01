@@ -2262,12 +2262,13 @@ var RLANG = {
 				}
 				else if (key === 'fontsize') 
 				{
-				   var select =  this.buildFontSizeDropdown();
-				    $(select).change($.proxy(function(e) {
-                            var val = $("#myFontsize option:selected").text();
-							this.changeFontSize(val);
-                    }, this));
-					return select;
+				//    var select =  this.buildFontSizeDropdown();
+				//     $(select).change($.proxy(function(e) {
+                //             var val = $("#myFontsize option:selected").text();
+				// 			this.changeFontSize(val);
+                //     }, this));
+				// 	return select;
+				    dropdown = this.buildFontSizeDropdown(dropdown);
 				}
 				else if (key === 'fontfamily'){
 					// var select = this.buildFontFamilyDropdown();
@@ -2296,15 +2297,24 @@ var RLANG = {
 
 			return button;
 		},
-		buildFontSizeDropdown:function(){
-            var $select = $('<select id="myFontsize"/>');
-            for (i=1;i<=100;i++){
-				if (i === 1) {
-					$select.append($('<option></option>').val(i).html(i))
+		buildFontSizeDropdown:function(dropdown){
+            // var $select = $('<select id="myFontsize"/>');
+            // for (i=1;i<=100;i++){
+			// 	if (i === 1) {
+			// 		$select.append($('<option></option>').val(i).html(i))
+			// 	}
+            //     $select.append($('<option></option>').val(i).html(i))
+			// }
+			// return $select;
+			var drop_a;
+			for (i = 1; i <= 100; i++)
+				{
+					drop_a = $('<a href="javascript:void(null);" >' + i + '</a>');
+					$(drop_a).click($.proxy(function(e) { this.changeFontSize( $(e.target).text()); }, this));
+					$(dropdown).append(drop_a);
 				}
-                $select.append($('<option></option>').val(i).html(i))
-			}
-			return $select;
+			$(dropdown).css('height', '122px').css('width', '38px').css('overflow-y', 'auto');
+			return dropdown;
 		},
 		buildFontFamilyDropdown: function(dropdown){
             // var $select = $('<select id="myFontfamily"/>');
