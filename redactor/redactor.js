@@ -2315,10 +2315,19 @@ var RLANG = {
 			return $select;
 		},
 		changeFontSize: function(val){
+			// console.log('node', this.getSelectedNode());
 			this.execCommand('styleWithCSS', true)
 			this.execCommand('fontSize', val);
 			this.execCommand('styleWithCSS', false)
-			// this.document.execCommand('styleWithCSS', false, )
+
+			//because the font-size is applied as medium,small, large
+			//change to px
+			this.$editor.find('span').each(function(index, value){
+				if (!(/\d/.test(this.style.fontSize)))
+				{ 
+					$(this).css('font-size', val + 'px')
+			    }
+			})
 			// this.$editor.find('font').replaceWith(function() {
 			// 	return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
 			// });
@@ -2535,7 +2544,7 @@ var RLANG = {
 			// console.log('keyy',e, dropdown, key);
 			if (!$(e.target).hasClass('dropact'))
 			{
-				console.log('urrey')
+				// console.log('urrey')
 				$(dropdown).removeClass('dropact');
 				this.showedDropDown = false;
 				this.hideAllDropDown();
