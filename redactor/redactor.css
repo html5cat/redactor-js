@@ -471,14 +471,14 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 }
 
 #redactor_modal {
-	background: #f7f7f7;
+	/* background: #f7f7f7;
 	background: -moz-linear-gradient(top,  #f7f7f7 0%, #e2e2e2 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#e2e2e2));
 	background: -webkit-linear-gradient(top,  #f7f7f7 0%,#e2e2e2 100%);
 	background: -o-linear-gradient(top,  #f7f7f7 0%,#e2e2e2 100%);
 	background: -ms-linear-gradient(top,  #f7f7f7 0%,#e2e2e2 100%);
-	background: linear-gradient(to bottom,  #f7f7f7 0%,#e2e2e2 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#e2e2e2',GradientType=0 );
+	background: linear-gradient(to bottom,  #f7f7f7 0%,#e2e2e2 100%); */
+	/* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#e2e2e2',GradientType=0 ); */
 	text-shadow: 0 1px 0 #fff;
 	padding: 0;
 	position: fixed;
@@ -490,6 +490,8 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
 	font-size: 12px !important;
 	color: #000;
+	background-color: white;
+    border-radius: 15px;
 }
 #redactor_modal_header {
 	padding: 11px 30px 0 15px;
@@ -600,7 +602,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 	color: #333;
 	font-size: 13px;
 	line-height: 1;
-	border-radius: 1px;
+	border-radius: 12px;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
 	-webkit-transition: border 0.3s ease-in;
 	-moz-transition: border 0.3s ease-in;

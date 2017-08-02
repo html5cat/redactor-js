@@ -343,7 +343,7 @@ var RLANG = {
 			modal_mulipleImage: String() +
 				'<div id="redactor_modal_content">' +
 					'<label>Upload images</label>' +
-					'<input type="file" id="redactor_multiple_file_upload" multiple/>' +
+					'<input type="file" class="custom-file-input" id="redactor_multiple_file_upload" multiple/>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
@@ -3439,7 +3439,9 @@ var RLANG = {
 		},
 		imageDelete: function(el)
 		{
-			$(el).remove();
+			console.log('parent for the image', $(el).parents().siblings())
+			// $(el).parent().remove();
+			// $(el).remove();
 			this.modalClose();
 			this.syncCode();
 		},
@@ -3508,23 +3510,44 @@ var RLANG = {
 		{
 			var images = $("#redactor_multiple_file_upload")[0].files
 			if (images.length)
-				{
+			{
+				var count = images.length;
+				var urls = [];
 				$.each(images, $.proxy(function(key, file)
 				{
 					var reader = new FileReader();	
-					reader.onload = function(file)
+					reader.onload = $.proxy(function(file)
 					{
-				        var fileUrl =  file.target.result;
-				        console.log(fileUrl);
-				    }				
+						var fileUrl =  file.target.result;
+						urls.push(fileUrl)
+						count -= 1		
+						if (!count){ this.createGallery(urls);}						
+				    }, this);				
 					reader.readAsDataURL(file);
-			    }, this))
+				}, this));
+					
+				
 			}
-			this._imageSet(this.newSlide(), true);
-			// this.showSlides();
             this.modalClose();
 		},
-		
+		createGallery: function(imageUrls)
+		{
+			console.log('hello--urls', imageUrls);
+			var parentFigure = this.createFigure();
+			parentFigure.className = 'slider'
+			for (var i = 0; i < imageUrls.length; i++)
+			{
+				var childFigure = this.createFigure();
+				var img = $('<img id="' + this.generateRandomId() + '">');
+				img.attr('src', imageUrls[i]);
+				childFigure.append(img[0])
+				parentFigure.append(childFigure);
+			}
+
+			this._imageSet(parentFigure.outerHTML, true);
+			// console.log('parent', parentFigure.outerHTML);
+			this.modalClose();
+		},
 		showSlides: function (n) 
 		{
 			if (!this.slideIndex){ this.slideIndex = 1;}
