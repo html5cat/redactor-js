@@ -1410,25 +1410,25 @@ var RLANG = {
 				// 	break;
 				// }
 			// }
-			if (!$(this.getSelectedNode()).is('div'))
-			{
-                var align = $(parent).css('text-align');
-			    switch (align)
-				    {
-					    case 'right':
-						    this.setBtnActive('alignright');
-					        break;
-					    case 'center':
-						    this.setBtnActive('aligncenter');
-					        break;
-						case 'justify':
-							this.setBtnActive('justify');
-							break;
-						default:
-							this.setBtnActive('alignleft');
-							break;
-					}
-			}
+			// if (!$(this.getSelectedNode()).is('div'))
+			// {
+            //     var align = $(parent).css('text-align');
+			//     switch (align)
+			// 	    {
+			// 		    case 'right':
+			// 			    this.setBtnActive('alignright');
+			// 		        break;
+			// 		    case 'center':
+			// 			    this.setBtnActive('aligncenter');
+			// 		        break;
+			// 			case 'justify':
+			// 				this.setBtnActive('justify');
+			// 				break;
+			// 			default:
+			// 				this.setBtnActive('alignleft');
+			// 				break;
+			// 		}
+			// }
 			
 		},
 		observeImages: function()
@@ -1544,7 +1544,6 @@ var RLANG = {
 		// EXECCOMMAND
 		execCommand: function(cmd, param)
 		{
-			debugger;
 			if (this.opts.visual == false)
 			{
 				this.$el.focus();
@@ -1726,22 +1725,14 @@ var RLANG = {
 		},
 		execRun: function(cmd, param)
 		{
-			debugger;
 			if (cmd === 'formatblock' && this.browser('msie'))
 			{
 				param = '<' + param + '>';
 			}
 
 			this.document.execCommand(cmd, false, param);
-			this.removeBoldFromHeading();
 		},
-		removeBoldFromHeading: function()
-		{
-			   var finds = $(':header').find('*').each(function(index, val){
-				   console.log(index, val);
-			   })
-			   console.log(finds)
-		},
+	
 		// FORMAT NEW LINE
 		formatNewLine: function(e)
 		{
@@ -2310,14 +2301,6 @@ var RLANG = {
 			return button;
 		},
 		buildFontSizeDropdown:function(dropdown){
-            // var $select = $('<select id="myFontsize"/>');
-            // for (i=1;i<=100;i++){
-			// 	if (i === 1) {
-			// 		$select.append($('<option></option>').val(i).html(i))
-			// 	}
-            //     $select.append($('<option></option>').val(i).html(i))
-			// }
-			// return $select;
 			var drop_a;
 			for (i = 1; i <= 100; i++)
 				{
@@ -2487,6 +2470,9 @@ var RLANG = {
 			var elnone = $('<a href="javascript:void(null);" class="redactor_color_none button"></a>').html(RLANG.clear);
 			//new hex code input an button
 			var elhex = $('<input type="text" name="lname" class="hexInput" style="margin: 6px 0px 0px 16px;" placeholder="Place Your Hex code">');
+			elhex.click(function(e){
+				e.stopPropagation();
+			})
 			var elapplyhex = $('<a href="javascript:void(null);" class="redactor_color_none button" style="margin-top: 9px;"></a>').html('Apply');
             
 			if (key === 'backcolor')
@@ -2558,7 +2544,6 @@ var RLANG = {
 					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show();
 				}
 				$('.hexInput').val('');
-				$('.hexInput').focus();
 			}
             
 			var hdlHideDropDown = $.proxy(function(e) { this.hideDropDown(e, dropdown, key); }, this);
