@@ -2355,10 +2355,14 @@ var RLANG = {
 			//because the font-size is applied as medium,small, large
 			//change to px
 			this.$editor.find('span').each(function(index, value){
-				if (!(/\d/.test(this.style.fontSize)))
-				{ 
-					$(this).css('font-size', val + 'px')
-			    }
+				if (this.style.fontSize)
+					{
+						if (!(/\d/.test(this.style.fontSize)))
+				        { 
+							$(this).css('font-size', val + 'px').css('line-height', '1em')			
+			            }
+        
+					}
 			})
 			// this.$editor.find('font').replaceWith(function() {
 			// 	return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
