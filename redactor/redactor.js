@@ -139,7 +139,7 @@ var RLANG = {
 			focus: false,
 			tabindex: false,
 			autoresize: true,
-			minHeight: false,
+			minHeight: 500,
 			fixed: false,
 			fixedTop: 0, // pixels
 			fixedBox: false,
@@ -1368,8 +1368,11 @@ var RLANG = {
 			{
 				// console.dir($(this.getSelectedHtml()).children())
 				// every element in the editor is selected then show last applyed style
+				console.log('selected-html', $(this.getSelectedHtml()));
 				$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
 				{
+					console.log(i, s);
+					// if (s.nodeType === 3){ s.remove()}
 					var tagName = $(s).prop("tagName").toLowerCase();
                     this.setBtnActive(this.opts.activeButtonsStates[tagName])
 				}, this))
@@ -1541,6 +1544,7 @@ var RLANG = {
 		// EXECCOMMAND
 		execCommand: function(cmd, param)
 		{
+			debugger;
 			if (this.opts.visual == false)
 			{
 				this.$el.focus();
@@ -1722,14 +1726,22 @@ var RLANG = {
 		},
 		execRun: function(cmd, param)
 		{
+			debugger;
 			if (cmd === 'formatblock' && this.browser('msie'))
 			{
 				param = '<' + param + '>';
 			}
 
 			this.document.execCommand(cmd, false, param);
+			this.removeBoldFromHeading();
 		},
-
+		removeBoldFromHeading: function()
+		{
+			   var finds = $(':header').find('*').each(function(index, val){
+				   console.log(index, val);
+			   })
+			   console.log(finds)
+		},
 		// FORMAT NEW LINE
 		formatNewLine: function(e)
 		{
