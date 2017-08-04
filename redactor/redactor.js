@@ -2440,29 +2440,29 @@ var RLANG = {
 				$(swatch).click(function()
 				{
 					_self.restoreSelection();
-					console.log(mode, $(this).attr('rel'))
+					// console.log(mode, $(this).attr('rel'))
 					 //ugly code for making undo redo activated.
 					_self.execCommand('styleWithCSS', true)
 					_self.execCommand(mode, $(this).attr('rel'));
 					_self.execCommand('styleWithCSS', false);
 					// remove style with css
-					if (mode === 'forecolor')
-					{
-						_self.$editor.find('font').replaceWith(function() {
+					// if (mode === 'forecolor')
+					// {
+					// 	_self.$editor.find('font').replaceWith(function() {
 
-							return $('<span style="color: ' + $(this).attr('color') + ';">' + $(this).html() + '</span>');
+					// 		return $('<span style="color: ' + $(this).attr('color') + ';">' + $(this).html() + '</span>');
 
-						});
-					}
+					// 	});
+					// }
 
-					if (_self.browser('msie') && mode === 'BackColor')
-					{
-						_self.$editor.find('font').replaceWith(function() {
+					// if (_self.browser('msie') && mode === 'BackColor')
+					// {
+					// 	_self.$editor.find('font').replaceWith(function() {
 
-							return $('<span style="' + $(this).attr('style') + '">' + $(this).html() + '</span>');
+					// 		return $('<span style="' + $(this).attr('style') + '">' + $(this).html() + '</span>');
 
-						});
-					}
+					// 	});
+					// }
 
 				});
 			}
@@ -2522,6 +2522,7 @@ var RLANG = {
 			}
 			else
 			{
+				// console.log(key, dropdown);
 				this.hideAllDropDown();
 				this.setBtnActive(key);
 				this.getBtn(key).addClass('dropact');
@@ -2540,10 +2541,16 @@ var RLANG = {
 				}
 				else
 				{
+					if (key == 'fontcolor')
+					{
+						// console.log('key', key)
+						// console.log($(this.getCurrentNode()), $(this.getSelectedNode()))
+					}
 					var top = this.$toolbar.offset().top + 30;
-					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show();
+					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show("slow");
 				}
 				$('.hexInput').val('');
+				console.log(this.getApplyedColor());
 			}
             
 			var hdlHideDropDown = $.proxy(function(e) { this.hideDropDown(e, dropdown, key); }, this);
@@ -2555,10 +2562,72 @@ var RLANG = {
 			e.stopPropagation();
 
 		},
+		getApplyedColor: function()
+		{
+			var colors = {}
+			var parent = this.getCurrentNode();
+            console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
+			//selecting the node for formatting
+			if(this.getSelectedNode().nodeType == 3)
+			{
+				parent = this.getCurrentNode();
+				this.getColor(parent, colors)
+			
+			}
+			else if (!$(this.getSelectedNode()).is('div'))
+			{
+				parent = this.getSelectedNode()
+			    this.getColor(parent, colors)
+			}
+			else 
+			{
+				// every element in the editor is selected then show last applyed style
+				// console.log('selected-html', $(this.getSelectedHtml()));
+				$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
+				{
+					console.log(i, s);
+				}, this))
+
+			}
+		
+			return colors
+
+		},
+		getColor: function(parent, colors)
+		{
+			if ($(parent).is('span'))
+				{
+				  return this.getRgb(parent)
+				}
+			else 
+				{
+				    $.each(['b', 'u', 'strike', 'strong', 'i', 'a', 'em', 'del'], $.proxy(function(i, v)
+					{
+						if($(parent).closest(v).length != 0) 
+							{
+								this.getRgb($(parent).closest(v)[0], colors)
+							}
+
+					}, this));
+							
+				}
+		},
+		getRgb: function(element, colors) 
+		{
+			if ($(element).css('color') !== "rgb(0, 0, 0)")
+			{
+				colors.color = $(element).css('color')
+			}
+			if ($(element).css('background-color') !== "rgba(0, 0, 0, 0)")
+			{
+				colors.background = $(element).css('background-color') 
+			}
+
+		},
 		hideAllDropDown: function()
 		{
 			this.$toolbar.find('a.dropact').removeClass('redactor_act').removeClass('dropact');
-			$('.redactor_dropdown').hide();
+			$('.redactor_dropdown').hide('slow');
 		},
 		hideDropDown: function(e, dropdown, key)
 		{
