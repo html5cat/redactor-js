@@ -2514,6 +2514,7 @@ var RLANG = {
 		// DROPDOWNS
 		showDropDown: function(e, dropdown, key)
 		{
+			var colors = {};
 			this.saveSelection();
 
 			if (this.getBtn(key).hasClass('dropact'))
@@ -2541,16 +2542,19 @@ var RLANG = {
 				}
 				else
 				{
-					if (key == 'fontcolor')
+					if (key == 'fontcolor' || key =='backcolor')
 					{
-						// console.log('key', key)
-						// console.log($(this.getCurrentNode()), $(this.getSelectedNode()))
+						this.getApplyedColor(colors)
+				        // console.log('colors', colors)
+				        this.deactivateColorBtn(dropdown, colors)
+				        this.activateColorBtn(dropdown, colors, key)
 					}
 					var top = this.$toolbar.offset().top + 30;
 					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show("slow");
 				}
+				//empty hex input
 				$('.hexInput').val('');
-				console.log(this.getApplyedColor());
+				
 			}
             
 			var hdlHideDropDown = $.proxy(function(e) { this.hideDropDown(e, dropdown, key); }, this);
@@ -2562,9 +2566,35 @@ var RLANG = {
 			e.stopPropagation();
 
 		},
-		getApplyedColor: function()
+		deactivateColorBtn: function(dropdown, colors)
 		{
-			var colors = {}
+			$(dropdown).find('a.redactor_color_act').removeClass('redactor_color_act')
+
+		},
+		activateColorBtn:function(dropdown, colors, key)
+		{
+			var applyedColor;
+			$(dropdown).find('a').each(function(index, elem){
+				elemColor = $(this).css('background-color')
+				if (key == 'fontcolor')
+					{
+						applyedColor = colors.color
+
+					}
+				else if (key == 'backcolor')
+					{
+						applyedColor = colors.background
+					}
+				
+				if (applyedColor !== undefined && applyedColor === elemColor)
+					{
+						$(this).addClass('redactor_color_act')
+					}
+			});
+
+		},
+		getApplyedColor: function(colors)
+		{
 			var parent = this.getCurrentNode();
             console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
 			//selecting the node for formatting
@@ -2579,25 +2609,24 @@ var RLANG = {
 				parent = this.getSelectedNode()
 			    this.getColor(parent, colors)
 			}
-			else 
-			{
-				// every element in the editor is selected then show last applyed style
-				// console.log('selected-html', $(this.getSelectedHtml()));
-				$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
-				{
-					console.log(i, s);
-				}, this))
+			// else 
+			// {
+			// 	// every element in the editor is selected then show last applyed style
+			// 	// console.log('selected-html', $(this.getSelectedHtml()));
+			// 	$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
+			// 	{
+			// 		console.log(i, s);
+			// 	}, this))
 
-			}
+			// }
 		
-			return colors
 
 		},
 		getColor: function(parent, colors)
 		{
 			if ($(parent).is('span'))
 				{
-				  return this.getRgb(parent)
+				  return this.getRgb(parent, colors)
 				}
 			else 
 				{
