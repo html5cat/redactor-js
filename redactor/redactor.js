@@ -881,6 +881,7 @@ var RLANG = {
 		shortcuts: function(e, cmd)
 		{
 			console.log('dfsdfsdfsd')
+			debugger;
 			e.preventDefault();
 			this.execCommand(cmd, false);
 		},
@@ -1003,25 +1004,27 @@ var RLANG = {
 				}
                 
 				// enter
-				if (pre === true && key === 13)
+				if (pre === true && key === 13 && e.shiftKey)
 				{
-					// e.preventDefault();
-					// var html = $(current).parent().text();
-					// this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
-					// if (html.search(/\s$/) == -1)
-					// {
-					// 	this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
-					// }
+					e.preventDefault();
+					var html = $(current).parent().text();
+					this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
+					if (html.search(/\s$/) == -1)
+					{
+						this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
+					}
+					//commented the syncCode due to the place ment of caret at the beggenign
 					// this.syncCode();
 
-					// return false;
+					return false;
 				}
 				
 				if (this.opts.shortcuts && !e.shiftKey && key === 9)
 				{
 					if (pre === false)
 					{
-						this.shortcuts(e, 'indent'); // Tab
+						// this.shortcuts(e, 'indent'); // Tab
+						
 					}
 					else
 					{
@@ -1033,7 +1036,7 @@ var RLANG = {
 				}
 				else if (this.opts.shortcuts && e.shiftKey && key === 9 )
 				{
-					this.shortcuts(e, 'outdent'); // Shift + tab
+					// this.shortcuts(e, 'outdent'); // Shift + tab
 				}
 
 				// safari shift key + enter
@@ -3533,7 +3536,7 @@ var RLANG = {
 		{
 			console.log('parent for the image', $(el).parents().siblings())
 			// $(el).parent().remove();
-			// $(el).remove();
+			$(el).remove();
 			this.modalClose();
 			this.syncCode();
 		},
