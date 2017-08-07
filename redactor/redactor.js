@@ -911,7 +911,6 @@ var RLANG = {
 				// new line p
 				if (key === 13 && !e.shiftKey && !e.ctrlKey && !e.metaKey)
 				{
-					console.log('key up');
 					if (this.browser('webkit'))
 					{
 						this.formatNewLine(e);
@@ -1006,24 +1005,18 @@ var RLANG = {
 				// enter
 				if (pre === true && key === 13)
 				{
-					e.preventDefault();
-                   console.log('helloo');
-					var html = $(current).parent().text();
-					this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
-					if (html.search(/\s$/) == -1)
-					{
-						this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
-					}
-					this.syncCode();
+					// e.preventDefault();
+					// var html = $(current).parent().text();
+					// this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
+					// if (html.search(/\s$/) == -1)
+					// {
+					// 	this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
+					// }
+					// this.syncCode();
 
 					return false;
 				}
-				//setting enter key to chnage p to br
-                // if (key == 13){
-				// 	e.preventDefault();
-                // //    document.execCommand('insertHTML', false, '<br>');
-				// }
-				// tab
+				
 				if (this.opts.shortcuts && !e.shiftKey && key === 9)
 				{
 					if (pre === false)
