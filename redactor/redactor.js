@@ -1014,7 +1014,7 @@ var RLANG = {
 					// }
 					// this.syncCode();
 
-					return false;
+					// return false;
 				}
 				
 				if (this.opts.shortcuts && !e.shiftKey && key === 9)
