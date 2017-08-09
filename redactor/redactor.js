@@ -1,6 +1,6 @@
 /*
 	Redactor v8.2.2
-	Updated: January 17, 2013
+	Updated: January 17, 2017
 
 	http://redactorjs.com/
 
