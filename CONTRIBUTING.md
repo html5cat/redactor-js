@@ -9,7 +9,6 @@ Sorry about that.
 # problems
  * options tag doesnt support any  style except firefox so the dropdown showing font-family not   work.
  * custom embed need api to fetch data of the url(then only we can render)
- * justify wont work when we select bold or anyother tags in paragraph
 
 
 # Ideas
