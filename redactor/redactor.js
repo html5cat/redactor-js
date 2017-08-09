@@ -1,6 +1,6 @@
 /*
 	Redactor v8.2.2
-	Updated: January 17, 2017
+	Updated: January 17, 2013
 
 	http://redactorjs.com/
 
@@ -85,7 +85,8 @@ var RLANG = {
 	alignment: 'Alignment',
 	fontsize: 'Font size',
 	fontfamily: 'Font Family',
-	multiple: 'multiple'
+	multiple: 'multiple',
+	imagevalidation:'Insert image in correct format'
 };
 
 (function($){
@@ -188,7 +189,7 @@ var RLANG = {
 			buttonsAdd: [],
 			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
 					'image', 'video', 'file', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignleft', 'aligncenter', 'alignright', 'justify', '|', 'fontsize', '|', 'fontfamily', '|', 'multiple'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+					'fontcolor', 'backcolor', '|', 'alignment','|', 'fontsize', '|', 'fontfamily', '|', 'multiple'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -282,6 +283,7 @@ var RLANG = {
 					// '<label>width</label>'+
 					// '<input type="number" id="redactor_link_width_id" class="redactor_input" />'+
 				'</div>' +
+				'<div id="valid">'+'<label>'+ RLANG.imagevalidation +'</label>' + '</div>'+
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
@@ -570,49 +572,34 @@ var RLANG = {
 				{
 					title: RLANG.alignment,
 					func: 'show',
+					className:'alignwidth',
 					dropdown:
 					{
 						alignleft:
 						{
-							title: RLANG.align_left,
-							exec: 'JustifyLeft'
+							title: '',
+							exec: 'JustifyLeft',
+							className: 'fa fa-align-left'
 						},
 						aligncenter:
 						{
-							title: RLANG.align_center,
-							exec: 'JustifyCenter'
+							title: '',
+							exec: 'JustifyCenter',
+							className: 'fa fa-align-center'
 						},
 						alignright:
 						{
-							title: RLANG.align_right,
-							exec: 'JustifyRight'
+							title: '',
+							exec: 'JustifyRight',
+							className: 'fa fa-align-right'
 						},
 						justify:
 						{
-							title: RLANG.align_justify,
-							exec: 'JustifyFull'
+							title:'',
+							exec: 'JustifyFull',
+							className: 'fa fa-align-justify'
 						}
 					}
-				},
-				alignleft:
-				{
-					exec: 'JustifyLeft',
-					title: RLANG.align_left
-				},
-				aligncenter:
-				{
-					exec: 'JustifyCenter',
-					title: RLANG.align_center
-				},
-				alignright:
-				{
-					exec: 'JustifyRight',
-					title: RLANG.align_right
-				},
-				justify:
-				{
-					exec: 'JustifyFull',
-					title: RLANG.align_justify
 				},
 				horizontalrule:
 				{
@@ -1571,8 +1558,7 @@ var RLANG = {
 				}
 				else if (cmd === 'unlink')
 				{
-
-					parent = this.getCurrentNode();
+					parent = this.getParentNode();
 					if ($(parent).get(0).tagName === 'A')
 					{
 						$(parent).replaceWith($(parent).text());
@@ -3789,6 +3775,9 @@ var RLANG = {
 
 				$('#redactor_upload_btn').click($.proxy(this.imageUploadCallbackLink, this));
 
+				$('#redactor_file_link').on('change keyup paste click', $.proxy(this.imageValidation,this));
+
+
 				if (this.opts.imageUpload === false && this.opts.imageGetJson === false)
 				{
 					setTimeout(function()
@@ -3811,17 +3800,39 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
+				var ext=($('#redactor_file_link').val());
+				//console.log(ext);
+				var extension=ext.substring(ext.lastIndexOf('.')+1).toLowerCase();
+				if(extension=="jpg" || extension=="jpeg" || extension=="bmp" || extension=="png" || extension=="gif")
+				{
+					console.log(extension);
+				
 				var id = this.generateRandomId()
 				var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
 				//add image inside afigure with close tag
+				//console.log($('redactor_file_link').val());
 				var generatedFigure = this.createFigure();
 				generatedFigure.appendChild($(data)[0])
 				this._imageSet(generatedFigure.outerHTML, true);
+				}
+				else
+				{
+					$('#redactor_file_link').addClass('validation');
+					$('#valid').show();
+				}
+				
 			}
+			
 			else
 			{
 				this.modalClose();
 			}
+		},
+		imageValidation:function()
+		{
+			//console.log('hello');
+			$('#redactor_file_link').removeClass('validation');
+			$('#valid').hide();
 		},
 		imageUploadCallback: function(data)
 		{

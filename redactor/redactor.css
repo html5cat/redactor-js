@@ -406,7 +406,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 	left: 0;
 	z-index: 2004;
 	position: absolute;
-	width: 200px;
+	width: auto;
 	background-color: #fff;
 	border: 1px solid #ccc;
 	font-size: 13px;
@@ -694,4 +694,14 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 .redactor_dropareabox.drop {
     background: #f4f4ee;
     border-color: #e0e5d6;
+}
+.validation
+{
+	border-color: red !important;
+}
+#valid
+{
+	font-weight: bold;
+	color:red;
+	display: none;
 }
