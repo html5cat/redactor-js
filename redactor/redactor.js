@@ -86,7 +86,8 @@ var RLANG = {
 	fontsize: 'Font size',
 	fontfamily: 'Font Family',
 	multiple: 'multiple',
-	imagevalidation:'Insert image in correct format'
+	imagevalidation:'Insert image in correct format',
+	save: 'Save'
 };
 
 (function($){
@@ -278,10 +279,6 @@ var RLANG = {
 				'<div id="redactor_tab3" class="redactor_tab" style="display: none;">' +
 					'<label>' + RLANG.image_web_link + '</label>' +
 					'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
-					// '<label>height</label>'+
-					// '<input type="number" id="redactor_link_height_id" class="redactor_input" />'+
-					// '<label>width</label>'+
-					// '<input type="number" id="redactor_link_width_id" class="redactor_input" />'+
 				'</div>' +
 				'<div id="valid">'+'<label>'+ RLANG.imagevalidation +'</label>' + '</div>'+
 				'</div>' +
@@ -868,7 +865,6 @@ var RLANG = {
 		shortcuts: function(e, cmd)
 		{
 			console.log('dfsdfsdfsd')
-			debugger;
 			e.preventDefault();
 			this.execCommand(cmd, false);
 		},
@@ -923,11 +919,16 @@ var RLANG = {
 				var parent = this.getParentNode();
 				var current = this.getCurrentNode();
 				var pre = false;
+				var li = false;
 				var ctrl = e.ctrlKey || e.metaKey;
 
 				if ((parent || current) && ($(parent).get(0).tagName === 'PRE' || $(current).get(0).tagName === 'PRE'))
 				{
 					pre = true;
+				}
+				if ((parent || current) && ($(parent).get(0).tagName === 'LI' || $(current).get(0).tagName === 'LI'))
+				{
+					li = true
 				}
 
 				// callback keydown
@@ -1008,9 +1009,10 @@ var RLANG = {
 				
 				if (this.opts.shortcuts && !e.shiftKey && key === 9)
 				{
-					if (pre === false)
+					console.log('tab')
+					if (pre === false && li === true)
 					{
-						// this.shortcuts(e, 'indent'); // Tab
+						this.shortcuts(e, 'indent'); // Tab
 						
 					}
 					else
@@ -2248,24 +2250,11 @@ var RLANG = {
 				}
 				else if (key === 'fontsize') 
 				{
-				//    var select =  this.buildFontSizeDropdown();
-				//     $(select).change($.proxy(function(e) {
-                //             var val = $("#myFontsize option:selected").text();
-				// 			this.changeFontSize(val);
-                //     }, this));
-				// 	return select;
 				    dropdown = this.buildFontSizeDropdown(dropdown);
 				}
 				else if (key === 'fontfamily'){
-					// var select = this.buildFontFamilyDropdown();
-					// $(select).change($.proxy(function(e){
-					// 	var val = $("#myFontfamily option:selected").val();
-					// 	console.log('font-family', val);
-					// 	this.changeFontFamily(val);
-					// }, this));
-					// return select;
+				
 					dropdown = this.buildFontFamilyDropdown(dropdown);
-					// button = $('<button/>').addClass('redactor_btn_' + key).text('FontFamily')
 					button.html('<button>fontfamily</button>')
 				}
 				else
@@ -2295,15 +2284,6 @@ var RLANG = {
 			return dropdown;
 		},
 		buildFontFamilyDropdown: function(dropdown){
-            // var $select = $('<select id="myFontfamily"/>');
-            //     for (i=0;i<this.opts.fontFamily.length;i++){
-			// 		var font = this.opts.fontFamily[i].font
-			// 		var family = this.opts.fontFamily[i].family
-			// 		// var span = $('<span></span>').css('font-family', family).html(font)
-
-            //         $select.append($('<option></option>').val(family).html(font))
-			// 	}
-			// return $select;
 			var drop_a;
             $.each(this.opts.fontFamily, $.proxy(function(index, obj){
 				drop_a = $('<a href="javascript:void(null);" >' + obj.font + '</a>');
@@ -3915,7 +3895,15 @@ var RLANG = {
 				this.insert_link_node = false;
 				var sel = this.getSelection();
 				var url = '', text = '', target = '';
-
+				var parent = this.getCurrentNode();
+				if (parent.nodeName === 'A')
+				{
+						this.insert_link_node = $(parent);
+						text = this.insert_link_node.text();
+						url = this.insert_link_node.attr('href');
+						target = this.insert_link_node.attr('target');
+				}
+				
 				if (this.browser('msie'))
 				{
 					var parent = this.getParentNode();
@@ -3986,6 +3974,12 @@ var RLANG = {
 					$('#redactor_link_blank').attr('checked', true);
 				}
 
+				if (url !== '')
+				{
+					debugger;
+					$('#redactor_insert_link_btn').val(RLANG.save)
+				}
+
 				$('#redactor_insert_link_btn').click($.proxy(this.insertLink, this));
 
 				setTimeout(function()
@@ -4008,9 +4002,10 @@ var RLANG = {
 				link = $('#redactor_link_url').val();
 				text = $('#redactor_link_url_text').val();
 
-				if ($('#redactor_link_blank').attr('checked'))
+				
+				if ($('#redactor_link_blank').prop('checked'))
 				{
-					target = ' target="_blank"';
+					target = ' target=' + '"_blank"';
 				}
 
 				// test url
@@ -4024,16 +4019,17 @@ var RLANG = {
 				}
 
 			}
-			else if (tab_selected === '2') // mailto
-			{
-				link = 'mailto:' + $('#redactor_link_mailto').val();
-				text = $('#redactor_link_mailto_text').val();
-			}
-			else if (tab_selected === '3') // anchor
-			{
-				link = '#' + $('#redactor_link_anchor').val();
-				text = $('#redactor_link_anchor_text').val();
-			}
+
+			// else if (tab_selected === '2') // mailto
+			// {
+			// 	link = 'mailto:' + $('#redactor_link_mailto').val();
+			// 	text = $('#redactor_link_mailto_text').val();
+			// }
+			// else if (tab_selected === '3') // anchor
+			// {
+			// 	link = '#' + $('#redactor_link_anchor').val();
+			// 	text = $('#redactor_link_anchor_text').val();
+			// }
 
 			this._insertLink('<a href="' + link + '"' + target + '>' +  text + '</a>', $.trim(text), link, target);
 
@@ -4051,11 +4047,12 @@ var RLANG = {
 					$(this.insert_link_node).attr('href', link);
 					if (target !== '')
 					{
-						$(this.insert_link_node).attr('target', target);
+						$(this.insert_link_node).attr('target', '_blank');
 					}
 					else
 					{
 						$(this.insert_link_node).removeAttr('target');
+
 					}
 
 					this.syncCode();
