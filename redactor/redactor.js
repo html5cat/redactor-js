@@ -2198,6 +2198,14 @@ var RLANG = {
 				}
 
 			}, this));
+
+			//check active buttons while clicking on others.
+			this.$toolbar.click($.proxy(function(e, s)
+			{
+				e.preventDefault();
+				this.observeFormatting();
+			}, this));
+
 		},
 		buildButton: function(key, s)
 		{
