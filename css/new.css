@@ -80,3 +80,10 @@ div#slider figure {
   border: solid #9e9e9e !important;
   border-radius: 11px !important;
 } 
+
+/*
+disable unlink  */
+.unlink-disable {
+  pointer-events: none;
+    background: darkgray;
+}

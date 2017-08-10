@@ -2198,7 +2198,6 @@ var RLANG = {
 				}
 
 			}, this));
-
 		},
 		buildButton: function(key, s)
 		{
@@ -2508,9 +2507,23 @@ var RLANG = {
 					if (key == 'fontcolor' || key =='backcolor')
 					{
 						this.getApplyedColor(colors)
-				        // console.log('colors', colors)
 				        this.deactivateColorBtn(dropdown, colors)
 				        this.activateColorBtn(dropdown, colors, key)
+					}
+					else if (key == 'link')
+					{
+						var parent = this.getCurrentNode()
+						if($(parent).get(0).tagName === 'A')
+						{
+							    $(dropdown).children().eq(0).text('Edit link')
+								$(dropdown).children().eq(1).removeClass('unlink-disable')
+						}
+						else
+						{
+							$(dropdown).children().eq(0).text(RLANG.link_insert)
+							$(dropdown).children().eq(1).addClass('unlink-disable')
+						}
+
 					}
 					var top = this.$toolbar.offset().top + 30;
 					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show("slow");
