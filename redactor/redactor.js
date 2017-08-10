@@ -1558,7 +1558,7 @@ var RLANG = {
 				}
 				else if (cmd === 'unlink')
 				{
-					parent = this.getParentNode();
+					parent = this.getCurrentNode();
 					if ($(parent).get(0).tagName === 'A')
 					{
 						$(parent).replaceWith($(parent).text());
