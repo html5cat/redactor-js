@@ -709,7 +709,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 }
 .disabling
 {
-	font-color: blue !important;
+	
 	pointer-events: none;
     cursor: not-allowed;
     
