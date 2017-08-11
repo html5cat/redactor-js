@@ -279,6 +279,7 @@ body .redactor_air .redactor_toolbar {
 	padding-right: 0;
 	list-style: none !important;
 	outline: none;
+
 }
 .redactor_toolbar li.redactor_separator {
 	float: left;
@@ -331,6 +332,7 @@ body .redactor_air .redactor_toolbar {
 	background-color: #ddd;
 	outline: none;
 }
+
 
 
 /*
@@ -704,4 +706,11 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 	font-weight: bold;
 	color:red;
 	display: none;
+}
+.disabling
+{
+	font-color: blue !important;
+	pointer-events: none;
+    cursor: not-allowed;
+    
 }

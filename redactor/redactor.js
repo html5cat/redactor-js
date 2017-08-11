@@ -194,8 +194,7 @@ var RLANG = {
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
 			formattingTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4'],
-
-			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link', 'alignright', 'alignleft', 'aligncenter', 'justify'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
+			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link', 'alignright', 'alignleft', 'aligncenter', 'justify'],
 			activeButtonsStates: {
 				b: 'bold',
 				strong: 'bold',
@@ -2081,15 +2080,12 @@ var RLANG = {
 			if (this.opts.visual)
 			{
 				var height = this.$editor.innerHeight();
-
 				this.$editor.hide();
 				this.$content.hide();
-
 				html = this.$editor.html();
 				//html = $.trim(this.formatting(html));
-
 				this.$el.height(height).val(html).show().focus();
-
+				this.enabledisable();
 				this.setBtnActive('html');
 				this.opts.visual = false;
 			}
@@ -2097,32 +2093,51 @@ var RLANG = {
 			{
 				this.$el.hide();
 				var html = this.$el.val();
-
+				
 				//html = this.savePreCode(html);
-
 				// clean up
 				//html = this.stripTags(html);
-
 				// set code
 				this.$editor.html(html).show();
 				this.$content.show();
-
 				if (this.$editor.html() === '')
 				{
 					this.setCode(this.opts.emptyHtml);
 				}
-
 				this.$editor.focus();
-
 				this.setBtnInactive('html');
+				this.enabledisable();
 				this.opts.visual = true;
-
 				this.observeImages();
 				this.observeTables();
 				this.observeVideos();
 			}
+			
 		},
+		enabledisable:function()
+		{			
+			//console.log(this.$toolbar.children());
+			this.$toolbar.children().each($.proxy(function(i,e)
+			{
+				console.log(e);
+				//console.log(this,$(this).children()[0]);
+				if($(this).hasClass('disabling'))
+				{
 
+					$(this).removeClass('disabling');
+				}
+				else 
+				{
+				 	var anchorChild = $(this).children()[0];
+					if(anchorChild !== undefined && $(anchorChild).attr('title') !== 'HTML')
+					{
+						$(this).addClass('disabling');
+						$(anchorChild).removeClass('redactor_act');
+						
+			 		}
+			 	}
+			}));
+		},
 		// AUTOSAVE
 		autoSave: function()
 		{
@@ -2156,7 +2171,7 @@ var RLANG = {
 			}
 
 			this.$toolbar = $('<ul>').addClass('redactor_toolbar');
-
+			
 			if (this.opts.air)
 			{
 				$(this.air).append(this.$toolbar);
@@ -2195,13 +2210,16 @@ var RLANG = {
 					this.$toolbar.append($('<li class="redactor_separator"></li>'));
 				}
 
+				
+
 			}, this));
+
 
 		},
 		buildButton: function(key, s)
 		{
 			// console.log(s, key)
-			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
+			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '" ></a>');
 
 			if (typeof s.func === 'undefined')
 			{
@@ -2231,7 +2249,6 @@ var RLANG = {
 
 				}, this));
 			}
-
 			if (typeof s.callback !== 'undefined' && s.callback !== false)
 			{
 				button.click($.proxy(function(e) { s.callback(this, e, key); }, this));
@@ -2280,6 +2297,7 @@ var RLANG = {
 
 				button.click(this.hdlShowDropDown);
 			}
+			
 
 			return button;
 		},
@@ -2670,12 +2688,16 @@ var RLANG = {
 		setBtnInactive: function(key)
 		{
 			this.getBtn(key).removeClass('redactor_act');
+
+
 		},
 		inactiveAllButtons: function()
 		{
 			$.each(this.opts.activeButtons, $.proxy(function(i,s)
 			{
 				this.setBtnInactive(s);
+				console.log(s);
+				
 
 			}, this));
 		},
