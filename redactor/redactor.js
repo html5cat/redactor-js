@@ -3631,23 +3631,6 @@ var RLANG = {
 			// console.log('parent', parentFigure.outerHTML);
 			this.modalClose();
 		},
-		showSlides: function (n) 
-		{
-			if (!this.slideIndex){ this.slideIndex = 1;}
-            var i;
-            var slides = document.getElementsByClassName("mySlides");
-			// var dots = document.getElementsByClassName("dot");
-			if (n > slides.length) {this.slideIndex = 1}    
-			if (n < 1) {this.slideIndex = slides.length}
-			for (i = 0; i < slides.length; i++) {
-				slides[i].style.display = "none";  
-			}
-			// for (i = 0; i < dots.length; i++) {
-			// 	dots[i].className = dots[i].className.replace(" active", "");
-			// }
-			slides[this.slideIndex-1].style.display = "block";  
-			// dots[slideIndex-1].className += " active";
-        },
 		showImage: function()
 		{
 			this.saveSelection();
