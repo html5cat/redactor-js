@@ -3454,16 +3454,50 @@ var RLANG = {
 			ifrm.style.pointerEvents = "none";
 			return ifrm;
 		},
-		createFigure: function()
+		createFigure: function(cls)
 		{
-			var generatedFigure = document.createElement('figure');
-			generatedFigure.contentEditable = 'false';
-			var figureCaption = document.createElement('figcaption');;
-			// console.log(figureCaption);
-			generatedFigure.appendChild(figureCaption);
-			//insert Anchor to it
-			// generatedFigure.appendChild(this.createAnchor());
+			cls = cls || ''
+			var generatedFigure = $('<figure class="' + cls + '">')
+			generatedFigure.attr('contentEditable', false);
 			return generatedFigure;
+		},
+		createFigcap: function(cls)
+		{
+			cls = cls || ''
+			var figureCaption = $('<figcaption class="'+ cls +'">');
+			return figureCaption;
+		},
+		createSpan: function(cls)
+		{
+			cls = cls || ''
+			var span = $('<span class="'+ cls +'">')
+			return span;
+
+		},
+		createFontIcons: function(cls)
+		{
+				var icon = $('<i/>')
+					.addClass(cls)
+					.attr('aria-hidden', true)
+					.css('color', '#abb9c2')
+				return icon;
+		},
+		createImageEditBtn: function()
+		{
+			var ul = $('<ul class="btn-class">')
+			var icons = ['fa fa-arrows-alt', 'fa fa-pencil', 'fa fa-align-justify', 'fa fa-trash']
+			$.each(icons, $.proxy(function(i, val)
+		    {
+				var fontIcon = this.createFontIcons(val)
+				var span = this.createSpan('span-cls')
+				span.append(fontIcon)
+			    var li = $('<li/>')
+					.attr('role', 'imagebtn')
+					.append(span)
+					.appendTo(ul);
+			}, this))
+			
+            return ul;
 		},
 		createAnchor: function()
 		{
@@ -3628,7 +3662,6 @@ var RLANG = {
 			}
 
 			this._imageSet(parentFigure.outerHTML, true);
-			// console.log('parent', parentFigure.outerHTML);
 			this.modalClose();
 		},
 		showImage: function()
@@ -3758,7 +3791,7 @@ var RLANG = {
 				}
 
 				$('#redactor_upload_btn').click($.proxy(this.imageUploadCallbackLink, this));
-
+                //validating input field modal
 				$('#redactor_file_link').on('change keyup paste click', $.proxy(this.imageValidation,this));
 
 
@@ -3784,20 +3817,23 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
+				// TODO: need to change the url section to regex
+				// FIXME: chnage to regex
 				var ext=($('#redactor_file_link').val());
 				//console.log(ext);
 				var extension=ext.substring(ext.lastIndexOf('.')+1).toLowerCase();
 				if(extension=="jpg" || extension=="jpeg" || extension=="bmp" || extension=="png" || extension=="gif")
 				{
-					console.log(extension);
-				
-				var id = this.generateRandomId()
-				var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
-				//add image inside afigure with close tag
-				//console.log($('redactor_file_link').val());
-				var generatedFigure = this.createFigure();
-				generatedFigure.appendChild($(data)[0])
-				this._imageSet(generatedFigure.outerHTML, true);
+					
+					var id = this.generateRandomId()
+					var url = $('#redactor_file_link').val()
+				    // var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
+				    //add image inside afigure with close tag
+				    // var generatedFigure = this.createFigure();
+					// generatedFigure.appendChild($(data)[0])
+					var generatedFigure = this.createImageHtml(url, id)
+					// console.log(generatedFigure.get(0).outerHTML)
+				    this._imageSet(generatedFigure.get(0).outerHTML, true);
 				}
 				else
 				{
@@ -3806,15 +3842,24 @@ var RLANG = {
 				}
 				
 			}
-			
 			else
 			{
 				this.modalClose();
 			}
 		},
+		createImageHtml: function(url, uuid)
+		{
+			var image = '<img' + ' id="' + uuid + '"' + ' src="' + url + '" />';
+			var caption = this.createFigcap('caption');
+			var generatedFigure = this.createFigure('img-border');
+			var span = this.createSpan('drop')
+			var btnList = this.createImageEditBtn()
+			generatedFigure.append(span, $(btnList), $(image), $(caption));
+            return generatedFigure;
+
+		},
 		imageValidation:function()
 		{
-			//console.log('hello');
 			$('#redactor_file_link').removeClass('validation');
 			$('#valid').hide();
 		},
