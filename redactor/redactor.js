@@ -98,9 +98,9 @@ var RLANG = {
 		return this.each(function()
 		{
 			var $obj = $(this);
-            console.log('obj', $obj)
+            
 			var data = $obj.data('redactor');
-			console.log('data', data);
+			
 			if (!data)
 			{
 				$obj.data('redactor', (data = new Redactor(this, option)));
@@ -195,8 +195,7 @@ var RLANG = {
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
 			formattingTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4'],
-
-			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link', 'alignright', 'alignleft', 'aligncenter', 'justify'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
+			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link', 'alignright', 'alignleft', 'aligncenter', 'justify'],
 			activeButtonsStates: {
 				b: 'bold',
 				strong: 'bold',
@@ -783,7 +782,7 @@ var RLANG = {
 				{
 					this.observeImages();
 					this.observeTables();
-					console.log('observers');
+					
 					this.observeVideos();
 
 				}, this), 1);
@@ -1440,11 +1439,11 @@ var RLANG = {
 			$(image).off('hover mousedown mouseup click mousemove');
 			$(image).click($.proxy(function(e)
 			{
-				console.log('hello world');
-				    this.aviaryEditor(e)
+				this.aviaryEditor(e)
 
 
 			}, this));
+		
 		},
 		//For looking video tags for click event
 		observeVideos: function(){
@@ -1542,7 +1541,6 @@ var RLANG = {
 
 				if (cmd === 'inserthtml')
 				{
-					debugger
 					if (this.browser('msie'))
 					{
 						this.$editor.focus();
@@ -2083,15 +2081,12 @@ var RLANG = {
 			if (this.opts.visual)
 			{
 				var height = this.$editor.innerHeight();
-
 				this.$editor.hide();
 				this.$content.hide();
-
 				html = this.$editor.html();
 				//html = $.trim(this.formatting(html));
-
 				this.$el.height(height).val(html).show().focus();
-
+				this.enabledisable();
 				this.setBtnActive('html');
 				this.opts.visual = false;
 			}
@@ -2099,32 +2094,51 @@ var RLANG = {
 			{
 				this.$el.hide();
 				var html = this.$el.val();
-
+				
 				//html = this.savePreCode(html);
-
 				// clean up
 				//html = this.stripTags(html);
-
 				// set code
 				this.$editor.html(html).show();
 				this.$content.show();
-
 				if (this.$editor.html() === '')
 				{
 					this.setCode(this.opts.emptyHtml);
 				}
-
 				this.$editor.focus();
-
 				this.setBtnInactive('html');
+				this.enabledisable();
 				this.opts.visual = true;
-
 				this.observeImages();
 				this.observeTables();
 				this.observeVideos();
 			}
+			
 		},
+		enabledisable:function()
+		{			
+			//console.log(this.$toolbar.children());
+			this.$toolbar.children().each($.proxy(function(i,e)
+			{
+				console.log(e);
+				//console.log(this,$(this).children()[0]);
+				if($(this).hasClass('disabling'))
+				{
 
+					$(this).removeClass('disabling');
+				}
+				else 
+				{
+				 	var anchorChild = $(this).children()[0];
+					if(anchorChild !== undefined && $(anchorChild).attr('title') !== 'HTML')
+					{
+						$(this).addClass('disabling');
+						$(anchorChild).removeClass('redactor_act');
+						
+			 		}
+			 	}
+			}));
+		},
 		// AUTOSAVE
 		autoSave: function()
 		{
@@ -2158,7 +2172,7 @@ var RLANG = {
 			}
 
 			this.$toolbar = $('<ul>').addClass('redactor_toolbar');
-
+			
 			if (this.opts.air)
 			{
 				$(this.air).append(this.$toolbar);
@@ -2197,6 +2211,8 @@ var RLANG = {
 					this.$toolbar.append($('<li class="redactor_separator"></li>'));
 				}
 
+				
+
 			}, this));
 
 			//check active buttons while clicking on others.
@@ -2210,7 +2226,7 @@ var RLANG = {
 		buildButton: function(key, s)
 		{
 			// console.log(s, key)
-			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
+			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '" ></a>');
 
 			if (typeof s.func === 'undefined')
 			{
@@ -2240,7 +2256,6 @@ var RLANG = {
 
 				}, this));
 			}
-
 			if (typeof s.callback !== 'undefined' && s.callback !== false)
 			{
 				button.click($.proxy(function(e) { s.callback(this, e, key); }, this));
@@ -2276,6 +2291,7 @@ var RLANG = {
 
 				button.click(this.hdlShowDropDown);
 			}
+			
 
 			return button;
 		},
@@ -2447,7 +2463,7 @@ var RLANG = {
             
 			if (key === 'backcolor')
 			{
-				console.log('helloo2', mode) 
+				//console.log('helloo2', mode) 
 				elnone.click($.proxy(this.setBackgroundNone, this));
 				elapplyhex.click(function(e){
 					that.restoreSelection();
@@ -2671,13 +2687,14 @@ var RLANG = {
 		setBtnInactive: function(key)
 		{
 			this.getBtn(key).removeClass('redactor_act');
+
+
 		},
 		inactiveAllButtons: function()
 		{
 			$.each(this.opts.activeButtons, $.proxy(function(i,s)
 			{
 				this.setBtnInactive(s);
-
 			}, this));
 		},
 		changeBtnIcon: function(key, classname)
@@ -3209,7 +3226,7 @@ var RLANG = {
 
 			$(resize).click($.proxy(function(e)
 			{
-				console.log('hello world');
+					
 				if (clicker)
 				{
 				    // this.aviaryEditor(e)
@@ -3817,23 +3834,14 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
-				// TODO: need to change the url section to regex
-				// FIXME: chnage to regex
 				var ext=($('#redactor_file_link').val());
-				//console.log(ext);
-				var extension=ext.substring(ext.lastIndexOf('.')+1).toLowerCase();
-				if(extension=="jpg" || extension=="jpeg" || extension=="bmp" || extension=="png" || extension=="gif")
-				{
-					
+				var regexQuery = /^((https?|ftp):)?\/\/.*(jpeg|jpg|png|gif|bmp)$/
+				if(regexQuery.test(ext))
+				{	
 					var id = this.generateRandomId()
 					var url = $('#redactor_file_link').val()
-				    // var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
-				    //add image inside afigure with close tag
-				    // var generatedFigure = this.createFigure();
-					// generatedFigure.appendChild($(data)[0])
 					var generatedFigure = this.createImageHtml(url, id)
-					// console.log(generatedFigure.get(0).outerHTML)
-				    this._imageSet(generatedFigure.get(0).outerHTML, true);
+					this._imageSet(generatedFigure.get(0).outerHTML, true);
 				}
 				else
 				{
