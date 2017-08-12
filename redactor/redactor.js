@@ -97,9 +97,9 @@ var RLANG = {
 		return this.each(function()
 		{
 			var $obj = $(this);
-            console.log('obj', $obj)
+            
 			var data = $obj.data('redactor');
-			console.log('data', data);
+			
 			if (!data)
 			{
 				$obj.data('redactor', (data = new Redactor(this, option)));
@@ -785,7 +785,7 @@ var RLANG = {
 				{
 					this.observeImages();
 					this.observeTables();
-					console.log('observers');
+					
 					this.observeVideos();
 
 				}, this), 1);
@@ -1437,11 +1437,11 @@ var RLANG = {
 			$(image).off('hover mousedown mouseup click mousemove');
 			$(image).click($.proxy(function(e)
 			{
-				console.log('hello world');
-				    this.aviaryEditor(e)
+				this.aviaryEditor(e)
 
 
 			}, this));
+		
 		},
 		//For looking video tags for click event
 		observeVideos: function(){
@@ -1539,7 +1539,6 @@ var RLANG = {
 
 				if (cmd === 'inserthtml')
 				{
-					debugger
 					if (this.browser('msie'))
 					{
 						this.$editor.focus();
@@ -2478,7 +2477,7 @@ var RLANG = {
             
 			if (key === 'backcolor')
 			{
-				console.log('helloo2', mode) 
+				//console.log('helloo2', mode) 
 				elnone.click($.proxy(this.setBackgroundNone, this));
 				elapplyhex.click(function(e){
 					that.restoreSelection();
@@ -2696,9 +2695,6 @@ var RLANG = {
 			$.each(this.opts.activeButtons, $.proxy(function(i,s)
 			{
 				this.setBtnInactive(s);
-				console.log(s);
-				
-
 			}, this));
 		},
 		changeBtnIcon: function(key, classname)
@@ -3230,7 +3226,7 @@ var RLANG = {
 
 			$(resize).click($.proxy(function(e)
 			{
-				console.log('hello world');
+					
 				if (clicker)
 				{
 				    // this.aviaryEditor(e)
@@ -3823,27 +3819,20 @@ var RLANG = {
 			if ($('#redactor_file_link').val() !== '')
 			{
 				var ext=($('#redactor_file_link').val());
-				//console.log(ext);
-				var extension=ext.substring(ext.lastIndexOf('.')+1).toLowerCase();
-				if(extension=="jpg" || extension=="jpeg" || extension=="bmp" || extension=="png" || extension=="gif")
-				{
-					console.log(extension);
-				
-				var id = this.generateRandomId()
-				var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
-				//add image inside afigure with close tag
-				//console.log($('redactor_file_link').val());
-				var generatedFigure = this.createFigure();
-				generatedFigure.appendChild($(data)[0])
-				this._imageSet(generatedFigure.outerHTML, true);
-				}
+				var regexQuery = /^((https?|ftp):)?\/\/.*(jpeg|jpg|png|gif|bmp)$/
+					if(regexQuery.test(ext))
+					{	
+						var id = this.generateRandomId()
+						var data = '<img' + ' id="' + id + '"' + ' src="' + $('#redactor_file_link').val() + '" />';
+						var generatedFigure = this.createFigure();
+						generatedFigure.appendChild($(data)[0])
+						this._imageSet(generatedFigure.outerHTML, true);
+					}
 				else
 				{
 					$('#redactor_file_link').addClass('validation');
 					$('#valid').show();
-				}
-				
-			}
+				}			}
 			
 			else
 			{
