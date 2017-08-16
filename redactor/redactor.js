@@ -1353,13 +1353,13 @@ var RLANG = {
 				// console.dir($(this.getSelectedHtml()).children())
 				// every element in the editor is selected then show last applyed style
 				console.log('selected-html', $(this.getSelectedHtml()));
-				$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
-				{
-					console.log(i, s);
-					// if (s.nodeType === 3){ s.remove()}
-					var tagName = $(s).prop("tagName").toLowerCase();
-                    this.setBtnActive(this.opts.activeButtonsStates[tagName])
-				}, this))
+				// $.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
+				// {
+				// 	console.log(i, s);
+				// 	// if (s.nodeType === 3){ s.remove()}
+				// 	var tagName = $(s).prop("tagName").toLowerCase();
+                //     this.setBtnActive(this.opts.activeButtonsStates[tagName])
+				// }, this))
 			}
 
 
@@ -2216,11 +2216,13 @@ var RLANG = {
 			}, this));
 
 			//check active buttons while clicking on others.
-			this.$toolbar.click($.proxy(function(e, s)
-			{
-				e.preventDefault();
-				this.observeFormatting();
-			}, this));
+			// this.$toolbar.click($.proxy(function(e, s)
+			// {
+			// 	console.log(e, s);
+			// 	console.log('dfsdfsd', this.getSelectedHtml())
+			// 	e.preventDefault();
+			// 	// this.observeFormatting();
+			// }, this));
 
 		},
 		buildButton: function(key, s)
@@ -2245,7 +2247,7 @@ var RLANG = {
 					}
                     // console.log('hello world', s.exec, key);
 					this.execCommand(s.exec, key);
-
+                    // this.observeFormatting();
 				}, this));
 			}
 			else if (s.func !== 'show')
