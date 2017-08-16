@@ -1455,9 +1455,28 @@ var RLANG = {
 			$(frontDrop).addClass('show-image-drop');
 			$(editBtns).addClass('show-image-btns');
 			$(frontDrop).click(function(){
-				$(this).removeClass('show-image-drop')
 				$(editBtns).removeClass('show-image-btns')
-			})
+				$(this).removeClass('show-image-drop')
+			});
+			//create btn actions
+			this.applyImageEditActions(editBtns, image)
+		},
+		applyImageEditActions:function(editBtns, image)
+		{
+			var resizeBtn =  $(editBtns).children('[role="resize"]');
+			resizeBtn.css('cursor', 'pointer');
+			$(resizeBtn).click($.proxy(function(e)
+			{
+				this.imageResize(image);
+                                         
+			}, this))
+
+		},
+		imageResize: function(image)
+		{
+			var parentFigure = $(image).parent()
+			console.log('clicked-on resize button', parentFigure);
+
 		},
 		//For looking video tags for click event
 		observeVideos: function(){
@@ -3520,15 +3539,15 @@ var RLANG = {
 		createImageEditBtn: function()
 		{
 			var ul = $('<ul class="btn-class">')
-			var icons = ['fa fa-arrows-alt', 'fa fa-pencil', 'fa fa-align-justify', 'fa fa-trash']
+			var icons = [{icon:'fa fa-arrows-alt', role: 'resize'}, {icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'align'}, {icon:'fa fa-trash', role: 'delete'}]
 			$.each(icons, $.proxy(function(i, val)
 		    {
-				var fontIcon = this.createFontIcons(val)
+				var fontIcon = this.createFontIcons(val.icon)
 				// fontIcon.click(function(){ console.log('hello world');});
 				var span = this.createSpan('span-cls')
 				span.append(fontIcon)
 			    var li = $('<li/>')
-					.attr('role', 'imagebtn')
+					.attr('role', val.role)
 					.append(span)
 					.appendTo(ul);
 			}, this))
