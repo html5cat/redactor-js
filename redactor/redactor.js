@@ -1433,38 +1433,49 @@ var RLANG = {
 					$(s).attr('unselectable', 'on');
 				}
 				console.dir('img', s);
-				this.imageClick(s)
+				this.showEditButtons(s)
 				// this.resizeImage(s);
 
 			}, this));
 
 		},
-		imageClick: function(image){
-			$(image).off('hover mousedown mouseup click mousemove');
-			$(image).click($.proxy(function(e)
-			{
-				this.displayEditBtns(image);
-
-			}, this));
-		
-		},
-		displayEditBtns: function(image)
+		showEditButtons: function(image)
 		{
+			$(image).off('hover mousedown mouseup click mousemove');
 			var frontDrop = $(image).siblings('.drop');
 			var editBtns = $(image).siblings('.btn-class');
+			$(image).click($.proxy(function(e)
+			{
+				this.displayEditBtns(frontDrop, editBtns);
+
+			}, this));
+			//create btn actions
+			this.applyImageEditActions(editBtns, image)
+		
+		},
+		displayEditBtns: function(frontDrop, editBtns)
+		{
+			
 			$(frontDrop).addClass('show-image-drop');
 			$(editBtns).addClass('show-image-btns');
+			$(frontDrop).off('click');
 			$(frontDrop).click(function(){
 				$(editBtns).removeClass('show-image-btns')
 				$(this).removeClass('show-image-drop')
 			});
-			//create btn actions
-			this.applyImageEditActions(editBtns, image)
+			
+			$(editBtns).click(function()
+			{
+				$(this).removeClass('show-image-btns')
+				$(frontDrop).removeClass('show-image-drop')
+
+			});
 		},
 		applyImageEditActions:function(editBtns, image)
 		{
 			var resizeBtn =  $(editBtns).children('[role="resize"]');
 			resizeBtn.css('cursor', 'pointer');
+			$(resizeBtn).off('click');
 			$(resizeBtn).click($.proxy(function(e)
 			{
 				this.imageResize(image);
@@ -1474,8 +1485,9 @@ var RLANG = {
 		},
 		imageResize: function(image)
 		{
-			var parentFigure = $(image).parent()
+			var parentFigure = $(image).parent();
 			console.log('clicked-on resize button', parentFigure);
+			this.resizeImage(image);
 
 		},
 		//For looking video tags for click event
@@ -3237,7 +3249,7 @@ var RLANG = {
 			var min_w = 10;
 			var min_h = 10;
 
-			$(resize).off('hover mousedown mouseup click mousemove');
+			// $(resize).off('hover mousedown mouseup click mousemove');
  			$(resize).hover(function() { $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor',''); clicked = false; });
 
 			$(resize).mousedown(function(e)
@@ -3261,16 +3273,16 @@ var RLANG = {
 
 			}, this));
 
-			$(resize).click($.proxy(function(e)
-			{
+			// $(resize).click($.proxy(function(e)
+			// {
 					
-				if (clicker)
-				{
-				    // this.aviaryEditor(e)
-					this.imageEdit(e);
-				}
+			// 	if (clicker)
+			// 	{
+			// 	    // this.aviaryEditor(e)
+			// 		this.imageEdit(e);
+			// 	}
 
-			}, this));
+			// }, this));
 
 			$(resize).mousemove(function(e)
 			{
