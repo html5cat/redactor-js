@@ -268,6 +268,11 @@ body .redactor_box_fullscreen {
 	overflow: hidden !important;
 	height: 32px !important;
 	border-bottom: 1px solid #bbb;
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
 }
 body .redactor_air .redactor_toolbar {
 	padding-right: 2px !important;

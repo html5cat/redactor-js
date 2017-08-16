@@ -1335,6 +1335,9 @@ var RLANG = {
 		// OBSERVERS
 		observeFormatting: function()
 		{
+			// debugger;
+			// TODO: need to find a better way to highlight all buttons when clicking other buttons
+			//FIXME: observe formating on buttons click   
 			var parent = this.getCurrentNode();
 			this.inactiveAllButtons();			
             // console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
@@ -1344,7 +1347,7 @@ var RLANG = {
 			{
 				parent = this.getCurrentNode();
 			}
-			else if (!$(this.getSelectedNode()).is('div'))
+			else if (!$(this.getSelectedNode()).is('div') || !$(this.getSelectedNode()).hasClass('redactor_toolbar'))
 			{
 				parent = this.getSelectedNode()
 			}
@@ -1424,13 +1427,14 @@ var RLANG = {
 
 			this.$editor.find('img').each($.proxy(function(i,s)
 			{
+				console.log('image', s)
 				if (this.browser('msie'))
 				{
 					$(s).attr('unselectable', 'on');
 				}
 				console.dir('img', s);
-				// this.imageClick(s)
-				this.resizeImage(s);
+				this.imageClick(s)
+				// this.resizeImage(s);
 
 			}, this));
 
@@ -1439,8 +1443,8 @@ var RLANG = {
 			$(image).off('hover mousedown mouseup click mousemove');
 			$(image).click($.proxy(function(e)
 			{
-				this.aviaryEditor(e)
-
+				console.log('image', $(image).siblings('.drop'));
+				// this.aviaryEditor(e)
 
 			}, this));
 		
@@ -2087,6 +2091,7 @@ var RLANG = {
 				//html = $.trim(this.formatting(html));
 				this.$el.height(height).val(html).show().focus();
 				this.enabledisable();
+				this.inactiveAllButtons()
 				this.setBtnActive('html');
 				this.opts.visual = false;
 			}
@@ -2106,6 +2111,7 @@ var RLANG = {
 					this.setCode(this.opts.emptyHtml);
 				}
 				this.$editor.focus();
+				this.inactiveAllButtons()
 				this.setBtnInactive('html');
 				this.enabledisable();
 				this.opts.visual = true;
@@ -2216,13 +2222,13 @@ var RLANG = {
 			}, this));
 
 			//check active buttons while clicking on others.
-			// this.$toolbar.click($.proxy(function(e, s)
-			// {
-			// 	console.log(e, s);
-			// 	console.log('dfsdfsd', this.getSelectedHtml())
-			// 	e.preventDefault();
-			// 	// this.observeFormatting();
-			// }, this));
+			this.$toolbar.click($.proxy(function(e, s)
+			{
+				// console.log(e, s);
+				// console.log('dfsdfsd', this.getSelectedHtml())
+				e.preventDefault();
+				this.observeFormatting();
+			}, this));
 
 		},
 		buildButton: function(key, s)
@@ -2247,20 +2253,20 @@ var RLANG = {
 					}
                     // console.log('hello world', s.exec, key);
 					this.execCommand(s.exec, key);
-                    // this.observeFormatting();
 				}, this));
 			}
 			else if (s.func !== 'show')
 			{
 				button.click($.proxy(function(e) {
-
 					this[s.func](e);
 
 				}, this));
 			}
 			if (typeof s.callback !== 'undefined' && s.callback !== false)
 			{
-				button.click($.proxy(function(e) { s.callback(this, e, key); }, this));
+				button.click($.proxy(function(e) { 
+					s.callback(this, e, key); 
+				}, this));
 			}
 
 			// dropdown
@@ -2289,7 +2295,7 @@ var RLANG = {
 				this.dropdowns.push(dropdown.appendTo($(document.body)));
 
 				// observing dropdown
-				this.hdlShowDropDown = $.proxy(function(e) { this.showDropDown(e, dropdown, key); }, this);
+				this.hdlShowDropDown = $.proxy(function(e) {  this.showDropDown(e, dropdown, key); }, this);
 
 				button.click(this.hdlShowDropDown);
 			}
@@ -3508,6 +3514,7 @@ var RLANG = {
 			$.each(icons, $.proxy(function(i, val)
 		    {
 				var fontIcon = this.createFontIcons(val)
+				// fontIcon.click(function(){ console.log('hello world');});
 				var span = this.createSpan('span-cls')
 				span.append(fontIcon)
 			    var li = $('<li/>')

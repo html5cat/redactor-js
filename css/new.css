@@ -76,6 +76,7 @@ disable unlink  */
 .img-border {
   position: relative;
   display: inline-block;
+  margin: 0px 0px 0px 0px;
 }
 
 .btn-class {
@@ -110,9 +111,10 @@ ul.btn-class li {
   height: 100%;
   opacity: 0;
   background: white;
+  z-index: -1;
 }
 
-.img-border:hover .drop {
+/* .img-border:hover .drop {
   opacity: 0.5;
   border: 1.5px;
   border-style: dashed;
@@ -121,4 +123,4 @@ ul.btn-class li {
    display: inline-block;
    opacity: 1;
    visibility: visible;
- }
+ } */
