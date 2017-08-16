@@ -1443,11 +1443,21 @@ var RLANG = {
 			$(image).off('hover mousedown mouseup click mousemove');
 			$(image).click($.proxy(function(e)
 			{
-				console.log('image', $(image).siblings('.drop'));
-				// this.aviaryEditor(e)
+				this.displayEditBtns(image);
 
 			}, this));
 		
+		},
+		displayEditBtns: function(image)
+		{
+			var frontDrop = $(image).siblings('.drop');
+			var editBtns = $(image).siblings('.btn-class');
+			$(frontDrop).addClass('show-image-drop');
+			$(editBtns).addClass('show-image-btns');
+			$(frontDrop).click(function(){
+				$(this).removeClass('show-image-drop')
+				$(editBtns).removeClass('show-image-btns')
+			})
 		},
 		//For looking video tags for click event
 		observeVideos: function(){

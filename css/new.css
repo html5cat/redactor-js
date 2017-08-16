@@ -112,15 +112,20 @@ ul.btn-class li {
   opacity: 0;
   background: white;
   z-index: -1;
+  visibility: hidden;
+  -webkit-transition: opacity 1s ease-in, visibility 1s ease-in;
+  transition: opacity 700ms ease-in, visibility 700ms ease-in;
 }
 
-/* .img-border:hover .drop {
+.show-image-drop {
   opacity: 0.5;
   border: 1.5px;
   border-style: dashed;
+  visibility: visible;
+  z-index: 0;
 }
- .img-border:hover .btn-class {
-   display: inline-block;
-   opacity: 1;
-   visibility: visible;
- } */
+.show-image-btns {
+  display: inline-block;
+  opacity: 1;
+  visibility: visible;
+}
