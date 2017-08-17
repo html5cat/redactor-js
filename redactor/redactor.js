@@ -1008,7 +1008,6 @@ var RLANG = {
 				
 				if (this.opts.shortcuts && !e.shiftKey && key === 9)
 				{
-					console.log('tab')
 					if (pre === false && li === true)
 					{
 						this.shortcuts(e, 'indent'); // Tab
@@ -1024,7 +1023,7 @@ var RLANG = {
 				}
 				else if (this.opts.shortcuts && e.shiftKey && key === 9 )
 				{
-					// this.shortcuts(e, 'outdent'); // Shift + tab
+					this.shortcuts(e, 'outdent'); // Shift + tab
 				}
 
 				// safari shift key + enter
@@ -1431,7 +1430,7 @@ var RLANG = {
 				}
 				console.dir('img', s);
 				this.applyImageEditActions(s)
-				// this.removebr(s);
+				this.removebr(s);
 				// this.resizeImage(s);
 
 			}, this));
@@ -1486,7 +1485,7 @@ var RLANG = {
 		removebr:function(image)
 		{
 			$(image).parent().parent().find('br').remove();
-			// $(image).parent().parent().append($('<br />'));
+			$(image).parent().parent().append(document.createTextNode('\n'));
 
 		},
 		//For looking video tags for click event
