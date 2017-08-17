@@ -1443,6 +1443,8 @@ var RLANG = {
 			var editBtns = $(image).siblings('.btn-class');
 			var parent  = $(image).parent();
 			var resizeBtn =  $(editBtns).children('[role="resize"]');
+			var deleteBtn= $(editBtns).children('[role="delete"]');
+			var editBtn= $(editBtns).children('[role="edit"]');
 
 			$(image).hover(function() 
 			{ 
@@ -1462,6 +1464,24 @@ var RLANG = {
 				this.resizeImage(image);
 			}, this))
 
+			deleteBtn.css('cursor','pointer');
+			$(deleteBtn).off('click');
+			$(deleteBtn).click($.proxy(function(e)
+				{
+					var sure = confirm("Are you sure you want to delete image");
+					if(sure)
+					{
+					parent.remove();
+					}
+				},this))
+
+			editBtn.css('cursor','pointer');
+			$(editBtn).off('click');
+			$(editBtn).click($.proxy(function(e)
+				{
+					var $el=$(image);
+					this.aviaryEditor($el);
+				},this))
 		},
 		removebr:function(image)
 		{
