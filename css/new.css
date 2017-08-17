@@ -75,7 +75,7 @@ disable unlink  */
 
 .img-border {
   position: relative;
-  display: inline-block;
+  display: inline-table;
   margin: 0px 0px 0px 0px;
 }
 
@@ -117,15 +117,20 @@ ul.btn-class li {
   transition: opacity 700ms ease-in, visibility 700ms ease-in;
 }
 
-.show-image-drop {
+
+
+.show-border {
+  border: 1.5px dashed rgb(148, 146, 146);
+}
+
+
+.img-border:hover .drop {
   opacity: 0.5;
-  border: 1.5px;
-  border-style: dashed;
   visibility: visible;
-  z-index: 0;
+  z-index:  0;
 }
-.show-image-btns {
-  display: inline-block;
-  opacity: 1;
-  visibility: visible;
-}
+ .img-border:hover .btn-class {
+   display: inline-block;
+   opacity: 1;
+   visibility: visible;
+ }

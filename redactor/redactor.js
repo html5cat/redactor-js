@@ -1433,61 +1433,36 @@ var RLANG = {
 					$(s).attr('unselectable', 'on');
 				}
 				console.dir('img', s);
-				this.showEditButtons(s)
+				this.applyImageEditActions(s)
 				// this.resizeImage(s);
 
 			}, this));
 
 		},
-		showEditButtons: function(image)
+		applyImageEditActions:function(image)
 		{
-			$(image).off('hover mousedown mouseup click mousemove');
 			var frontDrop = $(image).siblings('.drop');
 			var editBtns = $(image).siblings('.btn-class');
-			$(image).click($.proxy(function(e)
-			{
-				this.displayEditBtns(frontDrop, editBtns);
-
-			}, this));
-			//create btn actions
-			this.applyImageEditActions(editBtns, image)
-		
-		},
-		displayEditBtns: function(frontDrop, editBtns)
-		{
-			
-			$(frontDrop).addClass('show-image-drop');
-			$(editBtns).addClass('show-image-btns');
-			$(frontDrop).off('click');
-			$(frontDrop).click(function(){
-				$(editBtns).removeClass('show-image-btns')
-				$(this).removeClass('show-image-drop')
-			});
-			
-			$(editBtns).click(function()
-			{
-				$(this).removeClass('show-image-btns')
-				$(frontDrop).removeClass('show-image-drop')
-
-			});
-		},
-		applyImageEditActions:function(editBtns, image)
-		{
+			var parent  = $(image).parent();
 			var resizeBtn =  $(editBtns).children('[role="resize"]');
+
+			$(image).hover(function() 
+			{ 
+				 $(image).css('cursor', 'nw-resize');
+			}, 
+			function() 
+			{ 
+				$(image).css('cursor',''); 
+				$(frontDrop).css('z-index', '0');
+			});
 			resizeBtn.css('cursor', 'pointer');
 			$(resizeBtn).off('click');
 			$(resizeBtn).click($.proxy(function(e)
 			{
-				this.imageResize(image);
-                                         
+				$(parent).addClass('show-border')
+				$(frontDrop).css('z-index', '-1');
+				this.resizeImage(image);
 			}, this))
-
-		},
-		imageResize: function(image)
-		{
-			var parentFigure = $(image).parent();
-			console.log('clicked-on resize button', parentFigure);
-			this.resizeImage(image);
 
 		},
 		//For looking video tags for click event
@@ -3249,13 +3224,16 @@ var RLANG = {
 			var min_w = 10;
 			var min_h = 10;
 
-			// $(resize).off('hover mousedown mouseup click mousemove');
- 			$(resize).hover(function() { $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor',''); clicked = false; });
+			$(resize).off('mousedown mouseup mousemove');
+ 			// $(resize).hover(function() { $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor',''); clicked = false; });
 
 			$(resize).mousedown(function(e)
 			{
 				e.preventDefault();
-
+				if (!$(resize).parent().hasClass('show-border'))
+				{
+					$(resize).parent().addClass('show-border');
+				}
 				ratio = $(resize).width()/$(resize).height();
 
 				clicked = true;
@@ -3268,7 +3246,8 @@ var RLANG = {
 			$(resize).mouseup($.proxy(function(e)
 			{
 				clicked = false;
-				$(resize).css('cursor','');
+				// $(resize).css('cursor','');
+				$(resize).parent().removeClass('show-border');
 				this.syncCode();
 
 			}, this));
@@ -3543,8 +3522,9 @@ var RLANG = {
 		createFontIcons: function(cls)
 		{
 				var icon = $('<i/>')
-					.addClass(cls)
+					.addClass(cls.icon)
 					.attr('aria-hidden', true)
+					.attr('title', cls.role)
 					.css('color', '#abb9c2')
 				return icon;
 		},
@@ -3554,7 +3534,7 @@ var RLANG = {
 			var icons = [{icon:'fa fa-arrows-alt', role: 'resize'}, {icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'align'}, {icon:'fa fa-trash', role: 'delete'}]
 			$.each(icons, $.proxy(function(i, val)
 		    {
-				var fontIcon = this.createFontIcons(val.icon)
+				var fontIcon = this.createFontIcons(val)
 				// fontIcon.click(function(){ console.log('hello world');});
 				var span = this.createSpan('span-cls')
 				span.append(fontIcon)
