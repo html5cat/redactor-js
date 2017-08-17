@@ -1335,9 +1335,6 @@ var RLANG = {
 		// OBSERVERS
 		observeFormatting: function()
 		{
-			// debugger;
-			// TODO: need to find a better way to highlight all buttons when clicking other buttons
-			//FIXME: observe formating on buttons click   
 			var parent = this.getCurrentNode();
 			this.inactiveAllButtons();			
             // console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
@@ -1434,6 +1431,7 @@ var RLANG = {
 				}
 				console.dir('img', s);
 				this.applyImageEditActions(s)
+				// this.removebr(s);
 				// this.resizeImage(s);
 
 			}, this));
@@ -1463,6 +1461,12 @@ var RLANG = {
 				$(frontDrop).css('z-index', '-1');
 				this.resizeImage(image);
 			}, this))
+
+		},
+		removebr:function(image)
+		{
+			$(image).parent().parent().find('br').remove();
+			// $(image).parent().parent().append($('<br />'));
 
 		},
 		//For looking video tags for click event
@@ -1591,7 +1595,7 @@ var RLANG = {
 				else if (cmd === 'JustifyLeft' || cmd === 'JustifyCenter' || cmd === 'JustifyRight' || cmd === 'JustifyFull')
 				{
 					parent = this.getCurrentNode();
-					// console.log('justify', parent);
+					// console.log('justify', parent, this.getSelectedNode(), this.getSelectedHtml());
 					var tag = $(parent).get(0).tagName;
 					
 					if (this.opts.iframe === false && $(parent).parents('.redactor_editor').size() == 0)
