@@ -357,7 +357,7 @@ var RLANG = {
 			modal_image_title: String() +
 				'<div id="redactor_modal_content">' +
 					'<label>Upload Images</label>' +
-					'<input type="text" id="redactor_image_caption"/>' +
+					'<input type="text" class="redactor_input" id="redactor_image_caption"/>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
 				    '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
@@ -1496,17 +1496,23 @@ var RLANG = {
 			},this));
 
 			$(caption).css('cursor', 'pointer');
+			$(caption).off('click');
 			$(caption).click($.proxy(function(e)
 			{
-				this.modalInit('Add caption', this.opts.modal_image_title, 300, $.proxy(function(e)
+				this.modalInit('', this.opts.modal_image_title, 300, $.proxy(function(e)
 				{
+					var pre_caption = $(parent).find($('figcaption')).text();
+					$('#redactor_image_caption').val(pre_caption);	
+
 					$('#redactor_btn_image_title').click($.proxy(function(e)
 					{
-						console.log('hello.....');
-
+						var caption = $('#redactor_image_caption').val();
+						$(parent).find($('figcaption')).text(caption);
+						this.modalClose();
+						
 					}, this));
-				}, this));
 
+				}, this));
 
 			}, this));
 		},
