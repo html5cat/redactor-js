@@ -2542,7 +2542,7 @@ var RLANG = {
 		},
 		setColorNone: function()
 		{
-			$(this.getCurrentNode()).attr('color', '').css('color', '');
+			$(this.getCurrentNode()).css('color', '');
 			this.syncCode();
 		},
 		// DROPDOWNS

@@ -93,6 +93,10 @@ disable unlink  */
 ul.btn-class li {
   display: inline-block;
   padding: 5px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;  
 }
 
 .span-cls {
