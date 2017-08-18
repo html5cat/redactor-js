@@ -4428,6 +4428,10 @@ var RLANG = {
 		},
 		modalClose: function()
 		{
+			//remove the modal resizing 
+			$("#redactor_modal").removeClass('confirm');
+			$("#redactor_modal_close").css('visibility','visible');
+
 			$('#redactor_modal_close').unbind('click', this.modalClose);
 			$('#redactor_modal').fadeOut('fast', $.proxy(function()
 			{
