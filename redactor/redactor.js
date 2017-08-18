@@ -87,6 +87,9 @@ var RLANG = {
 	fontfamily: 'Font Family',
 	multiple: 'multiple',
 	imagevalidation:'Insert image in correct format',
+	confirmDelete:'Are you sure you want to delete image ?',
+	yes:'Yes',
+	cancel:'No',
 	save: 'Save'
 };
 
@@ -259,6 +262,13 @@ var RLANG = {
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" name="save" class="redactor_modal_btn" id="redactorSaveBtn" value="' + RLANG.save + '" />' +
 				'</div>',
+			modal_image_delete: String()+
+				'<div id = "redactor_modal_content">'+
+				'<div id="confirmdelete">'+'<label>'+ RLANG.confirmDelete +'</label>' + '</div>'+
+				'</div>' +
+				'<input type="button" name="ok" class="redactor_modal_btn " id="redactor_imgdel_btn" value="' + RLANG.yes + '" />' +
+				'<input type="button" name="cancel" class="redactor_modal_btn" id="redactor_imgdelclose_btn" value="' + RLANG.cancel + '" />' +
+				'<div>',
 
 			modal_image: String() +
 				'<div id="redactor_modal_content">' +
@@ -1444,7 +1454,7 @@ var RLANG = {
 			var resizeBtn =  $(editBtns).children('[role="resize"]');
 			var deleteBtn= $(editBtns).children('[role="delete"]');
 			var editBtn= $(editBtns).children('[role="edit"]');
-
+			console.log(parent);
 			$(image).hover(function() 
 			{ 
 				 $(image).css('cursor', 'nw-resize');
@@ -1467,11 +1477,7 @@ var RLANG = {
 			$(deleteBtn).off('click');
 			$(deleteBtn).click($.proxy(function(e)
 				{
-					var sure = confirm("Are you sure you want to delete image");
-					if(sure)
-					{
-					parent.remove();
-					}
+					this.confirmdel(parent);
 				},this))
 
 			editBtn.css('cursor','pointer');
@@ -1486,7 +1492,21 @@ var RLANG = {
 		{
 			$(image).parent().parent().find('br').remove();
 			$(image).parent().parent().append(document.createTextNode('\n'));
-
+		},
+		confirmdel:function(parent)
+		{
+				var set=$("#redactor_modal").addClass('confirm');
+				$("#redactor_modal_close").css('display','none');
+				this.modalInit('',this.opts.modal_image_delete);
+				$("#redactor_imgdel_btn").click($.proxy(function(e)
+				{
+					$(parent).remove();
+					this.modalClose();
+				},this))
+				$("#redactor_imgdelclose_btn").click($.proxy(function(e)
+				{
+					this.modalClose();
+				},this))
 		},
 		//For looking video tags for click event
 		observeVideos: function(){

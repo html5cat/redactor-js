@@ -508,7 +508,22 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 }
 #redactor_modal_content {
 	padding: 20px 30px;
-
+}
+#redactor_imgdel_btn
+{
+	margin-left: 70px !important;
+}
+#redactor_imgdelclose_btn
+{
+	margin-left: 40px !important;
+}
+.confirm
+{
+	width:280px !important;
+	height:130px !important;
+	margin-left: -150px !important;
+	margin-top: -30px !important;
+	border: 1px solid red;
 }
 #redactor_modal_close {
 	position: absolute;
@@ -719,3 +734,4 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
     cursor: not-allowed;
     
 }
+.
