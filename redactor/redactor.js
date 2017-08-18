@@ -1531,21 +1531,21 @@ var RLANG = {
 				{
 					$(parent).remove();
 					this.modalClose();
-					setTimeout(function()
-					{
-						$("#redactor_modal").removeClass('confirm');
-						$("#redactor_modal_close").css('visibility','visible');
-					},500);
+					// setTimeout(function()
+					// {
+					// 	$("#redactor_modal").removeClass('confirm');
+					// 	$("#redactor_modal_close").css('visibility','visible');
+					// },500);
 				},this));
 					
 				$("#redactor_imgdelclose_btn").click($.proxy(function(e)
 				{
 					this.modalClose();
-					setTimeout(function()
-					{
-					    $("#redactor_modal").removeClass('confirm');
-					    $("#redactor_modal_close").css('visibility','visible');
-					}, 500);
+					// setTimeout(function()
+					// {
+					//     $("#redactor_modal").removeClass('confirm');
+					//     $("#redactor_modal_close").css('visibility','visible');
+					// }, 500);
 				},this));
 				
 			},this));
