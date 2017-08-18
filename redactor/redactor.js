@@ -1488,15 +1488,11 @@ var RLANG = {
 					this.aviaryEditor($el);
 				},this))
 		},
-<<<<<<< HEAD
 		removebr:function(image)
 		{
 			$(image).parent().parent().find('br').remove();
 			$(image).parent().parent().append(document.createTextNode('\n'));
 		},
-=======
-
->>>>>>> 60d3746782d90a93edb8b9ca51ef0df289d856bd
 		confirmdel:function(parent)
 		{
 				var set=$("#redactor_modal").addClass('confirm');
