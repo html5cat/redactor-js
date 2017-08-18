@@ -1479,6 +1479,7 @@ var RLANG = {
 				{
 					this.confirmdel(parent);
 				},this))
+			
 
 			editBtn.css('cursor','pointer');
 			$(editBtn).off('click');
@@ -1495,18 +1496,32 @@ var RLANG = {
 		},
 		confirmdel:function(parent)
 		{
-				var set=$("#redactor_modal").addClass('confirm');
-				$("#redactor_modal_close").css('display','none');
-				this.modalInit('',this.opts.modal_image_delete);
+			$("#redactor_modal").addClass('confirm');
+			$("#redactor_modal_close").css('visibility','hidden');
+			this.modalInit('',this.opts.modal_image_delete, 300, $.proxy(function()
+			{
 				$("#redactor_imgdel_btn").click($.proxy(function(e)
 				{
 					$(parent).remove();
 					this.modalClose();
-				},this))
+					setTimeout(function()
+					{
+						$("#redactor_modal").removeClass('confirm');
+						$("#redactor_modal_close").css('visibility','visible');
+					},500);
+				},this));
+					
 				$("#redactor_imgdelclose_btn").click($.proxy(function(e)
 				{
 					this.modalClose();
-				},this))
+					setTimeout(function()
+					{
+					    $("#redactor_modal").removeClass('confirm');
+					    $("#redactor_modal_close").css('visibility','visible');
+					}, 500);
+				},this));
+				
+			},this));
 		},
 		//For looking video tags for click event
 		observeVideos: function(){
