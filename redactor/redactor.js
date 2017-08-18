@@ -2288,9 +2288,10 @@ var RLANG = {
 					if (this.browser('mozilla'))
 					{
 						this.$editor.focus();
-						//this.restoreSelection();
+						// this.restoreSelection();
 					}
-                    // console.log('hello world', s.exec, key);
+					// console.log('hello world', s.exec, key);
+					this.restoreSelection();
 					this.execCommand(s.exec, key);
 				}, this));
 			}
