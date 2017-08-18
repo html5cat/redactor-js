@@ -88,9 +88,6 @@ var RLANG = {
 	multiple: 'multiple',
 	imagevalidation:'Insert image in correct format',
 	confirmDelete:'Are you sure you want to delete image ?',
-	yes:'Yes',
-	cancel:'No',
-	save: 'Save'
 };
 
 (function($){
@@ -266,8 +263,8 @@ var RLANG = {
 				'<div id = "redactor_modal_content">'+
 				'<div id="confirmdelete">'+'<label>'+ RLANG.confirmDelete +'</label>' + '</div>'+
 				'</div>' +
-				'<input type="button" name="ok" class="redactor_modal_btn " id="redactor_imgdel_btn" value="' + RLANG.yes + '" />' +
-				'<input type="button" name="cancel" class="redactor_modal_btn" id="redactor_imgdelclose_btn" value="' + RLANG.cancel + '" />' +
+				'<input type="button" name="ok" class="redactor_modal_btn " id="redactor_imgdel_btn" value="' + 'Yes' + '" />' +
+				'<input type="button" name="cancel" class="redactor_modal_btn" id="redactor_imgdelclose_btn" value="' + 'No' + '" />' +
 				'<div>',
 
 			modal_image: String() +
@@ -357,7 +354,15 @@ var RLANG = {
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_multiple_file" value="' + RLANG.insert + '" />' +
 				'</div>',
-
+			modal_image_title: String() +
+				'<div id="redactor_modal_content">' +
+					'<label>Upload Images</label>' +
+					'<input type="text" id="redactor_image_caption"/>' +
+				'</div>' +
+				'<div id="redactor_modal_footer">' +
+				    '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+				    '<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_image_title" value="' + RLANG.insert + '" />' +
+			    '</div>',
 			toolbar: {
 				html:
 				{
@@ -1452,9 +1457,10 @@ var RLANG = {
 			var editBtns = $(image).siblings('.btn-class');
 			var parent  = $(image).parent();
 			var resizeBtn =  $(editBtns).children('[role="resize"]');
-			var deleteBtn= $(editBtns).children('[role="delete"]');
-			var editBtn= $(editBtns).children('[role="edit"]');
-			console.log(parent);
+			var deleteBtn = $(editBtns).children('[role="delete"]');
+			var editBtn = $(editBtns).children('[role="edit"]');
+			var caption = $(editBtns).children('[role="caption"]');
+
 			$(image).hover(function() 
 			{ 
 				 $(image).css('cursor', 'nw-resize');
@@ -1464,6 +1470,7 @@ var RLANG = {
 				$(image).css('cursor',''); 
 				$(frontDrop).css('z-index', '0');
 			});
+			
 			resizeBtn.css('cursor', 'pointer');
 			$(resizeBtn).off('click');
 			$(resizeBtn).click($.proxy(function(e)
@@ -1476,17 +1483,32 @@ var RLANG = {
 			deleteBtn.css('cursor','pointer');
 			$(deleteBtn).off('click');
 			$(deleteBtn).click($.proxy(function(e)
-				{
-					this.confirmdel(parent);
-				},this))
+			{
+				this.confirmdel(parent);
+			},this))
 
 			editBtn.css('cursor','pointer');
 			$(editBtn).off('click');
 			$(editBtn).click($.proxy(function(e)
+			{
+				var $el=$(image);
+				this.aviaryEditor($el);
+			},this));
+
+			$(caption).css('cursor', 'pointer');
+			$(caption).click($.proxy(function(e)
+			{
+				this.modalInit('Add caption', this.opts.modal_image_title, 300, $.proxy(function(e)
 				{
-					var $el=$(image);
-					this.aviaryEditor($el);
-				},this))
+					$('#redactor_btn_image_title').click($.proxy(function(e)
+					{
+						console.log('hello.....');
+
+					}, this));
+				}, this));
+
+
+			}, this));
 		},
 		removebr:function(image)
 		{
@@ -3575,7 +3597,7 @@ var RLANG = {
 		createImageEditBtn: function()
 		{
 			var ul = $('<ul class="btn-class">')
-			var icons = [{icon:'fa fa-arrows-alt', role: 'resize'}, {icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'align'}, {icon:'fa fa-trash', role: 'delete'}]
+			var icons = [{icon:'fa fa-arrows-alt', role: 'resize'}, {icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'caption'}, {icon:'fa fa-trash', role: 'delete'}]
 			$.each(icons, $.proxy(function(i, val)
 		    {
 				var fontIcon = this.createFontIcons(val)
