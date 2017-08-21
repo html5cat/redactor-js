@@ -932,6 +932,7 @@ var RLANG = {
 				var key = e.keyCode || e.which;
 				var parent = this.getParentNode();
 				var current = this.getCurrentNode();
+				var selected = this.getSelectedNode();
 				var pre = false;
 				var li = false;
 				var ctrl = e.ctrlKey || e.metaKey;
@@ -940,7 +941,7 @@ var RLANG = {
 				{
 					pre = true;
 				}
-				if ((parent || current) && ($(parent).get(0).tagName === 'LI' || $(current).get(0).tagName === 'LI'))
+				if ((parent || current) && ($(parent).get(0).tagName === 'LI' || $(current).get(0).tagName === 'LI') || $(selected).get(0).tagName === 'LI')
 				{
 					li = true
 				}
@@ -1030,6 +1031,7 @@ var RLANG = {
 					}
 					else
 					{
+						debugger;
 						e.preventDefault();
 						this.insertNodeAtCaret(this.document.createTextNode('\t'));
 						this.syncCode();
