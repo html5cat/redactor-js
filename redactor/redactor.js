@@ -1469,7 +1469,7 @@ var RLANG = {
 			function() 
 			{ 
 				$(image).css('cursor',''); 
-				$(frontDrop).css('z-index', '0');
+				// $(frontDrop).css('z-index', '0');
 			});
 			
 			resizeBtn.css('cursor', 'pointer');
@@ -2614,12 +2614,12 @@ var RLANG = {
 		},
 		setBackgroundNone: function()
 		{
-			// console.log(this.getParentNode(), this.getCurrentNode());
 			$(this.getCurrentNode()).css('background-color', 'transparent');
 			this.syncCode();
 		},
 		setColorNone: function()
 		{
+			// console.log(this.getParentNode(), this.getCurrentNode(), this.getSelectedNode(), this.getSelectedHtml());			
 			$(this.getCurrentNode()).css('color', '');
 			this.syncCode();
 		},
