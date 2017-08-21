@@ -356,7 +356,7 @@ var RLANG = {
 				'</div>',
 			modal_image_title: String() +
 				'<div id="redactor_modal_content">' +
-					'<label>title</label>' +
+					'<label>Image Caption</label>' +
 					'<input type="text" class="redactor_input" id="redactor_image_caption"/>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
@@ -1031,7 +1031,6 @@ var RLANG = {
 					}
 					else
 					{
-						debugger;
 						e.preventDefault();
 						this.insertNodeAtCaret(this.document.createTextNode('\t'));
 						this.syncCode();
@@ -1505,11 +1504,26 @@ var RLANG = {
 				{
 					var pre_caption = $(parent).find($('figcaption')).text();
 					$('#redactor_image_caption').val(pre_caption);	
-
+					if (pre_caption)
+					{
+						$('#redactor_btn_image_title').prop('value', 'Update');
+					}
+					else
+					{
+						$('#redactor_btn_image_title').prop('value', 'Insert');
+					}
 					$('#redactor_btn_image_title').click($.proxy(function(e)
 					{
 						var caption = $('#redactor_image_caption').val();
-						$(parent).find($('figcaption')).text(caption);
+						if (caption)
+						{
+							$(parent).find($('figcaption')).text(caption);
+							$(parent).find($('figcaption')).css('display', 'block')
+						}
+						else
+						{
+							$(parent).find($('figcaption')).css('display', 'none')
+						}
 						this.modalClose();
 
 					}, this));
