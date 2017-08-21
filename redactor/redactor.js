@@ -356,7 +356,7 @@ var RLANG = {
 				'</div>',
 			modal_image_title: String() +
 				'<div id="redactor_modal_content">' +
-					'<label>Upload Images</label>' +
+					'<label>title</label>' +
 					'<input type="text" class="redactor_input" id="redactor_image_caption"/>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
