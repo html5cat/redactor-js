@@ -1446,7 +1446,7 @@ var RLANG = {
 				}
 				console.dir('img', s);
 				this.applyImageEditActions(s)
-				this.removebr(s);
+				// this.removebr(s);
 				// this.resizeImage(s);
 
 			}, this));
@@ -2368,8 +2368,8 @@ var RLANG = {
 						this.$editor.focus();
 						// this.restoreSelection();
 					}
-					// console.log('hello world', s.exec, key);
-					this.restoreSelection();
+					//selection restore not working as expected.
+					this.$editor.focus();
 					this.execCommand(s.exec, key);
 				}, this));
 			}
@@ -3979,6 +3979,7 @@ var RLANG = {
 					var url = $('#redactor_file_link').val()
 					var generatedFigure = this.createImageHtml(url, id)
 					this._imageSet(generatedFigure.get(0).outerHTML, true);
+					this.syncCode()
 				}
 				else
 				{
