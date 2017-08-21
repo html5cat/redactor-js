@@ -2619,8 +2619,11 @@ var RLANG = {
 		},
 		setColorNone: function()
 		{
+			// TODO: have to put conditions when current node is div
 			// console.log(this.getParentNode(), this.getCurrentNode(), this.getSelectedNode(), this.getSelectedHtml());			
 			$(this.getCurrentNode()).css('color', '');
+			//remove format while apply color..only way to reset color.
+			this.execCommand('removeFormat', 'foreColor');
 			this.syncCode();
 		},
 		// DROPDOWNS
