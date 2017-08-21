@@ -3331,8 +3331,8 @@ var RLANG = {
 			var min_w = 10;
 			var min_h = 10;
 
-			$(resize).off('mousedown mouseup mousemove');
- 			// $(resize).hover(function() { $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor',''); clicked = false; });
+			$(resize).off('mousedown mouseup mousemove hover');
+ 			$(resize).hover(function() {  $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor', ''); clicked = false; });
 
 			$(resize).mousedown(function(e)
 			{
