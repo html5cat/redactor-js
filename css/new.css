@@ -93,7 +93,7 @@ disable unlink  */
 
 ul.btn-class li {
   display: inline-block;
-  padding: 5px;
+  padding: 11px;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -126,10 +126,24 @@ ul.btn-class li {
 
 .show-border {
   border: 1.5px dashed rgb(148, 146, 146);
+  z-index: 100;
 }
 
+.show-drop {
+  opacity: 0.5;
+  visibility: visible;
+  z-index:  100;
 
-.img-border:hover .drop {
+}
+
+.show-btn {
+  display: inline-block;
+  opacity: 1;
+  visibility: visible;
+  z-index: 100;
+}
+
+/* .img-border:hover .drop {
   opacity: 0.5;
   visibility: visible;
   z-index:  0;
@@ -138,4 +152,9 @@ ul.btn-class li {
    display: inline-block;
    opacity: 1;
    visibility: visible;
- }
+ } */
+.ui-wrapper  .ui-resizable-se {
+  border: 1px solid white
+
+
+}

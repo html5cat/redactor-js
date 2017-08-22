@@ -106,7 +106,7 @@ body .redactor_box_fullscreen {
 	height: auto;
 }
 
-.redactor_editor div,
+/* .redactor_editor div, */
 .redactor_editor p,
 .redactor_editor ul,
 .redactor_editor ol,
