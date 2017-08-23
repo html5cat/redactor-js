@@ -125,7 +125,7 @@ ul.btn-class li {
 
 
 .show-border {
-  border: 1.5px dashed rgb(148, 146, 146);
+  border: 6.5px solid cadetblue;
   z-index: 90;
 }
 
