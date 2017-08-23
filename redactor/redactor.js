@@ -1446,8 +1446,6 @@ var RLANG = {
 				}
 				console.dir('img', s);
 				this.applyImageEditActions(s)
-				// this.removebr(s);
-				// this.resizeImage(s);
 
 			}, this));
 
@@ -1457,53 +1455,55 @@ var RLANG = {
 			var frontDrop = $(image).siblings('.drop');
 			var editBtns = $(image).siblings('.btn-class');
 			var parent  = $(image).parent();
-			var resizeBtn =  $(editBtns).children('[role="resize"]');
 			var deleteBtn = $(editBtns).children('[role="delete"]');
 			var editBtn = $(editBtns).children('[role="edit"]');
 			var caption = $(editBtns).children('[role="caption"]');
 			
 			var resizeEnabled = false;
-				
+			var resizeStoped = false;
+			
             $(parent).off('click');
-			$(parent).click(function()
+			$(parent).click(function(e)
 			{
-				console.log('hello world--parent')
-				$(frontDrop).addClass('show-drop');
-				$(editBtns).addClass('show-btn');
-				$(parent).removeClass('show-border');
-			});
-
-			resizeBtn.css('cursor', 'pointer');
-			$(resizeBtn).off('click');
-			$(resizeBtn).click($.proxy(function(e)
-			{
+				if (resizeStoped && resizeEnabled)
+				{
+					resizeStoped = false;
+					return;
+				}
 				if (!resizeEnabled)
 				{
-                    $(image).resizable({
+					$(image).resizable({
 						handles: 'se',
 						minWidth: 150,
 						minHeight: 231,
 						resize: function( event, ui ) 
 						{
 							$(editBtns).removeClass('show-btn');
-							$(parent).addClass('show-border');
+							// $(parent).addClass('show-border');
 					
+						},
+						stop: function( event, ui ) 
+						{
+							$(editBtns).addClass('show-btn');
+							resizeStoped = true;
 						}
 					});
 					resizeEnabled = true;
-					$(frontDrop).css('z-index', '-1');
-					$(parent).addClass('show-border');					
+					$(frontDrop).addClass('show-drop');
+					$(parent).addClass('show-border');
+					$(editBtns).addClass('show-btn');	
+
 				}
 				else
 				{
 					$(image).resizable('destroy');
 					$(parent).removeClass('show-border');
 					$(editBtns).removeClass('show-btn');
+					$(frontDrop).removeClass('show-drop');
 					resizeEnabled = false;
 				}
-				// this.resizeImage(image);
-				e.stopPropagation();
-			}, this))
+
+			});
 
 			deleteBtn.css('cursor','pointer');
 			$(deleteBtn).off('click');
@@ -3653,7 +3653,7 @@ var RLANG = {
 		createImageEditBtn: function()
 		{
 			var ul = $('<ul class="btn-class">')
-			var icons = [{icon:'fa fa-arrows-alt', role: 'resize'}, {icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'caption'}, {icon:'fa fa-trash', role: 'delete'}]
+			var icons = [{icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'caption'}, {icon:'fa fa-trash', role: 'delete'}]
 			$.each(icons, $.proxy(function(i, val)
 		    {
 				var fontIcon = this.createFontIcons(val)

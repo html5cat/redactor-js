@@ -126,13 +126,13 @@ ul.btn-class li {
 
 .show-border {
   border: 1.5px dashed rgb(148, 146, 146);
-  z-index: 100;
+  z-index: 90;
 }
 
 .show-drop {
   opacity: 0.5;
   visibility: visible;
-  z-index:  100;
+  z-index:  90;
 
 }
 
@@ -140,7 +140,7 @@ ul.btn-class li {
   display: inline-block;
   opacity: 1;
   visibility: visible;
-  z-index: 100;
+  z-index: 90;
 }
 
 /* .img-border:hover .drop {
@@ -154,7 +154,7 @@ ul.btn-class li {
    visibility: visible;
  } */
 .ui-wrapper  .ui-resizable-se {
-  border: 1px solid white
+  border: 1px solid #434d59
 
 
 }
