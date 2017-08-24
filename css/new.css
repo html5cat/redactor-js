@@ -125,7 +125,7 @@ ul.btn-class li {
 
 
 .show-border {
-  border: 6.5px solid cadetblue;
+  border: 4.5px solid cadetblue;
   z-index: 90;
 }
 
@@ -154,7 +154,7 @@ ul.btn-class li {
    visibility: visible;
  } */
 .ui-wrapper  .ui-resizable-se {
-  border: 1px solid #434d59
+  border: 3px solid #e08294;
 
 
 }
