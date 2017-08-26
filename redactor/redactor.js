@@ -1537,7 +1537,8 @@ var RLANG = {
 				this.modalInit('', this.opts.modal_image_title, 300, $.proxy(function(e)
 				{
 					var pre_caption = $(parent).find($('figcaption')).text();
-					$('#redactor_image_caption').val(pre_caption);	
+					$('#redactor_image_caption').focus();
+					$('#redactor_image_caption').val(pre_caption)	
 					if (pre_caption)
 					{
 						$('#redactor_btn_image_title').prop('value', 'Update');
