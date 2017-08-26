@@ -1461,8 +1461,14 @@ var RLANG = {
 			
 			var resizeEnabled = false;
 			var resizeStoped = false;
-			
-            $(parent).off('click');
+			//responsize of figure
+			//only width when image is loaded;
+			$(image).load(function(){
+				var InitialFigSize = $(this).width() - 28;
+	    		$(parent).find($('figcaption')).css('width', InitialFigSize + 'px')
+			})
+
+			$(parent).off('click');
 			$(parent).click(function(e)
 			{
 				if (resizeStoped && resizeEnabled)
@@ -1480,6 +1486,9 @@ var RLANG = {
 						{
 							$(editBtns).removeClass('show-btn');
 							// $(parent).addClass('show-border');
+							//set figurecaption size to image to adjust the overflow off caption
+							var figSize = parseFloat($(image).width()) - 28;
+							$(parent).find($('figcaption')).css('width', figSize + 'px')
 					
 						},
 						stop: function( event, ui ) 
@@ -1543,10 +1552,11 @@ var RLANG = {
 						if (caption)
 						{
 							$(parent).find($('figcaption')).text(caption);
-							$(parent).find($('figcaption')).css('display', 'block')
+							$(parent).find($('figcaption')).css('display', 'table-caption').css('caption-side', 'bottom')
 						}
 						else
 						{
+							$(parent).find($('figcaption')).text(caption);
 							$(parent).find($('figcaption')).css('display', 'none')
 						}
 						this.modalClose();
@@ -2722,7 +2732,6 @@ var RLANG = {
 				elemColor = $(this).css('background-color')
 				if (key == 'fontcolor')
 					{
-						// TODO: remove this default value in future because nobody shows the default color.
 						applyedColor = colors.color || "rgb(0, 0, 0)";
 
 					}
