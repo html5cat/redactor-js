@@ -1480,8 +1480,6 @@ var RLANG = {
 				{
 					$(image).resizable({
 						handles: 'se',
-						minWidth: 150,
-						minHeight: 231,
 						resize: function( event, ui ) 
 						{
 							$(editBtns).removeClass('show-btn');
