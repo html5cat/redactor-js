@@ -158,3 +158,7 @@ ul.btn-class li {
 
 
 }
+.img-border img {
+  width: 100%;
+  height: 100%;
+}

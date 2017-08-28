@@ -1452,6 +1452,7 @@ var RLANG = {
 		},
 		applyImageEditActions:function(image)
 		{
+			
 			var frontDrop = $(image).siblings('.drop');
 			var editBtns = $(image).siblings('.btn-class');
 			var parent  = $(image).parent();
@@ -1469,30 +1470,41 @@ var RLANG = {
 			})
 
 			$(parent).off('click');
-			$(parent).click(function(e)
+			$(parent).click($.proxy(function(e)
 			{
+				var _self = this;
+				
+				_self.$editor.css('height', '30px');
+				
 				if (resizeStoped && resizeEnabled)
 				{
 					resizeStoped = false;
+					console.log(_self.$editor.height());
 					return;
 				}
 				if (!resizeEnabled)
 				{
 					$(image).resizable({
 						handles: 'se',
+						maxWidth: 900,
 						resize: function( event, ui ) 
 						{
+							// _self.$editor.scrollTop();
+							console.log('height', $(parent).height() + 'px');
 							$(editBtns).removeClass('show-btn');
 							// $(parent).addClass('show-border');
 							//set figurecaption size to image to adjust the overflow off caption
 							var figSize = parseFloat($(image).width()) - 28;
-							$(parent).find($('figcaption')).css('width', figSize + 'px')
-					
+							$(parent).find($('figcaption')).css('width', figSize + 'px');
+							// $(image).css('width', $(parent).width() + 'px').css('height', $(parent).height() + 'px');
+							var para = $(parent).closest('p');
+							// $(para).css('width', $(parent).width() + 'px').css('height',  $(parent).height() + 'px');
 						},
 						stop: function( event, ui ) 
 						{
 							$(editBtns).addClass('show-btn');
 							resizeStoped = true;
+							_self.$editor.css('height', '');
 						}
 					});
 					resizeEnabled = true;
@@ -1508,9 +1520,11 @@ var RLANG = {
 					$(editBtns).removeClass('show-btn');
 					$(frontDrop).removeClass('show-drop');
 					resizeEnabled = false;
+					_self.$editor.css('height', '');
+					
 				}
 
-			});
+			}, this));
 
 			deleteBtn.css('cursor','pointer');
 			$(deleteBtn).off('click');

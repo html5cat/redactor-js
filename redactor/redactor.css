@@ -97,12 +97,12 @@ body .redactor_box_fullscreen {
 .redactor_editor object,
 .redactor_editor embed,
 .redactor_editor video,
-.redactor_editor img {
+{
 	width: auto;
 	max-width: 100%;
 }
 .redactor_editor video,
-.redactor_editor img {
+{
 	height: auto;
 }
 
