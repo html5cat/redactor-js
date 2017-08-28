@@ -1504,7 +1504,7 @@ var RLANG = {
 						{
 							$(editBtns).addClass('show-btn');
 							resizeStoped = true;
-							_self.$editor.css('height', '');
+							_self.$editor.css('height', '30px');
 						}
 					});
 					resizeEnabled = true;
