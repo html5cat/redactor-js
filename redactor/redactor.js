@@ -1410,7 +1410,7 @@ var RLANG = {
 		},
 		applyImageEditActions:function(image)
 		{
-			
+			// TODO: need to chnage to small functions
 			var frontDrop = $(image).siblings('.drop');
 			var editBtns = $(image).siblings('.btn-class');
 			var parent  = $(image).parent();
@@ -3812,7 +3812,7 @@ var RLANG = {
 			for (var i = 0; i < imageUrls.length; i++)
 			{
 				var childFigure = this.createFigure();
-				var img = $('<img id="' + this.generateRandomId() + '">');
+				var img = $('<img id="' + this.generateRandomId() + '" draggable="false">');
 				img.attr('src', imageUrls[i]);
 				childFigure.append(img[0])
 				parentFigure.append(childFigure);
@@ -3998,7 +3998,7 @@ var RLANG = {
 		},
 		createImageHtml: function(url, uuid)
 		{
-			var image = '<img' + ' id="' + uuid + '"' + ' src="' + url + '" />';
+			var image = '<img' + ' id="' + uuid + '"' + ' src="' + url + '" draggable="false"/>';
 			var caption = this.createFigcap('caption');
 			var generatedFigure = this.createFigure('img-border');
 			var span = this.createSpan('drop')
