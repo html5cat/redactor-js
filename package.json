@@ -1,0 +1,26 @@
+{
+  "name": "redactor-js",
+  "version": "1.0.0",
+  "description": "\"wysiwyg editor using jquery\"",
+  "main": "redactor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sabareeshkk/redactor-js.git"
+  },
+  "keywords": [
+    "wysiwyg"
+  ],
+  "author": "sabareeshk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sabareeshkk/redactor-js/issues"
+  },
+  "homepage": "https://github.com/sabareeshkk/redactor-js#readme",
+  "devDependencies": {
+    "npx": "^9.5.0",
+    "webpack": "^3.5.1"
+  }
+}

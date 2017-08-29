@@ -1,4 +1,4 @@
-redactor-js
+<!-- redactor-js
 ===========
 
 # Repo not maintained. Proceed with caution or refer to http://imperavi.com/redactor/
@@ -35,4 +35,7 @@ If you found and issue, please submit it here: http://imperavi.com/support/
 ## License
 Starting with version 7.6.2 redactor-js is licensed under [Creative Commons Attribution-NonCommercial 3.0 license](http://creativecommons.org/licenses/by-nc/3.0/)
 
-For commercial use please buy license here: http://redactorjs.com/ or use earlier version.
+For commercial use please buy license here: http://redactorjs.com/ or use earlier version. -->
+
+## List of contenteditable Browser Inconsistencies
+![List](https://github.com/guardian/scribe/blob/master/BROWSERINCONSISTENCIES.md)

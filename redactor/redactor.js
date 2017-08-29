@@ -59,7 +59,7 @@ var RLANG = {
 	delete_head: 'Delete Head',
 	title: 'Title',
 	image_position: 'Position',
-	none: 'None',
+	clear: 'Clear',
 	left: 'Left',
 	right: 'Right',
 	image_web_link: 'Image Web Link',
@@ -82,7 +82,12 @@ var RLANG = {
 	anchor: 'Anchor',
 	link_new_tab: 'Open link in new tab',
 	underline: 'Underline',
-	alignment: 'Alignment'
+	alignment: 'Alignment',
+	fontsize: 'Font size',
+	fontfamily: 'Font Family',
+	multiple: 'multiple',
+	imagevalidation:'Insert image in correct format',
+	confirmDelete:'Are you sure you want to delete image ?',
 };
 
 (function($){
@@ -93,8 +98,9 @@ var RLANG = {
 		return this.each(function()
 		{
 			var $obj = $(this);
-
+            
 			var data = $obj.data('redactor');
+			
 			if (!data)
 			{
 				$obj.data('redactor', (data = new Redactor(this, option)));
@@ -108,7 +114,7 @@ var RLANG = {
 	{
 		// Element
 		this.$el = $(element);
-
+        // console.log(this.$el.data())
 		// Lang
 		if (typeof options !== 'undefined' && typeof options.lang !== 'undefined' && options.lang !== 'en' && typeof RELANG[options.lang] !== 'undefined')
 		{
@@ -135,7 +141,7 @@ var RLANG = {
 			focus: false,
 			tabindex: false,
 			autoresize: true,
-			minHeight: false,
+			minHeight: 500,
 			fixed: false,
 			fixedTop: 0, // pixels
 			fixedBox: false,
@@ -182,15 +188,14 @@ var RLANG = {
 
 			buttonsCustom: {},
 			buttonsAdd: [],
-			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-					'image', 'video', 'file', 'table', 'link', '|',
-					'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', 'underline', '|', 'unorderedlist', 'orderedlist', '|',
+					'image', 'video', 'file', 'link', '|',
+					'fontcolor', 'backcolor', '|', 'alignment','|', 'fontsize', '|', 'fontfamily', '|', 'multiple'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
 			formattingTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4'],
-
-			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist'], // 'alignleft', 'aligncenter', 'alignright', 'justify'
+			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'link', 'alignright', 'alignleft', 'aligncenter', 'justify'],
 			activeButtonsStates: {
 				b: 'bold',
 				strong: 'bold',
@@ -200,17 +205,24 @@ var RLANG = {
 				strike: 'deleted',
 				ul: 'unorderedlist',
 				ol: 'orderedlist',
-				u: 'underline'
+				u: 'underline',
+				a: 'link'
 			},
 
 			colors: [
-				'#ffffff', '#000000', '#eeece1', '#1f497d', '#4f81bd', '#c0504d', '#9bbb59', '#8064a2', '#4bacc6', '#f79646', '#ffff00',
+				'#ffffff', '#0c0c0c', '#eeece1', '#1f497d', '#4f81bd', '#c0504d', '#9bbb59', '#8064a2', '#4bacc6', '#f79646', '#ffff00',
 				'#f2f2f2', '#7f7f7f', '#ddd9c3', '#c6d9f0', '#dbe5f1', '#f2dcdb', '#ebf1dd', '#e5e0ec', '#dbeef3', '#fdeada', '#fff2ca',
 				'#d8d8d8', '#595959', '#c4bd97', '#8db3e2', '#b8cce4', '#e5b9b7', '#d7e3bc', '#ccc1d9', '#b7dde8', '#fbd5b5', '#ffe694',
 				'#bfbfbf', '#3f3f3f', '#938953', '#548dd4', '#95b3d7', '#d99694', '#c3d69b', '#b2a2c7', '#b7dde8', '#fac08f', '#f2c314',
 				'#a5a5a5', '#262626', '#494429', '#17365d', '#366092', '#953734', '#76923c', '#5f497a', '#92cddc', '#e36c09', '#c09100',
-				'#7f7f7f', '#0c0c0c', '#1d1b10', '#0f243e', '#244061', '#632423', '#4f6128', '#3f3151', '#31859b', '#974806', '#7f6000'],
-
+				'#7f7f7f', '#2d2828', '#1d1b10', '#0f243e', '#244061', '#632423', '#4f6128', '#3f3151', '#31859b', '#974806', '#7f6000'],
+            fontFamily: [
+				{ font: 'Times New Roman', family: '"Times New Roman", Times, serif'},
+				{ font: 'Courier New', family: '"Courier New", Courier, monospace'},
+				{ font: 'Palatino Linotype', family: '"Palatino Linotype", "Book Antiqua", Palatino, serif'},
+				{ font: 'Arial', family: 'Arial, Helvetica, sans-serif'},
+				{ font: 'Arial Black', family: '"Arial Black", Gadget, sans-serif'}
+			],
 			// private
 			emptyHtml: '<p><br /></p>',
 			buffer: false,
@@ -232,20 +244,28 @@ var RLANG = {
 				'<div id="redactor_modal_content">' +
 				'<label>' + RLANG.title + '</label>' +
 				'<input id="redactor_file_alt" class="redactor_input" />' +
-				'<label>' + RLANG.link + '</label>' +
-				'<input id="redactor_file_link" class="redactor_input" />' +
+				// '<label>' + RLANG.link + '</label>' +
+				// '<input id="redactor_file_link" class="redactor_input" />' +
 				'<label>' + RLANG.image_position + '</label>' +
 				'<select id="redactor_form_image_align">' +
-					'<option value="none">' + RLANG.none + '</option>' +
+					'<option value="none">' + RLANG.clear + '</option>' +
 					'<option value="left">' + RLANG.left + '</option>' +
 					'<option value="right">' + RLANG.right + '</option>' +
 				'</select>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
-					'<a href="javascript:void(null);" id="redactor_image_delete_btn" class="redactor_modal_btn">' + RLANG._delete + '</a>&nbsp;&nbsp;&nbsp;' +
+				    '<a href="javascript:void(null);" id="redactor_image_aviary_btn" class="redactor_modal_btn">' + 'Aviary' + '</a>&nbsp;&nbsp;&nbsp;'+
+					'<a href="javascript:void(null);" id="redactor_image_delete_btn" class="redactor_modal_btn">' + RLANG._delete + '</a>' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" name="save" class="redactor_modal_btn" id="redactorSaveBtn" value="' + RLANG.save + '" />' +
 				'</div>',
+			modal_image_delete: String()+
+				'<div id = "redactor_modal_content">'+
+				'<div id="confirmdelete">'+'<label>'+ RLANG.confirmDelete +'</label>' + '</div>'+
+				'</div>' +
+				'<input type="button" name="ok" class="redactor_modal_btn " id="redactor_imgdel_btn" value="' + 'Yes' + '" />' +
+				'<input type="button" name="cancel" class="redactor_modal_btn" id="redactor_imgdelclose_btn" value="' + 'No' + '" />' +
+				'<div>',
 
 			modal_image: String() +
 				'<div id="redactor_modal_content">' +
@@ -266,6 +286,7 @@ var RLANG = {
 					'<label>' + RLANG.image_web_link + '</label>' +
 					'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
 				'</div>' +
+				'<div id="valid">'+'<label>'+ RLANG.imagevalidation +'</label>' + '</div>'+
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
@@ -277,8 +298,8 @@ var RLANG = {
 				'<form id="redactorInsertLinkForm" method="post" action="">' +
 					'<div id="redactor_tabs">' +
 						'<a href="javascript:void(null);" class="redactor_tabs_act">URL</a>' +
-						'<a href="javascript:void(null);">Email</a>' +
-						'<a href="javascript:void(null);">' + RLANG.anchor + '</a>' +
+						// '<a href="javascript:void(null);">Email</a>' +
+						// '<a href="javascript:void(null);">' + RLANG.anchor + '</a>' +
 					'</div>' +
 					'<input type="hidden" id="redactor_tab_selected" value="1" />' +
 					'<div class="redactor_tab" id="redactor_tab1">' +
@@ -286,14 +307,14 @@ var RLANG = {
 						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_url_text" />' +
 						'<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
 					'</div>' +
-					'<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
-						'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
-						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_mailto_text" />' +
-					'</div>' +
-					'<div class="redactor_tab" id="redactor_tab3" style="display: none;">' +
-						'<label>' + RLANG.anchor + '</label><input type="text" class="redactor_input" id="redactor_link_anchor"  />' +
-						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_anchor_text" />' +
-					'</div>' +
+					// '<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
+					// 	'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
+					// 	'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_mailto_text" />' +
+					// '</div>' +
+					// '<div class="redactor_tab" id="redactor_tab3" style="display: none;">' +
+					// 	'<label>' + RLANG.anchor + '</label><input type="text" class="redactor_input" id="redactor_link_anchor"  />' +
+					// 	'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_anchor_text" />' +
+					// '</div>' +
 				'</form>' +
 				'</div>' +
 				'<div id="redactor_modal_footer">' +
@@ -324,7 +345,37 @@ var RLANG = {
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" class="redactor_modal_btn" id="redactor_insert_video_btn" value="' + RLANG.insert + '" />' +
 				'</div>',
-
+			modal_mulipleImage: String() +
+				'<div id="redactor_modal_content">' +
+					'<label>Upload images</label>' +
+					'<input type="file" class="custom-file-input" id="redactor_multiple_file_upload" multiple/>' +
+				'</div>' +
+				'<div id="redactor_modal_footer">' +
+					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+					'<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_multiple_file" value="' + RLANG.insert + '" />' +
+				'</div>',
+			modal_image_title: String() +
+				'<div id="redactor_modal_content">' +
+					'<label>Image Caption</label>' +
+					'<input type="text" class="redactor_input" id="redactor_image_caption"/>' +
+				'</div>' +
+				'<div id="redactor_modal_footer">' +
+				    '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+				    '<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_image_title" value="' + RLANG.insert + '" />' +
+				'</div>',
+			modal_image_align: String() +
+				'<div id="redactor_modal_content">' +
+				    '<label>Image Position</label>' +
+				    '<select id="redactor_form_image_align">' +
+				        '<option value="none">' + RLANG.clear + '</option>' +
+				        '<option value="left">' + RLANG.left + '</option>' +
+				        '<option value="right">' + RLANG.right + '</option>' +
+				    '</select>'+
+				'</div>'+
+				'<div id="redactor_modal_footer">' +
+				    '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+				    '<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_image_title" value="' + RLANG.insert + '" />' +
+			    '</div>',
 			toolbar: {
 				html:
 				{
@@ -523,6 +574,14 @@ var RLANG = {
 						}
 					}
 				},
+				fontsize:{
+					 title: RLANG.fontsize,
+					 func: 'show'
+				},
+				fontfamily:{
+					title: RLANG.fontfamily,
+					func: 'show'                           
+				},
 				fontcolor:
 				{
 					title: RLANG.fontcolor,
@@ -537,54 +596,43 @@ var RLANG = {
 				{
 					title: RLANG.alignment,
 					func: 'show',
+					className:'alignwidth',
 					dropdown:
 					{
 						alignleft:
 						{
-							title: RLANG.align_left,
-							exec: 'JustifyLeft'
+							title: '',
+							exec: 'JustifyLeft',
+							className: 'fa fa-align-left'
 						},
 						aligncenter:
 						{
-							title: RLANG.align_center,
-							exec: 'JustifyCenter'
+							title: '',
+							exec: 'JustifyCenter',
+							className: 'fa fa-align-center'
 						},
 						alignright:
 						{
-							title: RLANG.align_right,
-							exec: 'JustifyRight'
+							title: '',
+							exec: 'JustifyRight',
+							className: 'fa fa-align-right'
 						},
 						justify:
 						{
-							title: RLANG.align_justify,
-							exec: 'JustifyFull'
+							title:'',
+							exec: 'JustifyFull',
+							className: 'fa fa-align-justify'
 						}
 					}
-				},
-				alignleft:
-				{
-					exec: 'JustifyLeft',
-					title: RLANG.align_left
-				},
-				aligncenter:
-				{
-					exec: 'JustifyCenter',
-					title: RLANG.align_center
-				},
-				alignright:
-				{
-					exec: 'JustifyRight',
-					title: RLANG.align_right
-				},
-				justify:
-				{
-					exec: 'JustifyFull',
-					title: RLANG.align_justify
 				},
 				horizontalrule:
 				{
 					exec: 'inserthorizontalrule',
 					title: RLANG.horizontalrule
+				},
+				multiple: {
+					title: RLANG.multiple,
+					func: 'showMultipleImage'
 				}
 			}
 
@@ -604,13 +652,16 @@ var RLANG = {
 		// Initialization
 		init: function()
 		{
+			//Initialize aviry image editor plugin
+			this.aviary();
+
 			// get dimensions
 			this.height = this.$el.css('height');
 			this.width = this.$el.css('width');
 
 			rdocument = this.document = document;
 			rwindow = this.window = window;
-
+			//updated due to undo redo not working when updating font tags.
 			// mobile
 			if (this.opts.mobile === false && this.isMobile())
 			{
@@ -759,6 +810,8 @@ var RLANG = {
 				{
 					this.observeImages();
 					this.observeTables();
+					
+					this.observeVideos();
 
 				}, this), 1);
 
@@ -809,8 +862,36 @@ var RLANG = {
 		    this.build(false, afterBuild);
 
 		},
+		generateRandomId: function()
+		{
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+           }
+           return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+		},
+		aviary: function (){
+			this.featherEditor = new Aviary.Feather({
+                apiKey: '3c2ecea9c7734cb88633e839e970e6d5',
+                onSave: function(imageID, newURL) {
+                        var img = document.getElementById(imageID);
+						img.src = newURL;
+						setTimeout(function(){
+						    this.closeEditor();
+						}.bind(this), 3000);
+			    }.bind(this),
+			    onError: function(errorObj) {
+                    alert(errorObj.message);
+                }			
+		});
+		},
+	    closeEditor: function(){
+          this.featherEditor.close();
+		},
 		shortcuts: function(e, cmd)
 		{
+			console.log('dfsdfsdfsd')
 			e.preventDefault();
 			this.execCommand(cmd, false);
 		},
@@ -864,12 +945,18 @@ var RLANG = {
 				var key = e.keyCode || e.which;
 				var parent = this.getParentNode();
 				var current = this.getCurrentNode();
+				var selected = this.getSelectedNode();
 				var pre = false;
+				var li = false;
 				var ctrl = e.ctrlKey || e.metaKey;
 
 				if ((parent || current) && ($(parent).get(0).tagName === 'PRE' || $(current).get(0).tagName === 'PRE'))
 				{
 					pre = true;
+				}
+				if ((parent || current) && ($(parent).get(0).tagName === 'LI' || $(current).get(0).tagName === 'LI') || $(selected).get(0).tagName === 'LI')
+				{
+					li = true
 				}
 
 				// callback keydown
@@ -931,29 +1018,29 @@ var RLANG = {
 				{
 					this.opts.buffer = false;
 				}
-
+                
 				// enter
-				if (pre === true && key === 13)
+				if (pre === true && key === 13 && e.shiftKey)
 				{
 					e.preventDefault();
-
 					var html = $(current).parent().text();
 					this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
 					if (html.search(/\s$/) == -1)
 					{
 						this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
 					}
-					this.syncCode();
+					//commented the syncCode due to the place ment of caret at the beggenign
+					// this.syncCode();
 
 					return false;
 				}
-
-				// tab
+				
 				if (this.opts.shortcuts && !e.shiftKey && key === 9)
 				{
-					if (pre === false)
+					if (pre === false && li === true)
 					{
 						this.shortcuts(e, 'indent'); // Tab
+						
 					}
 					else
 					{
@@ -1195,6 +1282,8 @@ var RLANG = {
 			this.$editor.focus();
 			this.pasteHtmlAtCaret(html);
 			this.observeImages();
+			//new line
+			this.observeVideos();
 			this.syncCode();
 		},
 
@@ -1275,8 +1364,32 @@ var RLANG = {
 		observeFormatting: function()
 		{
 			var parent = this.getCurrentNode();
+			this.inactiveAllButtons();			
+            // console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
+			// console.log('node type', this.getSelectedNode().nodeType)
+			//selecting the node for formatting
+			if(this.getSelectedNode().nodeType == 3)
+			{
+				parent = this.getCurrentNode();
+			}
+			else if (!$(this.getSelectedNode()).is('div') || !$(this.getSelectedNode()).hasClass('redactor_toolbar'))
+			{
+				parent = this.getSelectedNode()
+			}
+			else 
+			{
+				// console.dir($(this.getSelectedHtml()).children())
+				// every element in the editor is selected then show last applyed style
+				console.log('selected-html', $(this.getSelectedHtml()));
+				// $.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
+				// {
+				// 	console.log(i, s);
+				// 	// if (s.nodeType === 3){ s.remove()}
+				// 	var tagName = $(s).prop("tagName").toLowerCase();
+                //     this.setBtnActive(this.opts.activeButtonsStates[tagName])
+				// }, this))
+			}
 
-			this.inactiveAllButtons();
 
 			$.each(this.opts.activeButtonsStates, $.proxy(function(i,s)
 			{
@@ -1286,29 +1399,7 @@ var RLANG = {
 				}
 
 			}, this));
-
-			var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
-
-			if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
-			{
-				var align = $(tag[0].elem).css('text-align');
-
-				switch (align)
-				{
-					case 'right':
-						this.setBtnActive('alignright');
-					break;
-					case 'center':
-						this.setBtnActive('aligncenter');
-					break;
-					case 'justify':
-						this.setBtnActive('justify');
-					break;
-					default:
-						this.setBtnActive('alignleft');
-					break;
-				}
-			}
+			
 		},
 		observeImages: function()
 		{
@@ -1319,13 +1410,237 @@ var RLANG = {
 
 			this.$editor.find('img').each($.proxy(function(i,s)
 			{
+				console.log('image', s)
 				if (this.browser('msie'))
 				{
 					$(s).attr('unselectable', 'on');
 				}
+				console.dir('img', s);
+				this.applyImageEditActions(s)
 
-				this.resizeImage(s);
+			}, this));
 
+		},
+		applyImageEditActions:function(image)
+		{
+			// TODO: need to chnage to small functions
+			var frontDrop = $(image).siblings('.drop');
+			var editBtns = $(image).siblings('.btn-class');
+			var parent  = $(image).parent();
+			var deleteBtn = $(editBtns).children('[role="delete"]');
+			var editBtn = $(editBtns).children('[role="edit"]');
+			var caption = $(editBtns).children('[role="caption"]');
+			var align = $(editBtns).children('[role="align"]');
+			
+			var resizeEnabled = false;
+			var resizeStoped = false;
+			//responsize of figure
+			//only width when image is loaded;
+			$(image).load(function(){
+				var InitialFigSize = $(this).width() - 28;
+	    		$(parent).find($('figcaption')).css('width', InitialFigSize + 'px')
+			})
+
+			$(parent).off('click');
+			$(parent).click($.proxy(function(e)
+			{
+				var _self = this;
+				console.log('height', _self.$editor.outerHeight(true),_self.$editor.height(), _self.$editor[0].scrollHeight, _self.$editor.innerHeight());
+				if (resizeStoped && resizeEnabled)
+				{
+					resizeStoped = false;
+					console.log(_self.$editor.height());
+					return;
+				}
+				if (!resizeEnabled)
+				{
+					$(image).resizable({
+						handles: 'se',
+						maxWidth: 900,
+						resize: function( event, ui ) 
+						{
+							// console.log('height', _self.$editor.outerHeight(true),_self.$editor.height(), _self.$editor[0].scrollHeight, _self.$editor.innerHeight());
+							_self.$editor.css('min-height',  _self.$editor[0].scrollHeight + 'px');
+							$(editBtns).removeClass('show-btn');
+							// $(parent).addClass('show-border');
+							//set figurecaption size to image to adjust the overflow off caption
+							var figSize = parseFloat($(image).width()) - 28;
+							$(parent).find($('figcaption')).css('width', figSize + 'px');
+						},
+						stop: function( event, ui ) 
+						{
+							$(editBtns).addClass('show-btn');
+							resizeStoped = true;
+							_self.$editor.css('min-height', _self.opts.minHeight);
+						}
+					});
+					resizeEnabled = true;
+					$(frontDrop).addClass('show-drop');
+					$(parent).addClass('show-border');
+					$(editBtns).addClass('show-btn');	
+
+				}
+				else
+				{
+					$(image).resizable('destroy');
+					$(parent).removeClass('show-border');
+					$(editBtns).removeClass('show-btn');
+					$(frontDrop).removeClass('show-drop');
+					resizeEnabled = false;
+					// _self.$editor.css('height', '');
+					
+				}
+               e.stopPropagation();
+			}, this));
+
+			deleteBtn.css('cursor','pointer');
+			$(deleteBtn).off('click');
+			$(deleteBtn).click($.proxy(function(e)
+			{
+				this.confirmdel(parent);
+			},this))
+
+			editBtn.css('cursor','pointer');
+			$(editBtn).off('click');
+			$(editBtn).click($.proxy(function(e)
+			{
+				var $el = $(image);
+				this.aviaryEditor($el);
+				e.stopPropagation();
+			},this));
+
+			$(caption).css('cursor', 'pointer');
+			$(caption).off('click');
+			$(caption).click($.proxy(function(e)
+			{
+				this.modalInit('', this.opts.modal_image_title, 300, $.proxy(function(e)
+				{
+					var pre_caption = $(parent).find($('figcaption')).text();
+					$('#redactor_image_caption').focus();
+					$('#redactor_image_caption').val(pre_caption)	
+					if (pre_caption)
+					{
+						$('#redactor_btn_image_title').prop('value', 'Update');
+					}
+					else
+					{
+						$('#redactor_btn_image_title').prop('value', 'Insert');
+					}
+					$('#redactor_btn_image_title').click($.proxy(function(e)
+					{
+						var caption = $('#redactor_image_caption').val();
+						if (caption)
+						{
+							$(parent).find($('figcaption')).text(caption);
+							$(parent).find($('figcaption')).css('display', 'table-caption').css('caption-side', 'bottom')
+						}
+						else
+						{
+							$(parent).find($('figcaption')).text(caption);
+							$(parent).find($('figcaption')).css('display', 'none')
+						}
+						this.modalClose();
+
+					}, this));
+
+				}, this));
+                e.stopPropagation();
+			}, this));
+			
+			$(align).css('cursor', 'pointer');
+			$(align).off('click');
+			$(align).click($.proxy(function(e)
+			{
+				console.log('hello align');
+				this.modalInit('', this.opts.modal_image_align, 300, $.proxy(function(e)
+				{
+					$('#redactor_btn_image_title').click($.proxy(function(e)
+					{
+					    var parentPara = $(image).closest('p');					
+						var floating = $('#redactor_form_image_align').val();
+
+						if (floating === 'left')
+						{
+							$(parentPara).css({ 'float': 'left', margin: '0 10px 10px 0' });
+						}
+						else if (floating === 'right')
+						{
+							$(parentPara).css({ 'float': 'right', margin: '0 0 10px 10px' });
+						}
+						else
+						{
+							$(parentPara).css({ 'float': 'none', margin: '0' });
+						}
+
+						this.modalClose();
+
+					},this));
+					
+				}, this));
+
+				e.stopPropagation();
+			}, this));
+            //remove image resize while clicking editor
+			this.$editor.click(function(e)
+			{
+				if($(image).hasClass('ui-resizable'))
+				{
+					$(image).resizable('destroy');
+				}
+				$(parent).removeClass('show-border');
+				$(editBtns).removeClass('show-btn');
+				$(frontDrop).removeClass('show-drop');
+				resizeEnabled = false;
+			});
+
+		},
+		removebr:function(image)
+		{
+			$(image).parent().parent().find('br').remove();
+			$(image).parent().parent().append(document.createTextNode('\n'));
+		},
+		confirmdel:function(parent)
+		{
+			$("#redactor_modal").addClass('confirm');
+			$("#redactor_modal_close").css('visibility','hidden');
+			this.modalInit('',this.opts.modal_image_delete, 300, $.proxy(function()
+			{
+				$("#redactor_imgdel_btn").click($.proxy(function(e)
+				{
+					$(parent).remove();
+					this.modalClose();
+				},this));
+					
+				$("#redactor_imgdelclose_btn").click($.proxy(function(e)
+				{
+					this.modalClose();
+				},this));
+				
+			},this));
+		},
+		//For looking video tags for click event
+		observeVideos: function(){
+			this.$editor.find('.close').each($.proxy(function(i, s)
+			{
+				if (this.browser('msie'))
+					{
+						$(s).attr('unselectable', 'on');
+					}
+				this.addClickToCloseTag(s);
+
+			}, this));
+		},
+		//close Video 
+		addClickToCloseTag: function(video){
+			
+			$(video).click($.proxy(function(e)
+			{
+				// console.log('hello world', e);
+				// console.log($(e.target).parent());
+				let parent  =  $(e.target).parent()
+				$(parent).remove();
+				//to set the cursor back to the same position
+				this.restoreSelection();
 			}, this));
 
 		},
@@ -1411,10 +1726,12 @@ var RLANG = {
 					}
 
 					this.observeImages();
+					//new line
+					this.observeVideos();
 				}
 				else if (cmd === 'unlink')
 				{
-					parent = this.getParentNode();
+					parent = this.getCurrentNode();
 					if ($(parent).get(0).tagName === 'A')
 					{
 						$(parent).replaceWith($(parent).text());
@@ -1427,10 +1744,12 @@ var RLANG = {
 				else if (cmd === 'JustifyLeft' || cmd === 'JustifyCenter' || cmd === 'JustifyRight' || cmd === 'JustifyFull')
 				{
 					parent = this.getCurrentNode();
+					// console.log('justify', parent, this.getSelectedNode(), this.getSelectedHtml());
 					var tag = $(parent).get(0).tagName;
-
+					
 					if (this.opts.iframe === false && $(parent).parents('.redactor_editor').size() == 0)
 					{
+						this.execRun(cmd, param);
 						return false;
 					}
 
@@ -1569,7 +1888,7 @@ var RLANG = {
 
 			this.document.execCommand(cmd, false, param);
 		},
-
+	
 		// FORMAT NEW LINE
 		formatNewLine: function(e)
 		{
@@ -1935,15 +2254,13 @@ var RLANG = {
 			if (this.opts.visual)
 			{
 				var height = this.$editor.innerHeight();
-
 				this.$editor.hide();
 				this.$content.hide();
-
 				html = this.$editor.html();
 				//html = $.trim(this.formatting(html));
-
 				this.$el.height(height).val(html).show().focus();
-
+				this.enabledisable();
+				this.inactiveAllButtons()
 				this.setBtnActive('html');
 				this.opts.visual = false;
 			}
@@ -1951,31 +2268,52 @@ var RLANG = {
 			{
 				this.$el.hide();
 				var html = this.$el.val();
-
+				
 				//html = this.savePreCode(html);
-
 				// clean up
 				//html = this.stripTags(html);
-
 				// set code
 				this.$editor.html(html).show();
 				this.$content.show();
-
 				if (this.$editor.html() === '')
 				{
 					this.setCode(this.opts.emptyHtml);
 				}
-
 				this.$editor.focus();
-
+				this.inactiveAllButtons()
 				this.setBtnInactive('html');
+				this.enabledisable();
 				this.opts.visual = true;
-
 				this.observeImages();
 				this.observeTables();
+				this.observeVideos();
 			}
+			
 		},
+		enabledisable:function()
+		{			
+			//console.log(this.$toolbar.children());
+			this.$toolbar.children().each($.proxy(function(i,e)
+			{
+				console.log(e);
+				//console.log(this,$(this).children()[0]);
+				if($(this).hasClass('disabling'))
+				{
 
+					$(this).removeClass('disabling');
+				}
+				else 
+				{
+				 	var anchorChild = $(this).children()[0];
+					if(anchorChild !== undefined && $(anchorChild).attr('title') !== 'HTML')
+					{
+						$(this).addClass('disabling');
+						$(anchorChild).removeClass('redactor_act');
+						
+			 		}
+			 	}
+			}));
+		},
 		// AUTOSAVE
 		autoSave: function()
 		{
@@ -2009,7 +2347,7 @@ var RLANG = {
 			}
 
 			this.$toolbar = $('<ul>').addClass('redactor_toolbar');
-
+			
 			if (this.opts.air)
 			{
 				$(this.air).append(this.$toolbar);
@@ -2048,12 +2386,24 @@ var RLANG = {
 					this.$toolbar.append($('<li class="redactor_separator"></li>'));
 				}
 
+				
+
+			}, this));
+
+			//check active buttons while clicking on others.
+			this.$toolbar.click($.proxy(function(e, s)
+			{
+				// console.log(e, s);
+				// console.log('dfsdfsd', this.getSelectedHtml())
+				e.preventDefault();
+				this.observeFormatting();
 			}, this));
 
 		},
 		buildButton: function(key, s)
 		{
-			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
+			// console.log(s, key)
+			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '" ></a>');
 
 			if (typeof s.func === 'undefined')
 			{
@@ -2068,35 +2418,44 @@ var RLANG = {
 					if (this.browser('mozilla'))
 					{
 						this.$editor.focus();
-						//this.restoreSelection();
+						// this.restoreSelection();
 					}
-
+					//selection restore not working as expected.
+					this.$editor.focus();
 					this.execCommand(s.exec, key);
-
 				}, this));
 			}
 			else if (s.func !== 'show')
 			{
 				button.click($.proxy(function(e) {
-
 					this[s.func](e);
 
 				}, this));
 			}
-
 			if (typeof s.callback !== 'undefined' && s.callback !== false)
 			{
-				button.click($.proxy(function(e) { s.callback(this, e, key); }, this));
+				button.click($.proxy(function(e) { 
+					s.callback(this, e, key); 
+				}, this));
 			}
 
 			// dropdown
-			if (key === 'backcolor' || key === 'fontcolor' || typeof(s.dropdown) !== 'undefined')
+			if (key === 'backcolor' || key === 'fontcolor' || key === 'fontsize' || key === 'fontfamily' || typeof(s.dropdown) !== 'undefined')
 			{
 				var dropdown = $('<div class="redactor_dropdown" style="display: none;">');
 
 				if (key === 'backcolor' || key === 'fontcolor')
 				{
 					dropdown = this.buildColorPicker(dropdown, key);
+				}
+				else if (key === 'fontsize') 
+				{
+				    dropdown = this.buildFontSizeDropdown(dropdown);
+				}
+				else if (key === 'fontfamily'){
+				
+					dropdown = this.buildFontFamilyDropdown(dropdown);
+					button.html('<button>fontfamily</button>')
 				}
 				else
 				{
@@ -2106,15 +2465,69 @@ var RLANG = {
 				this.dropdowns.push(dropdown.appendTo($(document.body)));
 
 				// observing dropdown
-				this.hdlShowDropDown = $.proxy(function(e) { this.showDropDown(e, dropdown, key); }, this);
+				this.hdlShowDropDown = $.proxy(function(e) {  this.showDropDown(e, dropdown, key); }, this);
 
 				button.click(this.hdlShowDropDown);
 			}
+			
 
 			return button;
 		},
+		buildFontSizeDropdown:function(dropdown){
+			var drop_a;
+			for (i = 1; i <= 100; i++)
+				{
+					drop_a = $('<a href="javascript:void(null);" >' + i + '</a>');
+					$(drop_a).click($.proxy(function(e) { this.changeFontSize( $(e.target).text()); }, this));
+					$(dropdown).append(drop_a);
+				}
+			$(dropdown).css('height', '122px').css('width', '38px').css('overflow-y', 'auto');
+			return dropdown;
+		},
+		buildFontFamilyDropdown: function(dropdown){
+			var drop_a;
+            $.each(this.opts.fontFamily, $.proxy(function(index, obj){
+				drop_a = $('<a href="javascript:void(null);" >' + obj.font + '</a>');
+				$(drop_a).css("font-family", obj.family);
+				$(drop_a).click($.proxy(function() { this.changeFontFamily(obj.family); }, this));
+                $(dropdown).append(drop_a);
+			}, this));
+            return dropdown
+		},
+		changeFontSize: function(val){
+			this.execCommand('styleWithCSS', true)
+			this.execCommand('fontSize', val);
+			this.execCommand('styleWithCSS', false)
+
+			//because the font-size is applied as medium,small, large
+			//change to px
+			this.$editor.find('span').each(function(index, value){
+				if (this.style.fontSize)
+					{
+						if (!(/\d/.test(this.style.fontSize)))
+				        { 
+							$(this).css('font-size', val + 'px').css('line-height', '1em')			
+			            }
+        
+					}
+			})
+			// this.$editor.find('font').replaceWith(function() {
+			// 	return $('<span style="font-size: ' + val + 'px;">' + $(this).html() + '</span>');
+			// });
+		},
+		changeFontFamily: function(val){
+			this.execCommand('styleWithCSS', true)
+			this.execCommand('fontName', val)
+			this.execCommand('styleWithCSS', false)
+			// this.$editor.find('font').replaceWith(function() {
+			// 	var span = $('<span>' + $(this).html() + '</span>');
+			// 	$(span).css('font-family', val);
+			// 	return span
+		    // });
+		},
 		buildDropdown: function(dropdown, obj)
 		{
+			// console.log('obj', obj);
 			$.each(obj, $.proxy(
 				function (x, d)
 				{
@@ -2130,10 +2543,12 @@ var RLANG = {
 					}
 					else
 					{
+						// console.log('iterate', x, d);
 						drop_a = $('<a href="javascript:void(null);" class="' + d.className + '">' + d.title + '</a>');
-
+                        
 						if (typeof(d.callback) === 'function')
 						{
+							console.log('callback', d)
 							$(drop_a).click($.proxy(function(e) { d.callback(this, e, x); }, this));
 						}
 						else if (typeof(d.func) === 'undefined')
@@ -2142,6 +2557,7 @@ var RLANG = {
 						}
 						else
 						{
+							// console.log('if function', d)
 							$(drop_a).click($.proxy(function(e) { this[d.func](e); }, this));
 						}
 					}
@@ -2157,6 +2573,7 @@ var RLANG = {
 		buildColorPicker: function(dropdown, key)
 		{
 			var mode;
+			var that = this;
 			if (key === 'backcolor')
 			{
 				if (this.browser('msie'))
@@ -2186,66 +2603,95 @@ var RLANG = {
 				var _self = this;
 				$(swatch).click(function()
 				{
+					_self.restoreSelection();
+					// console.log(mode, $(this).attr('rel'))
+					 //ugly code for making undo redo activated.
+					_self.execCommand('styleWithCSS', true)
 					_self.execCommand(mode, $(this).attr('rel'));
+					_self.execCommand('styleWithCSS', false);
+					// remove style with css
+					// if (mode === 'forecolor')
+					// {
+					// 	_self.$editor.find('font').replaceWith(function() {
 
-					if (mode === 'forecolor')
-					{
-						_self.$editor.find('font').replaceWith(function() {
+					// 		return $('<span style="color: ' + $(this).attr('color') + ';">' + $(this).html() + '</span>');
 
-							return $('<span style="color: ' + $(this).attr('color') + ';">' + $(this).html() + '</span>');
+					// 	});
+					// }
 
-						});
-					}
+					// if (_self.browser('msie') && mode === 'BackColor')
+					// {
+					// 	_self.$editor.find('font').replaceWith(function() {
 
-					if (_self.browser('msie') && mode === 'BackColor')
-					{
-						_self.$editor.find('font').replaceWith(function() {
+					// 		return $('<span style="' + $(this).attr('style') + '">' + $(this).html() + '</span>');
 
-							return $('<span style="' + $(this).attr('style') + '">' + $(this).html() + '</span>');
-
-						});
-					}
+					// 	});
+					// }
 
 				});
 			}
 
-			var elnone = $('<a href="javascript:void(null);" class="redactor_color_none"></a>').html(RLANG.none);
-
+			var elnone = $('<a href="javascript:void(null);" class="redactor_color_none button"></a>').html(RLANG.clear);
+			//new hex code input an button
+			var elhex = $('<input type="text" name="lname" class="hexInput" style="margin: 6px 0px 0px 16px;" placeholder="Place Your Hex code">');
+			elhex.click(function(e){
+				e.stopPropagation();
+			})
+			var elapplyhex = $('<a href="javascript:void(null);" class="redactor_color_none button" style="margin-top: 9px;"></a>').html('Apply');
+            
 			if (key === 'backcolor')
 			{
+				//console.log('helloo2', mode) 
 				elnone.click($.proxy(this.setBackgroundNone, this));
+				elapplyhex.click(function(e){
+					that.restoreSelection();
+                    that.execCommand(mode, $(this).siblings('input').val());
+		        });
 			}
 			else
 			{
 				elnone.click($.proxy(this.setColorNone, this));
+				elapplyhex.click(function(e){
+					console.log('font-color');
+					that.restoreSelection();
+                    that.execCommand(mode, $(this).siblings('input').val());
+		        });
 			}
 
 			$(dropdown).append(elnone);
-
+			$(dropdown).append(elhex);
+            $(dropdown).append(elapplyhex);
+			
 			return dropdown;
 		},
 		setBackgroundNone: function()
 		{
-			$(this.getParentNode()).css('background-color', 'transparent');
+			$(this.getCurrentNode()).css('background-color', 'transparent');
 			this.syncCode();
 		},
 		setColorNone: function()
 		{
-			$(this.getParentNode()).attr('color', '').css('color', '');
+			// TODO: have to put conditions when current node is div
+			// console.log(this.getParentNode(), this.getCurrentNode(), this.getSelectedNode(), this.getSelectedHtml());			
+			$(this.getCurrentNode()).css('color', '');
+			//remove format while apply color..only way to reset color.
+			this.execCommand('removeFormat', 'foreColor');
 			this.syncCode();
 		},
-
 		// DROPDOWNS
 		showDropDown: function(e, dropdown, key)
 		{
+			var colors = {};
+			this.saveSelection();
+
 			if (this.getBtn(key).hasClass('dropact'))
 			{
 				this.hideAllDropDown();
 			}
 			else
 			{
+				// console.log(key, dropdown);
 				this.hideAllDropDown();
-
 				this.setBtnActive(key);
 				this.getBtn(key).addClass('dropact');
 
@@ -2263,11 +2709,35 @@ var RLANG = {
 				}
 				else
 				{
-					var top = this.$toolbar.offset().top + 30;
-					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show();
-				}
-			}
+					if (key == 'fontcolor' || key =='backcolor')
+					{
+						this.getApplyedColor(colors)
+				        this.deactivateColorBtn(dropdown, colors)
+				        this.activateColorBtn(dropdown, colors, key)
+					}
+					else if (key == 'link')
+					{
+						var parent = this.getCurrentNode()
+						if($(parent).get(0).tagName === 'A')
+						{
+							    $(dropdown).children().eq(0).text('Edit link')
+								$(dropdown).children().eq(1).removeClass('unlink-disable')
+						}
+						else
+						{
+							$(dropdown).children().eq(0).text(RLANG.link_insert)
+							$(dropdown).children().eq(1).addClass('unlink-disable')
+						}
 
+					}
+					var top = this.$toolbar.offset().top + 30;
+					$(dropdown).css({ position: 'absolute', left: left + 'px', top: top + 'px' }).show("slow");
+				}
+				//empty hex input
+				$('.hexInput').val('');
+				
+			}
+            
 			var hdlHideDropDown = $.proxy(function(e) { this.hideDropDown(e, dropdown, key); }, this);
 
 			$(document).one('click', hdlHideDropDown);
@@ -2277,15 +2747,105 @@ var RLANG = {
 			e.stopPropagation();
 
 		},
+		deactivateColorBtn: function(dropdown, colors)
+		{
+			$(dropdown).find('a.redactor_color_act').removeClass('redactor_color_act')
+
+		},
+		activateColorBtn:function(dropdown, colors, key)
+		{
+			var applyedColor;
+			$(dropdown).find('a').each(function(index, elem){
+				elemColor = $(this).css('background-color')
+				if (key == 'fontcolor')
+					{
+						applyedColor = colors.color || "rgb(0, 0, 0)";
+
+					}
+				else if (key == 'backcolor')
+					{
+						applyedColor = colors.background
+					}
+				
+				if (applyedColor !== undefined && applyedColor === elemColor)
+					{
+						$(this).addClass('redactor_color_act')
+					}
+			});
+
+		},
+		getApplyedColor: function(colors)
+		{
+			var parent = this.getCurrentNode();
+            // console.log(this.getSelectedNode(), this.getCurrentNode(), this.getParentNode(), this.getSelectedHtml());
+			//selecting the node for formatting
+			if(this.getSelectedNode().nodeType == 3)
+			{
+				parent = this.getCurrentNode();
+				this.getColor(parent, colors)
+			
+			}
+			else if (!$(this.getSelectedNode()).is('div'))
+			{
+				parent = this.getSelectedNode()
+			    this.getColor(parent, colors)
+			}
+			// else 
+			// {
+			// 	// every element in the editor is selected then show last applyed style
+			// 	// console.log('selected-html', $(this.getSelectedHtml()));
+			// 	$.each($(this.getSelectedHtml()).children(), $.proxy(function(i, s)
+			// 	{
+			// 		console.log(i, s);
+			// 	}, this))
+
+			// }
+		
+
+		},
+		getColor: function(parent, colors)
+		{
+			if ($(parent).is('span'))
+				{
+				  return this.getRgb(parent, colors)
+				}
+			else 
+				{
+				    $.each(['b', 'u', 'strike', 'strong', 'i', 'a', 'em', 'del'], $.proxy(function(i, v)
+					{
+						if($(parent).closest(v).length != 0) 
+							{
+								this.getRgb($(parent).closest(v)[0], colors)
+							}
+
+					}, this));
+							
+				}
+		},
+		getRgb: function(element, colors) 
+		{
+			// console.log('sudo', $(element).css('color'))
+			if ($(element).css('color') !== "rgb(0, 0, 0)")
+			{
+				colors.color = $(element).css('color')
+			}
+			if ($(element).css('background-color') !== "rgba(0, 0, 0, 0)")
+			{
+				colors.background = $(element).css('background-color') 
+			}
+
+		},
 		hideAllDropDown: function()
 		{
 			this.$toolbar.find('a.dropact').removeClass('redactor_act').removeClass('dropact');
-			$('.redactor_dropdown').hide();
+			$('.redactor_dropdown').hide('slow');
 		},
 		hideDropDown: function(e, dropdown, key)
 		{
+			// console.log('keyy',e, dropdown, key);
 			if (!$(e.target).hasClass('dropact'))
 			{
+				// console.log('urrey')
 				$(dropdown).removeClass('dropact');
 				this.showedDropDown = false;
 				this.hideAllDropDown();
@@ -2309,13 +2869,14 @@ var RLANG = {
 		setBtnInactive: function(key)
 		{
 			this.getBtn(key).removeClass('redactor_act');
+
+
 		},
 		inactiveAllButtons: function()
 		{
 			$.each(this.opts.activeButtons, $.proxy(function(i,s)
 			{
 				this.setBtnInactive(s);
-
 			}, this));
 		},
 		changeBtnIcon: function(key, classname)
@@ -2636,6 +3197,7 @@ var RLANG = {
 		{
 			if (typeof this.window.getSelection !== 'undefined')
 			{
+				// console.dir( this.getSelectedNode());
 				return this.getSelectedNode().parentNode;
 			}
 			else if (typeof this.document.selection !== 'undefined')
@@ -2656,6 +3218,7 @@ var RLANG = {
 			else if (typeof this.window.getSelection !== 'undefined')
 			{
 				var s = this.window.getSelection();
+				// console.log('sssssss---', this.window.getSelection(), this.getSelection().getRangeAt(0));
 				if (s.rangeCount > 0)
 				{
 					return this.getSelection().getRangeAt(0).commonAncestorContainer;
@@ -2819,13 +3382,16 @@ var RLANG = {
 			var min_w = 10;
 			var min_h = 10;
 
-			$(resize).off('hover mousedown mouseup click mousemove');
- 			$(resize).hover(function() { $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor',''); clicked = false; });
+			$(resize).off('mousedown mouseup mousemove hover');
+ 			$(resize).hover(function() {  $(resize).css('cursor', 'nw-resize'); }, function() { $(resize).css('cursor', ''); clicked = false; });
 
 			$(resize).mousedown(function(e)
 			{
 				e.preventDefault();
-
+				if (!$(resize).parent().hasClass('show-border'))
+				{
+					$(resize).parent().addClass('show-border');
+				}
 				ratio = $(resize).width()/$(resize).height();
 
 				clicked = true;
@@ -2838,19 +3404,22 @@ var RLANG = {
 			$(resize).mouseup($.proxy(function(e)
 			{
 				clicked = false;
-				$(resize).css('cursor','');
+				// $(resize).css('cursor','');
+				$(resize).parent().removeClass('show-border');
 				this.syncCode();
 
 			}, this));
 
-			$(resize).click($.proxy(function(e)
-			{
-				if (clicker)
-				{
-					this.imageEdit(e);
-				}
+			// $(resize).click($.proxy(function(e)
+			// {
+					
+			// 	if (clicker)
+			// 	{
+			// 	    // this.aviaryEditor(e)
+			// 		this.imageEdit(e);
+			// 	}
 
-			}, this));
+			// }, this));
 
 			$(resize).mousemove(function(e)
 			{
@@ -3070,12 +3639,99 @@ var RLANG = {
 		{
 			var data = $('#redactor_insert_video_area').val();
 			data = this.stripTags(data);
-
+		
+			var generatedFigure = this.createFigure();
+			generatedFigure.appendChild(this.createIframe(data));
+			
 			this.restoreSelection();
-			this.execCommand('inserthtml', data);
+			this.execCommand('inserthtml', generatedFigure.outerHTML);
 			this.modalClose();
 		},
+		createIframe: function(src)
+		{
+            var ifrm = document.createElement("iframe");
+		    src = src.replace("watch?v=", "embed/");
+            ifrm.setAttribute("src", src);
+            ifrm.style.width = "640px";
+			ifrm.style.height = "480px";
+			ifrm.style.pointerEvents = "none";
+			return ifrm;
+		},
+		createFigure: function(cls)
+		{
+			cls = cls || ''
+			var generatedFigure = $('<figure class="' + cls + '">')
+			generatedFigure.attr('contentEditable', false);
+			return generatedFigure;
+		},
+		createFigcap: function(cls)
+		{
+			cls = cls || ''
+			var figureCaption = $('<figcaption class="'+ cls +'">');
+			return figureCaption;
+		},
+		createSpan: function(cls)
+		{
+			cls = cls || ''
+			var span = $('<span class="'+ cls +'">')
+			return span;
 
+		},
+		createFontIcons: function(cls)
+		{
+				var icon = $('<i/>')
+					.addClass(cls.icon)
+					.attr('aria-hidden', true)
+					.attr('title', cls.role)
+					.css('color', '#abb9c2')
+				return icon;
+		},
+		createImageEditBtn: function()
+		{
+			var ul = $('<ul class="btn-class">')
+			var icons = [{icon: 'fa fa-align-center', role: 'align'},{icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'caption'}, {icon:'fa fa-trash', role: 'delete'}]
+			$.each(icons, $.proxy(function(i, val)
+		    {
+				var fontIcon = this.createFontIcons(val)
+				// fontIcon.click(function(){ console.log('hello world');});
+				var span = this.createSpan('span-cls')
+				span.append(fontIcon)
+			    var li = $('<li/>')
+					.attr('role', val.role)
+					.append(span)
+					.appendTo(ul);
+			}, this))
+			
+            return ul;
+		},
+		createAnchor: function()
+		{
+            var aTag = document.createElement('a');
+			aTag.setAttribute('href',"#");
+			aTag.classList.add('close');
+			return aTag;
+		},
+		aviaryFeather: function()
+		{
+            var featherEditor = new Aviary.Feather({
+                apiKey: '3c2ecea9c7734cb88633e839e970e6d5',
+                onSave: function(imageID, newURL) {
+                         console.log('hello world', imageID, newURL);
+                         var img = document.getElementById(imageID);
+                         img.src = newURL;
+				},
+				onError: function(errorObj) {
+                    alert(errorObj.message);
+                }		
+			});
+			return featherEditor;
+		},
+		aviaryEditor: function(elem)
+		{
+			this.modalClose();
+			this.featherEditor.launch({image: elem.attr('id'), url: elem.attr('src')});
+            return false;
+		},
 		// INSERT IMAGE
 		imageEdit: function(e)
 		{
@@ -3084,7 +3740,8 @@ var RLANG = {
 
 			var callback = $.proxy(function()
 			{
-				$('#redactor_file_alt').val($el.attr('alt'));
+				var caption =  $($($el).siblings()[0]).text();
+				$('#redactor_file_alt').val(caption);
 				$('#redactor_image_edit_src').attr('href', $el.attr('src'));
 				$('#redactor_form_image_align').val($el.css('float'));
 
@@ -3095,6 +3752,7 @@ var RLANG = {
 
 				$('#redactor_image_delete_btn').click($.proxy(function() { this.imageDelete($el); }, this));
 				$('#redactorSaveBtn').click($.proxy(function() { this.imageSave($el); }, this));
+				$('#redactor_image_aviary_btn').click($.proxy(function(){ this.aviaryEditor($el)}, this));
 
 			}, this);
 
@@ -3103,6 +3761,8 @@ var RLANG = {
 		},
 		imageDelete: function(el)
 		{
+			console.log('parent for the image', $(el).parents().siblings())
+			// $(el).parent().remove();
 			$(el).remove();
 			this.modalClose();
 			this.syncCode();
@@ -3110,9 +3770,12 @@ var RLANG = {
 		imageSave: function(el)
 		{
 			var parent = $(el).parent();
+			var sibling = $(el).siblings();
 
+			$(sibling[0]).html('<h3>' + $('#redactor_file_alt').val() + '</h3>');
+            // console.log('parent ', parent, $(el).siblings());
 			$(el).attr('alt', $('#redactor_file_alt').val());
-
+            
 			var floating = $('#redactor_form_image_align').val();
 
 			if (floating === 'left')
@@ -3153,6 +3816,58 @@ var RLANG = {
 			this.observeImages();
 			this.syncCode();
 
+		},
+		showMultipleImage: function()
+		{
+			this.saveSelection();
+			
+			var callback = $.proxy(function()
+			{
+				$('#redactor_btn_multiple_file').click($.proxy(this.multipleImageUpload, this))
+			}, this);
+
+			this.modalInit(RLANG.image, this.opts.modal_mulipleImage, 610, callback);
+		},
+		multipleImageUpload:function()
+		{
+			var images = $("#redactor_multiple_file_upload")[0].files
+			if (images.length)
+			{
+				var count = images.length;
+				var urls = [];
+				$.each(images, $.proxy(function(key, file)
+				{
+					var reader = new FileReader();	
+					reader.onload = $.proxy(function(file)
+					{
+						var fileUrl =  file.target.result;
+						urls.push(fileUrl)
+						count -= 1		
+						if (!count){ this.createGallery(urls);}						
+				    }, this);				
+					reader.readAsDataURL(file);
+				}, this));
+					
+				
+			}
+            this.modalClose();
+		},
+		createGallery: function(imageUrls)
+		{
+			// console.log('hello--urls', imageUrls);
+			var parentFigure = this.createFigure();
+			parentFigure.className = 'slider'
+			for (var i = 0; i < imageUrls.length; i++)
+			{
+				var childFigure = this.createFigure();
+				var img = $('<img id="' + this.generateRandomId() + '" draggable="false">');
+				img.attr('src', imageUrls[i]);
+				childFigure.append(img[0])
+				parentFigure.append(childFigure);
+			}
+
+			this._imageSet(parentFigure.outerHTML, true);
+			this.modalClose();
 		},
 		showImage: function()
 		{
@@ -3237,7 +3952,7 @@ var RLANG = {
 
 				if (this.opts.imageUpload !== false)
 				{
-
+                    console.log('hello world===image upload')
 					// dragupload
 					if (this.opts.uploadCrossDomain === false && this.isMobile() === false)
 					{
@@ -3253,7 +3968,7 @@ var RLANG = {
 							});
 						}
 					}
-
+                    
 					// ajax upload
 					this.uploadInit('redactor_file',
 					{
@@ -3281,6 +3996,9 @@ var RLANG = {
 				}
 
 				$('#redactor_upload_btn').click($.proxy(this.imageUploadCallbackLink, this));
+                //validating input field modal
+				$('#redactor_file_link').on('change keyup paste click', $.proxy(this.imageValidation,this));
+
 
 				if (this.opts.imageUpload === false && this.opts.imageGetJson === false)
 				{
@@ -3304,16 +4022,47 @@ var RLANG = {
 		{
 			if ($('#redactor_file_link').val() !== '')
 			{
-				var data = '<img src="' + $('#redactor_file_link').val() + '" />';
-				this._imageSet(data, true);
+				var ext=($('#redactor_file_link').val());
+				var regexQuery = /^((https?|ftp):)?\/\/.*(jpeg|jpg|png|gif|bmp)$/
+				if(regexQuery.test(ext))
+				{	
+					var id = this.generateRandomId()
+					var url = $('#redactor_file_link').val()
+					var generatedFigure = this.createImageHtml(url, id)
+					this._imageSet(generatedFigure.get(0).outerHTML, true);
+					this.syncCode()
+				}
+				else
+				{
+					$('#redactor_file_link').addClass('validation');
+					$('#valid').show();
+				}
+				
 			}
 			else
 			{
 				this.modalClose();
 			}
 		},
+		createImageHtml: function(url, uuid)
+		{
+			var image = '<img' + ' id="' + uuid + '"' + ' src="' + url + '" draggable="false"/>';
+			var caption = this.createFigcap('caption');
+			var generatedFigure = this.createFigure('img-border');
+			var span = this.createSpan('drop')
+			var btnList = this.createImageEditBtn()
+			generatedFigure.append(span, $(btnList), $(image), $(caption));
+            return generatedFigure;
+
+		},
+		imageValidation:function()
+		{
+			$('#redactor_file_link').removeClass('validation');
+			$('#valid').hide();
+		},
 		imageUploadCallback: function(data)
 		{
+			console.log('helloo');
 			this._imageSet(data);
 		},
 		_imageSet: function(json, link)
@@ -3343,8 +4092,45 @@ var RLANG = {
 
 			this.modalClose();
 			this.observeImages();
+			//for click event
+			this.observeVideos()
 		},
-
+		// image slide html
+		createSlideHtml: function()
+		{
+			var slideimages = '<div class="slideshow-container">'+
+                                '<div class="mySlides fade">'+
+                                  '<div class="numbertext">1 / 3</div>'+
+                                      '<img src="http://farm9.staticflickr.com/8072/8346734966_f9cd7d0941_z.jpg" style="width:100%">'+
+                                      '<div class="text">Caption Text</div>'+
+                                '</div>'+
+                               '<div class="mySlides fade">'+
+                                  '<div class="numbertext">2 / 3</div>'+
+                                    '<img src="http://farm9.staticflickr.com/8504/8365873811_d32571df3d_z.jpg" style="width:100%">'+
+                                    '<div class="text">Caption Two</div>'+
+                                '</div>'+
+                                '<div class="mySlides fade">'+
+                                  '<div class="numbertext">3 / 3</div>'+
+                                  '<img src="http://farm9.staticflickr.com/8068/8250438572_d1a5917072_z.jpg" style="width:100%">'+
+                                  '<div class="text">Caption Three</div>'+
+                                '</div>'+
+                                '<a class="prev" onclick="plusSlides(-1)">&#10094;</a>'+
+                                '<a class="next" onclick="plusSlides(1)">&#10095;</a>';
+            return $(slideimages)[0].outerHTML
+		},
+		newSlide: function()
+		{
+			var plainSlide = '<div id="slider">'+
+                              '<figure>'+
+                                  '<img src="http://farm9.staticflickr.com/8072/8346734966_f9cd7d0941_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8504/8365873811_d32571df3d_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8068/8250438572_d1a5917072_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8061/8237246833_54d8fa37f0_z.jpg" alt>'+
+                                  '<img src="http://farm9.staticflickr.com/8055/8098750623_66292a35c0_z.jpg" alt>'+
+                              '</figure>'+
+                             '</div>';
+            return $(plainSlide)[0].outerHTML;
+		},
 		// INSERT LINK
 		showLink: function()
 		{
@@ -3355,7 +4141,15 @@ var RLANG = {
 				this.insert_link_node = false;
 				var sel = this.getSelection();
 				var url = '', text = '', target = '';
-
+				var parent = this.getCurrentNode();
+				if (parent.nodeName === 'A')
+				{
+						this.insert_link_node = $(parent);
+						text = this.insert_link_node.text();
+						url = this.insert_link_node.attr('href');
+						target = this.insert_link_node.attr('target');
+				}
+				
 				if (this.browser('msie'))
 				{
 					var parent = this.getParentNode();
@@ -3426,6 +4220,12 @@ var RLANG = {
 					$('#redactor_link_blank').attr('checked', true);
 				}
 
+				if (url !== '')
+				{
+					debugger;
+					$('#redactor_insert_link_btn').val(RLANG.save)
+				}
+
 				$('#redactor_insert_link_btn').click($.proxy(this.insertLink, this));
 
 				setTimeout(function()
@@ -3448,9 +4248,10 @@ var RLANG = {
 				link = $('#redactor_link_url').val();
 				text = $('#redactor_link_url_text').val();
 
-				if ($('#redactor_link_blank').attr('checked'))
+				
+				if ($('#redactor_link_blank').prop('checked'))
 				{
-					target = ' target="_blank"';
+					target = ' target=' + '"_blank"';
 				}
 
 				// test url
@@ -3464,16 +4265,17 @@ var RLANG = {
 				}
 
 			}
-			else if (tab_selected === '2') // mailto
-			{
-				link = 'mailto:' + $('#redactor_link_mailto').val();
-				text = $('#redactor_link_mailto_text').val();
-			}
-			else if (tab_selected === '3') // anchor
-			{
-				link = '#' + $('#redactor_link_anchor').val();
-				text = $('#redactor_link_anchor_text').val();
-			}
+
+			// else if (tab_selected === '2') // mailto
+			// {
+			// 	link = 'mailto:' + $('#redactor_link_mailto').val();
+			// 	text = $('#redactor_link_mailto_text').val();
+			// }
+			// else if (tab_selected === '3') // anchor
+			// {
+			// 	link = '#' + $('#redactor_link_anchor').val();
+			// 	text = $('#redactor_link_anchor_text').val();
+			// }
 
 			this._insertLink('<a href="' + link + '"' + target + '>' +  text + '</a>', $.trim(text), link, target);
 
@@ -3491,11 +4293,12 @@ var RLANG = {
 					$(this.insert_link_node).attr('href', link);
 					if (target !== '')
 					{
-						$(this.insert_link_node).attr('target', target);
+						$(this.insert_link_node).attr('target', '_blank');
 					}
 					else
 					{
 						$(this.insert_link_node).removeAttr('target');
+
 					}
 
 					this.syncCode();
@@ -3696,6 +4499,10 @@ var RLANG = {
 		},
 		modalClose: function()
 		{
+			//remove the modal resizing 
+			$("#redactor_modal").removeClass('confirm');
+			$("#redactor_modal_close").css('visibility','visible');
+
 			$('#redactor_modal_close').unbind('click', this.modalClose);
 			$('#redactor_modal').fadeOut('fast', $.proxy(function()
 			{
@@ -3733,6 +4540,7 @@ var RLANG = {
 		// UPLOAD
 		uploadInit: function(element, options)
 		{
+			console.log('hello--upload init', element, options);
 			// Upload Options
 			this.uploadOptions = {
 				url: false,
@@ -3762,6 +4570,7 @@ var RLANG = {
 			// Auto or trigger
 			if (this.uploadOptions.auto)
 			{
+				debugger
 				$(this.uploadOptions.input).change($.proxy(function()
 				{
 					this.element.submit(function(e) { return false; });
@@ -3771,6 +4580,7 @@ var RLANG = {
 			}
 			else if (this.uploadOptions.trigger)
 			{
+				debugger
 				$('#' + this.uploadOptions.trigger).click($.proxy(this.uploadSubmit, this));
 			}
 		},
@@ -3799,6 +4609,8 @@ var RLANG = {
 		},
 		uploadForm : function(f, name)
 		{
+			debugger;
+			console.log('upload form')
 			if (this.uploadOptions.input)
 			{
 				var formId = 'redactorUploadForm' + this.id;
@@ -3830,11 +4642,12 @@ var RLANG = {
 				$(this.form).css('top', '-2000px');
 				$(this.form).css('left', '-2000px');
 				$(this.form).appendTo('body');
-
+               
 				this.form.submit();
 			}
 			else
 			{
+				console.log('hello---in uploadfornm')
 				f.attr('target', name);
 				f.attr('method', 'POST');
 				f.attr('enctype', 'multipart/form-data');
