@@ -1473,9 +1473,7 @@ var RLANG = {
 			$(parent).click($.proxy(function(e)
 			{
 				var _self = this;
-				
-				_self.$editor.css('height', '30px');
-				
+				console.log('height', _self.$editor.outerHeight(true),_self.$editor.height(), _self.$editor[0].scrollHeight, _self.$editor.innerHeight());
 				if (resizeStoped && resizeEnabled)
 				{
 					resizeStoped = false;
@@ -1489,22 +1487,19 @@ var RLANG = {
 						maxWidth: 900,
 						resize: function( event, ui ) 
 						{
-							// _self.$editor.scrollTop();
-							console.log('height', $(parent).height() + 'px');
+							// console.log('height', _self.$editor.outerHeight(true),_self.$editor.height(), _self.$editor[0].scrollHeight, _self.$editor.innerHeight());
+							_self.$editor.css('min-height',  _self.$editor[0].scrollHeight + 'px');
 							$(editBtns).removeClass('show-btn');
 							// $(parent).addClass('show-border');
 							//set figurecaption size to image to adjust the overflow off caption
 							var figSize = parseFloat($(image).width()) - 28;
 							$(parent).find($('figcaption')).css('width', figSize + 'px');
-							// $(image).css('width', $(parent).width() + 'px').css('height', $(parent).height() + 'px');
-							var para = $(parent).closest('p');
-							// $(para).css('width', $(parent).width() + 'px').css('height',  $(parent).height() + 'px');
 						},
 						stop: function( event, ui ) 
 						{
 							$(editBtns).addClass('show-btn');
 							resizeStoped = true;
-							_self.$editor.css('height', '30px');
+							_self.$editor.css('min-height', _self.opts.minHeight);
 						}
 					});
 					resizeEnabled = true;
