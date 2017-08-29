@@ -1386,48 +1386,6 @@ var RLANG = {
 				}
 
 			}, this));
-
-			// var tag = $(parent).closest(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'td']);
-			// console.log('tag', parent, $(tag).css('text-align'), $(parent).css('text-align'));            
-			// if (typeof tag[0] !== 'undefined' && typeof tag[0].elem !== 'undefined' && $(tag[0].elem).size() != 0)
-			// {
-			// 	var align = $(tag[0].elem).css('text-align');
-
-				// switch (align)
-				// {
-				// 	case 'right':
-				// 		this.setBtnActive('alignright');
-				// 	break;
-				// 	case 'center':
-				// 		this.setBtnActive('aligncenter');
-				// 	break;
-				// 	case 'justify':
-				// 		this.setBtnActive('justify');
-				// 	break;
-				// 	default:
-				// 		this.setBtnActive('alignleft');
-				// 	break;
-				// }
-			// }
-			// if (!$(this.getSelectedNode()).is('div'))
-			// {
-            //     var align = $(parent).css('text-align');
-			//     switch (align)
-			// 	    {
-			// 		    case 'right':
-			// 			    this.setBtnActive('alignright');
-			// 		        break;
-			// 		    case 'center':
-			// 			    this.setBtnActive('aligncenter');
-			// 		        break;
-			// 			case 'justify':
-			// 				this.setBtnActive('justify');
-			// 				break;
-			// 			default:
-			// 				this.setBtnActive('alignleft');
-			// 				break;
-			// 		}
-			// }
 			
 		},
 		observeImages: function()
@@ -1515,10 +1473,10 @@ var RLANG = {
 					$(editBtns).removeClass('show-btn');
 					$(frontDrop).removeClass('show-drop');
 					resizeEnabled = false;
-					_self.$editor.css('height', '');
+					// _self.$editor.css('height', '');
 					
 				}
-
+               e.stopPropagation();
 			}, this));
 
 			deleteBtn.css('cursor','pointer');
@@ -1574,6 +1532,19 @@ var RLANG = {
 				}, this));
                 e.stopPropagation();
 			}, this));
+            //remove image resize while clicking editor
+			this.$editor.click(function(e)
+			{
+				if($(image).hasClass('ui-resizable'))
+				{
+					$(image).resizable('destroy');
+				}
+				$(parent).removeClass('show-border');
+				$(editBtns).removeClass('show-btn');
+				$(frontDrop).removeClass('show-drop');
+				resizeEnabled = false;
+			});
+
 		},
 		removebr:function(image)
 		{
