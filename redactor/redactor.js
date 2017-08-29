@@ -362,6 +362,19 @@ var RLANG = {
 				'<div id="redactor_modal_footer">' +
 				    '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 				    '<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_image_title" value="' + RLANG.insert + '" />' +
+				'</div>',
+			modal_image_align: String() +
+				'<div id="redactor_modal_content">' +
+				    '<label>Image Position</label>' +
+				    '<select id="redactor_form_image_align">' +
+				        '<option value="none">' + RLANG.clear + '</option>' +
+				        '<option value="left">' + RLANG.left + '</option>' +
+				        '<option value="right">' + RLANG.right + '</option>' +
+				    '</select>'+
+				'</div>'+
+				'<div id="redactor_modal_footer">' +
+				    '<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+				    '<input type="button" name="upload" class="redactor_modal_btn" id="redactor_btn_image_title" value="' + RLANG.insert + '" />' +
 			    '</div>',
 			toolbar: {
 				html:
@@ -1417,6 +1430,7 @@ var RLANG = {
 			var deleteBtn = $(editBtns).children('[role="delete"]');
 			var editBtn = $(editBtns).children('[role="edit"]');
 			var caption = $(editBtns).children('[role="caption"]');
+			var align = $(editBtns).children('[role="align"]');
 			
 			var resizeEnabled = false;
 			var resizeStoped = false;
@@ -1531,6 +1545,40 @@ var RLANG = {
 
 				}, this));
                 e.stopPropagation();
+			}, this));
+			
+			$(align).css('cursor', 'pointer');
+			$(align).off('click');
+			$(align).click($.proxy(function(e)
+			{
+				console.log('hello align');
+				this.modalInit('', this.opts.modal_image_align, 300, $.proxy(function(e)
+				{
+					$('#redactor_btn_image_title').click($.proxy(function(e)
+					{
+					    var parentPara = $(image).closest('p');					
+						var floating = $('#redactor_form_image_align').val();
+
+						if (floating === 'left')
+						{
+							$(parentPara).css({ 'float': 'left', margin: '0 10px 10px 0' });
+						}
+						else if (floating === 'right')
+						{
+							$(parentPara).css({ 'float': 'right', margin: '0 0 10px 10px' });
+						}
+						else
+						{
+							$(parentPara).css({ 'float': 'none', margin: '0' });
+						}
+
+						this.modalClose();
+
+					},this));
+					
+				}, this));
+
+				e.stopPropagation();
 			}, this));
             //remove image resize while clicking editor
 			this.$editor.click(function(e)
@@ -3641,7 +3689,7 @@ var RLANG = {
 		createImageEditBtn: function()
 		{
 			var ul = $('<ul class="btn-class">')
-			var icons = [{icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'caption'}, {icon:'fa fa-trash', role: 'delete'}]
+			var icons = [{icon: 'fa fa-align-center', role: 'align'},{icon:'fa fa-pencil', role:'edit'}, {icon:'fa fa-align-justify', role: 'caption'}, {icon:'fa fa-trash', role: 'delete'}]
 			$.each(icons, $.proxy(function(i, val)
 		    {
 				var fontIcon = this.createFontIcons(val)
